@@ -1,0 +1,17 @@
+﻿CREATE TABLE [dbo].[T_TRANS_DET_ITEM] (
+    [TRANS_DET_ITEM_ID] NVARCHAR (50)   NOT NULL,
+    [TRANS_DET_ID]      NVARCHAR (50)   NULL,
+    [ITEM_ID]           NVARCHAR (50)   NULL,
+    [ITEM_QTY]          DECIMAL (18, 5) NULL,
+    [ITEM_STATUS]       NVARCHAR (50)   NULL,
+    [ITEM_DESC]         NVARCHAR (MAX)  NULL,
+    [DATA_STATUS]       NVARCHAR (50)   NULL,
+    [CREATED_BY]        NVARCHAR (50)   NULL,
+    [CREATED_DATE]      DATETIME        NULL,
+    [MODIFIED_BY]       NVARCHAR (50)   NULL,
+    [MODIFIED_DATE]     DATETIME        NULL,
+    [ROW_VERSION]       TIMESTAMP       NULL,
+    [ITEM_UOM_ID]       NVARCHAR (50)   NULL,
+    [ITEM_CAT_ID]       NVARCHAR (50)   NULL
+);
+

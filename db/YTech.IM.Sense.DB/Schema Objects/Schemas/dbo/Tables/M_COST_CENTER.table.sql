@@ -1,0 +1,17 @@
+﻿CREATE TABLE [dbo].[M_COST_CENTER] (
+    [COST_CENTER_ID]           NVARCHAR (50)   NOT NULL,
+    [EMPLOYEE_ID]              NVARCHAR (50)   NULL,
+    [COST_CENTER_NAME]         NVARCHAR (50)   NULL,
+    [COST_CENTER_TOTAL_BUDGET] NUMERIC (18, 5) NULL,
+    [COST_CENTER_STATUS]       NVARCHAR (50)   NULL,
+    [COST_CENTER_START_DATE]   DATETIME        NULL,
+    [COST_CENTER_END_DATE]     DATETIME        NULL,
+    [COST_CENTER_DESC]         NVARCHAR (MAX)  NULL,
+    [DATA_STATUS]              NVARCHAR (50)   NULL,
+    [CREATED_BY]               NVARCHAR (50)   NULL,
+    [CREATED_DATE]             DATETIME        NULL,
+    [MODIFIED_BY]              NVARCHAR (50)   NULL,
+    [MODIFIED_DATE]            DATETIME        NULL,
+    [ROW_VERSION]              TIMESTAMP       NULL
+);
+
