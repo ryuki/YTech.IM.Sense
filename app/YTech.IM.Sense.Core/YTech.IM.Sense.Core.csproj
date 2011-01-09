@@ -73,6 +73,9 @@
     <Compile Include="Master\MItem.cs" />
     <Compile Include="Master\MItemCat.cs" />
     <Compile Include="Master\MItemUom.cs" />
+    <Compile Include="Master\MPacket.cs" />
+    <Compile Include="Master\MPacketItemCat.cs" />
+    <Compile Include="Master\MRoom.cs" />
     <Compile Include="Master\MSupplier.cs" />
     <Compile Include="Master\MWarehouse.cs" />
     <Compile Include="Master\RefAddress.cs" />
@@ -89,6 +92,9 @@
     <Compile Include="RepositoryInterfaces\IMItemCatRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMItemRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMItemUomRepository.cs" />
+    <Compile Include="RepositoryInterfaces\IMPacketItemCatRepository.cs" />
+    <Compile Include="RepositoryInterfaces\IMPacketRepository.cs" />
+    <Compile Include="RepositoryInterfaces\IMRoomRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMSupplierRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMWarehouseRepository.cs" />
     <Compile Include="RepositoryInterfaces\IRefAddressRepository.cs" />
@@ -101,20 +107,31 @@
     <Compile Include="RepositoryInterfaces\ITReferenceRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITStockCardRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITStockItemRepository.cs" />
+    <Compile Include="RepositoryInterfaces\ITStockRefRepository.cs" />
+    <Compile Include="RepositoryInterfaces\ITStockRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITTransDetRepository.cs" />
+    <Compile Include="RepositoryInterfaces\ITTransRefRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITTransRepository.cs" />
     <Compile Include="Transaction\Accounting\TJournal.cs" />
     <Compile Include="Transaction\Accounting\TJournalDet.cs" />
     <Compile Include="Transaction\Accounting\TJournalRef.cs" />
     <Compile Include="Transaction\Accounting\TRecAccount.cs" />
     <Compile Include="Transaction\Accounting\TRecPeriod.cs" />
+    <Compile Include="Transaction\Inventory\TStock.cs" />
     <Compile Include="Transaction\Inventory\TStockCard.cs" />
     <Compile Include="Transaction\Inventory\TStockItem.cs" />
+    <Compile Include="Transaction\Inventory\TStockRef.cs" />
     <Compile Include="Transaction\Inventory\TTrans.cs" />
     <Compile Include="Transaction\Inventory\TTransDet.cs" />
+    <Compile Include="Transaction\Inventory\TTransRef.cs" />
     <Compile Include="Transaction\TReference.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\YTech.IM.Sense.Enums\YTech.IM.Sense.Enums.csproj">
+      <Project>{07256BF4-72B4-46A8-8EF4-C58E26422306}</Project>
+      <Name>YTech.IM.Sense.Enums</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

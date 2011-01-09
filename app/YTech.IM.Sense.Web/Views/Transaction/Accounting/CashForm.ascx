@@ -1,53 +1,14 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="System.Web.Mvc.ViewUserControl<YTech.IM.Sense.Web.Controllers.ViewModel.CashFormViewModel>" %>
-<%@ Import Namespace="YTech.IM.Sense.Enums" %>
+
+<%= Html.Partial("~/Views/Shared/Status.ascx",Model) %>
 <% using (Html.BeginForm())
    {%>
 <%=Html.AntiForgeryToken()%>
 <%=Html.Hidden("Journal.Id", (ViewData.Model.Journal != null) ? ViewData.Model.Journal.Id : "")%>
 <%=Html.Hidden("Journal.JournalType", ViewData.Model.Journal.JournalType)%>
-<%--<div>
-<%=ViewData.Model.Title%>
-</div>--%>
-<% if (TempData[EnumCommonViewData.SaveState.ToString()] != null)
-   {
-       if (TempData[EnumCommonViewData.SaveState.ToString()].Equals(EnumSaveState.Success))
-       {	%>
-<div class="ui-state-highlight ui-corner-all" style="padding: 5pt; margin-bottom: 5pt;">
-    <p>
-        <span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
-        <% if (ViewData.Model.Journal.JournalType.Equals(EnumJournalType.CashIn.ToString()))
-           {%>
-        Kas Masuk berhasil disimpan.
-        <%
-            }
-           else if (ViewData.Model.Journal.JournalType.Equals(EnumJournalType.CashOut.ToString()))
-           {%>
-        Kas Keluar berhasil disimpan.
-        <%
-            }%></p>
-</div>
-<% }
-       else if (ViewData[EnumCommonViewData.SaveState.ToString()].Equals(EnumSaveState.Failed))
-       { %>
-<div class="ui-state-error ui-corner-all" style="padding: 5pt; margin-bottom: 5pt;">
-    <p>
-        <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-        <% if (ViewData.Model.Journal.JournalType.Equals(YTech.IM.Sense.Enums.EnumJournalType.CashIn.ToString()))
-           {%>
-        Kas Masuk gagal disimpan.
-        <%
-            }
-           else if (ViewData.Model.Journal.JournalType.Equals(YTech.IM.Sense.Enums.EnumJournalType.CashOut.ToString()))
-           {%>
-        Kas Keluar gagal disimpan.
-        <%
-            }%>
-    </p>
-</div>
-<% }
-   } %>
+
 <div>
-    <span id="toolbar" class="ui-widget-header ui-corner-all"><a id="newJournal" href="/Transaction/Accounting/GeneralLedger">
+    <span id="toolbar" class="ui-widget-header ui-corner-all"><a id="newJournal" href="<%= Url.Action(ViewData.Model.Journal.JournalType, "Accounting") %>">
         Baru</a>
         <button id="Save" type="submit">
             Simpan</button>
@@ -91,6 +52,10 @@
                         <%= Html.ValidationMessage("Journal.CostCenterId")%>
                     </td>
                 </tr>
+            </table>
+        </td>
+        <td>
+        <table>
                 <tr>
                     <td>
                         <label for="AccountId">
@@ -111,9 +76,8 @@
                         <%= Html.ValidationMessage("Journal.JournalDesc")%>
                     </td>
                 </tr>
-            </table>
-        </td>
-        <td>
+        
+        </table>
         </td>
     </tr>
 </table>
@@ -130,22 +94,22 @@
     <p>
     </p>
 </div>
-  <script language="javascript" type="text/javascript">
+<script language="javascript" type="text/javascript">
 
-      $(function () {
-          $("#newJournal").button();
-          $("#Save").button();
-          $("#Journal_JournalDate").datepicker({ dateFormat: "dd-M-yy" });
-      });
+    $(function () {
+        $("#newJournal").button();
+        $("#Save").button();
+        $("#Journal_JournalDate").datepicker({ dateFormat: "dd-M-yy" });
+    });
 
-      $(document).ready(function () {
+    $(document).ready(function () {
 
-          $("#dialog").dialog({
-              autoOpen: false
-          });
+        $("#dialog").dialog({
+            autoOpen: false
+        });
 
-          var editDialog = {
-              url: '<%= Url.Action("Update", "Accounting") %>'
+        var editDialog = {
+            url: '<%= Url.Action("Update", "Accounting") %>'
                 , closeAfterAdd: true
                 , closeAfterEdit: true
                 , modal: true
@@ -168,9 +132,9 @@
                     $('#dialog p:first').text(response.responseText);
                     $("#dialog").dialog("open");
                 }
-          };
-          var insertDialog = {
-              url: '<%= Url.Action("Insert", "Accounting") %>'
+        };
+        var insertDialog = {
+            url: '<%= Url.Action("Insert", "Accounting") %>'
                 , closeAfterAdd: true
                 , closeAfterEdit: true
                 , modal: true
@@ -184,30 +148,30 @@
                     $("#dialog").dialog("open");
                 }
                 , width: "400"
-          };
-          var deleteDialog = {
-              url: '<%= Url.Action("Delete", "Accounting") %>'
+        };
+        var deleteDialog = {
+            url: '<%= Url.Action("Delete", "Accounting") %>'
                 , modal: true
                 , width: "400"
                 , afterComplete: function (response, postdata, formid) {
                     $('#dialog p:first').text(response.responseText);
                     $("#dialog").dialog("open");
                 }
-          };
+        };
 
-          $.jgrid.nav.addtext = "Tambah";
-          $.jgrid.nav.edittext = "Edit";
-          $.jgrid.nav.deltext = "Hapus";
-          $.jgrid.edit.addCaption = "Tambah Detail Baru";
-          $.jgrid.edit.editCaption = "Edit Detail";
-          $.jgrid.del.caption = "Hapus Detail";
-          $.jgrid.del.msg = "Anda yakin menghapus Detail yang dipilih?";
-          $("#list").jqGrid({
-              url: '<%= Url.Action("List", "Accounting") %>',
-              datatype: 'json',
-              mtype: 'GET',
-              colNames: ['Id', 'Akun', 'Akun', 'No Bukti', 'Status', 'Jumlah', 'Debet', 'Kredit', 'Keterangan'],
-              colModel: [
+        $.jgrid.nav.addtext = "Tambah";
+        $.jgrid.nav.edittext = "Edit";
+        $.jgrid.nav.deltext = "Hapus";
+        $.jgrid.edit.addCaption = "Tambah Detail Baru";
+        $.jgrid.edit.editCaption = "Edit Detail";
+        $.jgrid.del.caption = "Hapus Detail";
+        $.jgrid.del.msg = "Anda yakin menghapus Detail yang dipilih?";
+        $("#list").jqGrid({
+            url: '<%= Url.Action("List", "Accounting") %>',
+            datatype: 'json',
+            mtype: 'GET',
+            colNames: ['Id', 'Akun', 'Akun', 'No Bukti', 'Status', 'Jumlah', 'Debet', 'Kredit', 'Keterangan'],
+            colModel: [
                     { name: 'Id', index: 'Id', width: 100, align: 'left', key: true, editrules: { required: true, edithidden: false }, hidedlg: true, hidden: true, editable: false },
                     { name: 'AccountId', index: 'AccountId', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { edithidden: true }, hidden: true },
                     { name: 'AccountName', index: 'AccountName', width: 200, align: 'left', editable: false, sortable: false, edittype: 'select', editrules: { edithidden: true} },
@@ -218,24 +182,24 @@
                    { name: 'JournalDetAmmountKredit', index: 'JournalDetAmmountKredit', width: 200, sortable: false, editable: false, align: 'right', editable: false, editrules: { required: false, number: true, edithidden: true }, hidden: true },
                    { name: 'JournalDetDesc', index: 'BrandDesc', width: 200, sortable: false, align: 'left', editable: true, edittype: 'textarea', editoptions: { rows: "3", cols: "20" }, editrules: { required: false}}],
 
-              pager: $('#listPager'),
-              rowNum: -1,
-              //              rowList: [20, 30, 50, 100],
-              rownumbers: true,
-              //              sortname: 'Id',
-              //              sortorder: "asc",
-              //              viewrecords: true,
-              height: 300,
-              caption: 'Daftar Detail',
-              autowidth: true,
-              loadComplete: function () {
-                  $('#list').setColProp('AccountId', { editoptions: { value: accounts} });
-                  $('#listPager_center').hide();
-              },
-              ondblClickRow: function (rowid, iRow, iCol, e) {
-                  //$("#list").editGridRow(rowid, editDialog);
-              }, footerrow: true, userDataOnFooter: true, altRows: true
-          }).navGrid('#listPager',
+            pager: $('#listPager'),
+            rowNum: -1,
+            //              rowList: [20, 30, 50, 100],
+            rownumbers: true,
+            //              sortname: 'Id',
+            //              sortorder: "asc",
+            //              viewrecords: true,
+            height: 150,
+            caption: 'Daftar Detail',
+            autowidth: true,
+            loadComplete: function () {
+                $('#list').setColProp('AccountId', { editoptions: { value: accounts} });
+                $('#listPager_center').hide();
+            },
+            ondblClickRow: function (rowid, iRow, iCol, e) {
+                //$("#list").editGridRow(rowid, editDialog);
+            }, footerrow: true, userDataOnFooter: true, altRows: true
+        }).navGrid('#listPager',
                 {
                     edit: false, add: true, del: true, search: false, refresh: true, view: false
                 },
@@ -244,6 +208,6 @@
                 deleteDialog
             );
 
-          var accounts = $.ajax({ url: '/Master/Account/GetList', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the accounts.'); } }).responseText;
-      });
-    </script>
+                var accounts = $.ajax({ url: '<%= ResolveUrl("~/Master/Account/GetList") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the accounts.'); } }).responseText;
+    });
+</script>

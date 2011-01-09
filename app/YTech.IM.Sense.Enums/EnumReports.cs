@@ -13,6 +13,7 @@ namespace YTech.IM.Sense.Enums
         RptNeraca,
         RptLR,
         RptStockCard,
-        RptStockItem
+        RptStockItem,
+        RptAnalyzeBudgetDetail
     }
 }

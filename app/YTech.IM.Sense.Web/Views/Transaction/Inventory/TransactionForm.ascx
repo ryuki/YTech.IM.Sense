@@ -1,37 +1,14 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="System.Web.Mvc.ViewUserControl<YTech.IM.Sense.Web.Controllers.ViewModel.TransactionFormViewModel>" %>
-<%@ Import Namespace="YTech.IM.Sense.Enums" %>
-<%--<% using (Html.BeginForm("Save", "Inventory", FormMethod.Post, new { @class = "cmxform" }))
-   { %>--%>
+
+<%= Html.Partial("~/Views/Shared/Status.ascx",Model) %>
 <% using (Html.BeginForm())
    { %>
 <%= Html.AntiForgeryToken() %>
 <%= Html.Hidden("Trans.Id", (ViewData.Model.Trans != null) ? ViewData.Model.Trans.Id : "")%>
 <%= Html.Hidden("Trans.TransStatus", (ViewData.Model.Trans != null) ? ViewData.Model.Trans.TransStatus : "")%>
-<%--<div>
-<%= ViewData.Model.Title %>
-</div>--%>
-<% if (TempData[EnumCommonViewData.SaveState.ToString()] != null)
-   {
-       if (TempData[EnumCommonViewData.SaveState.ToString()].Equals(EnumSaveState.Success))
-       {	%>
-<div class="ui-state-highlight ui-corner-all" style="padding: 5pt; margin-bottom: 5pt;">
-    <p>
-        <span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
-        Transaksi berhasil disimpan.</p>
-</div>
-<% }
-   else if (TempData[EnumCommonViewData.SaveState.ToString()].Equals(EnumSaveState.Failed))
-   { %>
-<div class="ui-state-error ui-corner-all" style="padding: 5pt; margin-bottom: 5pt;">
-    <p>
-        <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-        Transaksi gagal disimpan.
-    </p>
-</div>
-<% }
-   } %>
+
 <div>
-    <span id="toolbar" class="ui-widget-header ui-corner-all"><a id="newTrans" href="/Transaction/Inventory<% if (!ViewData.Model.Trans.TransStatus.Equals(EnumTransactionStatus.PurchaseOrder.ToString())){%>/<%= Model.Trans.TransStatus.ToString() %><%} %>">
+    <span id="toolbar" class="ui-widget-header ui-corner-all"><a id="newTrans" href="<%= Url.Action(ViewData.Model.Trans.TransStatus.Equals(EnumTransactionStatus.PurchaseOrder.ToString()) ? "Index" : Model.Trans.TransStatus.ToString(), "Inventory") %>">
         Baru</a>
         <button id="Save" type="submit">
             Simpan</button>
@@ -45,7 +22,7 @@
     <tr>
         <td>
             <table>
-             <% if (ViewData.Model.ViewDate)
+                <% if (ViewData.Model.ViewDate)
                    {	%>
                 <tr>
                     <td>
@@ -58,8 +35,7 @@
                     </td>
                 </tr>
                 <% } %>
-
-                 <% if (ViewData.Model.ViewFactur)
+                <% if (ViewData.Model.ViewFactur)
                    {	%>
                 <tr>
                     <td>
@@ -72,6 +48,23 @@
                     </td>
                 </tr>
                 <% } %>
+                <% if (ViewData.Model.ViewPaymentMethod)
+                   {	%>
+                <tr>
+                    <td>
+                        <label for="Trans_TransPaymentMethod">
+                            Cara Pembayaran :</label>
+                    </td>
+                    <td>
+                        <%= Html.DropDownList("Trans.TransPaymentMethod", Model.PaymentMethodList)%>
+                        <%= Html.ValidationMessage("Trans.TransPaymentMethod")%>
+                    </td>
+                </tr>
+                <% } %>
+            </table>
+        </td>
+        <td>
+            <table>
                 <% if (ViewData.Model.ViewSupplier)
                    {	%>
                 <tr>
@@ -113,8 +106,6 @@
                 <% } %>
             </table>
         </td>
-        <td>
-        </td>
     </tr>
 </table>
 <table id="list" class="scroll" cellpadding="0" cellspacing="0">
@@ -128,7 +119,7 @@
     </p>
 </div>
 <% } %>
-<script language="javascript">
+<script language="javascript" type="text/javascript">
     function CalculateTotal() {
         var price = $('#TransDetPrice').attr('value');
         var qty = $('#TransDetQty').attr('value');
@@ -182,14 +173,15 @@
                 , modal: true
                 , afterShowForm: function (eparams) {
                     $('#Id').attr('disabled', '');
-
-                    $('#TransDetPrice').attr('value', '0');
                     $('#TransDetQty').attr('value', '1');
+                     <% if (ViewData.Model.ViewPrice)
+               {%> 
+                    $('#TransDetPrice').attr('value', '0');
                     $('#TransDetDisc').attr('value', '0');
                     $('#TransDetTotal').attr('value', '0');
 
                     $('#ItemId').change(function () {
-                        var price = $.ajax({ url: '/Master/Item/Get/' + $('#ItemId :selected').val(), async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the items.'); } }).responseText;
+                        var price = $.ajax({ url: '<%= ResolveUrl("~/Master/Item/Get") %>/' + $('#ItemId :selected').val(), async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the items.'); } }).responseText;
                         $('#TransDetPrice').attr('value', price);
                         CalculateTotal();
                     });
@@ -202,6 +194,9 @@
                     $('#TransDetDisc').change(function () {
                         CalculateTotal();
                     });
+                   <%
+               }%>  
+                    
                 }
                 , afterComplete: function (response, postdata, formid) {
                     $('#dialog p:first').text(response.responseText);
@@ -227,19 +222,30 @@
         $.jgrid.del.caption = "Hapus Detail";
         $.jgrid.del.msg = "Anda yakin menghapus Detail yang dipilih?";
         $("#list").jqGrid({
-            url: '<%= Url.Action("List", "Inventory") %>',
+            url: '<%= Url.Action("List", "Inventory", new { usePrice = ViewData.Model.ViewPrice} ) %>',
+//                postData: {
+//                    UsePrice: function () { return <% if (ViewData.Model.ViewPrice) {%>' true' <%} else { %>                                                      'false'
+//                                                      <% } %>; }
+//                },
             datatype: 'json',
             mtype: 'GET',
-            colNames: ['Id', 'Produk', 'Produk', 'Kuantitas', 'Harga', 'Diskon', 'Total', 'Keterangan'],
+            colNames: ['Id', 'Produk', 'Produk', 'Kuantitas',
+            <% if (ViewData.Model.ViewPrice)
+               {%> 'Harga', 'Diskon', 'Total',
+                   <%
+               }%>                   
+                    'Keterangan'],
             colModel: [
                     { name: 'Id', index: 'Id', width: 100, align: 'left', key: true, editrules: { required: true, edithidden: false }, hidedlg: true, hidden: true, editable: false },
                     { name: 'ItemId', index: 'ItemId', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { edithidden: true }, hidden: true },
                     { name: 'ItemName', index: 'ItemName', width: 200, align: 'left', editable: false, edittype: 'select', editrules: { edithidden: true} },
-                   { name: 'TransDetQty', index: 'TransDetQty', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false, number: true }, formatter: 'number' },
+                     { name: 'TransDetQty', index: 'TransDetQty', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false, number: true }, formatter: 'number' },
+                   <% if (ViewData.Model.ViewPrice) {%> 
                    { name: 'TransDetPrice', index: 'TransDetPrice', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false, number: true }, formatter: 'number' },
                    { name: 'TransDetDisc', index: 'TransDetDisc', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false, number: true }, formatter: 'number' },
                    { name: 'TransDetTotal', index: 'TransDetTotal', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false, number: true }, formatter: 'number' },
-                   { name: 'TransDetDesc', index: 'BrandDesc', width: 200, sortable: false, align: 'left', editable: true, edittype: 'textarea', editoptions: { rows: "3", cols: "20" }, editrules: { required: false}}],
+                   <%}%> 
+                { name: 'TransDetDesc', index: 'TransDetDesc', width: 200, sortable: false, align: 'left', editable: true, edittype: 'textarea', editoptions: { rows: "3", cols: "20" }, editrules: { required: false}}],
 
             pager: $('#listPager'),
             rowNum: -1,
@@ -248,7 +254,7 @@
             //              sortname: 'Id',
             //              sortorder: "asc",
             //              viewrecords: true,
-            height: 300,
+            height: 150,
             caption: 'Daftar Detail',
             autowidth: true,
             loadComplete: function () {
@@ -267,6 +273,6 @@
                 deleteDialog
             );
 
-        var items = $.ajax({ url: '/Master/Item/GetList', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the items.'); } }).responseText;
+        var items = $.ajax({ url:  '<%= ResolveUrl("~/Master/Item/GetList") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the items.'); } }).responseText;
     });
 </script>

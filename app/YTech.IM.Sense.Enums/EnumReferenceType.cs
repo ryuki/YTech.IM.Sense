@@ -8,6 +8,17 @@ namespace YTech.IM.Sense.Enums
     public enum EnumReferenceType
     {
         VoucherNo,
-        LRDitahanAccountId
+        LRDitahanAccountId,
+        FacturFormat,
+        Sales,
+        Purchase,
+        PurchaseOrder,
+        ReturSales,
+        ReturPurchase,
+        Using,
+        Mutation,
+        Adjusment,
+        Received,
+        Budgeting
     }
 }

@@ -21,6 +21,10 @@
         <div>
             <%= Html.ActionLinkForAreas<ItemController>(c => c.Index(), "Master Produk")%></div>
         <div>
+            <%= Html.ActionLinkForAreas<PacketController>(c => c.Index(), "Master Paket")%></div>
+        <div>
+            <%= Html.ActionLinkForAreas<RoomController>(c => c.Index(), "Master Ruangan")%></div>
+        <div>
             <hr />
         </div>
         <div>

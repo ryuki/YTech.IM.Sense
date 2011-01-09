@@ -12,7 +12,10 @@ namespace YTech.IM.Sense.Enums
         PurchaseOrder,
         ReturSales,
         ReturPurchase,
+        Using,
         Mutation,
-        Adjusment
+        Adjusment,
+        Received,
+        Budgeting
     }
 }

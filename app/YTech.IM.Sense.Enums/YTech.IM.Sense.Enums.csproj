@@ -46,9 +46,11 @@
     <Compile Include="EnumExportFormat.cs" />
     <Compile Include="EnumJournalStatus.cs" />
     <Compile Include="EnumJournalType.cs" />
+    <Compile Include="EnumPaymentMethod.cs" />
     <Compile Include="EnumPeriodType.cs" />
     <Compile Include="EnumReferenceType.cs" />
     <Compile Include="EnumReports.cs" />
+    <Compile Include="EnumRoomType.cs" />
     <Compile Include="EnumSaveState.cs" />
     <Compile Include="EnumTransactionStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

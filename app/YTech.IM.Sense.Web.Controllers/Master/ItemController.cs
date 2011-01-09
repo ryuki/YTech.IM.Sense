@@ -8,6 +8,7 @@ using SharpArch.Core;
 using SharpArch.Web.NHibernate;
 using YTech.IM.Sense.Core.Master;
 using YTech.IM.Sense.Core.RepositoryInterfaces;
+using YTech.IM.Sense.Data.Repository;
 using YTech.IM.Sense.Enums;
 
 namespace YTech.IM.Sense.Web.Controllers.Master
@@ -15,6 +16,9 @@ namespace YTech.IM.Sense.Web.Controllers.Master
     [HandleError]
     public class ItemController : Controller
     {
+        public ItemController() : this(new MItemRepository(),new MItemCatRepository(), new MBrandRepository ())
+        {}
+
         private readonly IMItemRepository _mItemRepository;
         private readonly IMItemCatRepository _mItemCatRepository;
         private readonly IMBrandRepository _mBrandRepository;

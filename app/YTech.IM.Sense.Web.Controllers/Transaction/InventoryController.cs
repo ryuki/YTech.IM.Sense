@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ using YTech.IM.Sense.Core.Master;
 using YTech.IM.Sense.Core.RepositoryInterfaces;
 using YTech.IM.Sense.Core.Transaction;
 using YTech.IM.Sense.Core.Transaction.Inventory;
+using YTech.IM.Sense.Data.Repository;
 using YTech.IM.Sense.Enums;
 using YTech.IM.Sense.Web.Controllers.ViewModel;
 
@@ -18,14 +20,22 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
     [HandleError]
     public class InventoryController : Controller
     {
+        public InventoryController()
+            : this(new TTransRepository(), new MWarehouseRepository(), new MSupplierRepository(), new MItemRepository(), new TStockCardRepository(), new TStockItemRepository(), new TTransRefRepository(), new TStockRepository(), new TStockRefRepository())
+        {
+        }
+
         private readonly ITTransRepository _tTransRepository;
         private readonly IMWarehouseRepository _mWarehouseRepository;
         private readonly IMSupplierRepository _mSupplierRepository;
         private readonly IMItemRepository _mItemRepository;
         private readonly ITStockCardRepository _tStockCardRepository;
         private readonly ITStockItemRepository _tStockItemRepository;
+        private readonly ITTransRefRepository _tTransRefRepository;
+        private readonly ITStockRepository _tStockRepository;
+        private readonly ITStockRefRepository _tStockRefRepository;
 
-        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository)
+        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransRefRepository tTransRefRepository, ITStockRepository tStockRepository, ITStockRefRepository tStockRefRepository)
         {
             Check.Require(tTransRepository != null, "tTransRepository may not be null");
             Check.Require(mWarehouseRepository != null, "mWarehouseRepository may not be null");
@@ -33,6 +43,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             Check.Require(mItemRepository != null, "mItemRepository may not be null");
             Check.Require(tStockCardRepository != null, "tStockCardRepository may not be null");
             Check.Require(tStockItemRepository != null, "tStockItemRepository may not be null");
+            Check.Require(tTransRefRepository != null, "tTransRefRepository may not be null");
+            Check.Require(tStockRepository != null, "tStockRepository may not be null");
+            Check.Require(tStockRefRepository != null, "tStockRefRepository may not be null");
 
             this._tTransRepository = tTransRepository;
             this._mWarehouseRepository = mWarehouseRepository;
@@ -40,6 +53,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             this._mItemRepository = mItemRepository;
             this._tStockCardRepository = tStockCardRepository;
             this._tStockItemRepository = tStockItemRepository;
+            this._tTransRefRepository = tTransRefRepository;
+            this._tStockRepository = tStockRepository;
+            this._tStockRefRepository = tStockRefRepository;
         }
 
         public ActionResult Index()
@@ -64,6 +80,8 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     viewModel.ViewSupplier = true;
                     viewModel.ViewDate = true;
                     viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = false;
                     break;
                 case EnumTransactionStatus.Purchase:
                     viewModel.ViewWarehouse = true;
@@ -72,6 +90,8 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     viewModel.ViewSupplier = true;
                     viewModel.ViewDate = true;
                     viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = true;
                     break;
                 case EnumTransactionStatus.ReturPurchase:
                     viewModel.ViewWarehouse = true;
@@ -80,10 +100,22 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     viewModel.ViewSupplier = true;
                     viewModel.ViewDate = true;
                     viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = true;
                     break;
                 case EnumTransactionStatus.Sales:
                     break;
                 case EnumTransactionStatus.ReturSales:
+                    break;
+                case EnumTransactionStatus.Using:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Pemakaian Material";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewSupplier = false;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = false;
+                    viewModel.ViewPaymentMethod = false;
                     break;
                 case EnumTransactionStatus.Mutation:
                     viewModel.ViewWarehouse = true;
@@ -92,6 +124,8 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     viewModel.ViewSupplier = false;
                     viewModel.ViewDate = true;
                     viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = false;
+                    viewModel.ViewPaymentMethod = false;
                     break;
                 case EnumTransactionStatus.Adjusment:
                     viewModel.ViewWarehouse = true;
@@ -100,6 +134,27 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     viewModel.ViewSupplier = false;
                     viewModel.ViewDate = true;
                     viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = false;
+                    viewModel.ViewPaymentMethod = false;
+                    break;
+                case EnumTransactionStatus.Received:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Penerimaan Stok";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewSupplier = true;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPaymentMethod = false;
+                    break;
+                case EnumTransactionStatus.Budgeting:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Rencana Anggaran Belanja";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewSupplier = false;
+                    viewModel.ViewDate = false;
+                    viewModel.ViewFactur = false;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = false;
                     break;
             }
 
@@ -111,7 +166,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         {
             TTrans trans = new TTrans();
             trans.TransDate = DateTime.Today;
-            // trans.TransFactur = "yahu";
+            trans.TransFactur = Helper.CommonHelper.GetFacturNo(enumTransactionStatus);
             trans.SetAssignedIdTo(Guid.NewGuid().ToString());
             trans.TransStatus = enumTransactionStatus.ToString();
             return trans;
@@ -123,7 +178,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             viewModel.Trans = SetNewTrans(EnumTransactionStatus.Purchase);
             SetViewModelByStatus(viewModel, EnumTransactionStatus.Purchase);
 
-            ListDetTrans = new List<TTransDet>();
+            ListTransRef = new List<TTransRef>();
             return View(viewModel);
         }
 
@@ -132,7 +187,55 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Purchase(TTrans Trans, FormCollection formCollection)
         {
-            return SaveTransaction(Trans, formCollection);
+            return SaveTransactionRef(Trans, formCollection);
+        }
+
+        private ActionResult SaveTransactionRef(TTrans Trans, FormCollection formCollection)
+        {
+            _tTransRepository.DbContext.BeginTransaction();
+            if (Trans == null)
+            {
+                Trans = new TTrans();
+            }
+            Trans.SetAssignedIdTo(formCollection["Trans.Id"]);
+            Trans.CreatedDate = DateTime.Now;
+            Trans.CreatedBy = User.Identity.Name;
+            Trans.DataStatus = Enums.EnumDataStatus.New.ToString();
+            Trans.TransSubTotal = ListTransRef.Sum(x => x.TransIdRef.TransSubTotal);
+            _tTransRepository.Save(Trans);
+            _tTransRepository.DbContext.CommitTransaction();
+
+            _tTransRefRepository.DbContext.BeginTransaction();
+            TTransRef detToInsert;
+            foreach (TTransRef det in ListTransRef)
+            {
+                detToInsert = new TTransRef();
+                detToInsert.SetAssignedIdTo(det.Id);
+                detToInsert.TransId = Trans;
+                detToInsert.TransIdRef = det.TransIdRef;
+                detToInsert.TransRefDesc = det.TransRefDesc;
+                detToInsert.TransRefStatus = det.TransRefStatus;
+
+                detToInsert.CreatedBy = User.Identity.Name;
+                detToInsert.CreatedDate = DateTime.Now;
+                detToInsert.DataStatus = EnumDataStatus.New.ToString();
+                _tTransRefRepository.Save(detToInsert);
+            }
+            try
+            {
+                _tTransRefRepository.DbContext.CommitTransaction();
+                TempData[EnumCommonViewData.SaveState.ToString()] = EnumSaveState.Success;
+            }
+            catch (Exception)
+            {
+                _tTransRefRepository.DbContext.RollbackTransaction();
+                TempData[EnumCommonViewData.SaveState.ToString()] = EnumSaveState.Failed;
+            }
+            if (!Trans.TransStatus.Equals(EnumTransactionStatus.PurchaseOrder.ToString()))
+            {
+                return RedirectToAction(Trans.TransStatus);
+            }
+            return RedirectToAction("Index");
         }
 
         public ActionResult ReturPurchase()
@@ -150,6 +253,44 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         [Transaction]                   // Wraps a transaction around the action
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ReturPurchase(TTrans Trans, FormCollection formCollection)
+        {
+            return SaveTransaction(Trans, formCollection);
+        }
+
+        public ActionResult Using()
+        {
+            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository);
+            viewModel.Trans = SetNewTrans(EnumTransactionStatus.Using);
+            SetViewModelByStatus(viewModel, EnumTransactionStatus.Using);
+
+
+            ListDetTrans = new List<TTransDet>();
+            return View(viewModel);
+        }
+
+        [ValidateAntiForgeryToken]      // Helps avoid CSRF attacks
+        [Transaction]                   // Wraps a transaction around the action
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Using(TTrans Trans, FormCollection formCollection)
+        {
+            return SaveTransaction(Trans, formCollection);
+        }
+
+        public ActionResult Received()
+        {
+            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository);
+            viewModel.Trans = SetNewTrans(EnumTransactionStatus.Received);
+            SetViewModelByStatus(viewModel, EnumTransactionStatus.Received);
+
+
+            ListDetTrans = new List<TTransDet>();
+            return View(viewModel);
+        }
+
+        [ValidateAntiForgeryToken]      // Helps avoid CSRF attacks
+        [Transaction]                   // Wraps a transaction around the action
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Received(TTrans Trans, FormCollection formCollection)
         {
             return SaveTransaction(Trans, formCollection);
         }
@@ -209,11 +350,81 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             }
         }
 
+        private List<TTransRef> ListTransRef
+        {
+            get
+            {
+                if (Session["ListTransRef"] == null)
+                {
+                    Session["ListTransRef"] = new List<TTransRef>();
+                }
+                return Session["ListTransRef"] as List<TTransRef>;
+            }
+            set
+            {
+                Session["ListTransRef"] = value;
+            }
+        }
+
         [Transaction]
-        public virtual ActionResult List(string sidx, string sord, int page, int rows)
+        public virtual ActionResult List(string sidx, string sord, int page, int rows, string usePrice)
         {
             int totalRecords = 0;
             var transDets = ListDetTrans;
+            int pageSize = rows;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+
+            var result = (
+                           from det in transDets
+                           select new
+                                      {
+                                          i = det.Id.ToString(),
+                                          cell = new string[]
+                                                     {
+                                                         det.Id,
+                                                         det.ItemId != null ? det.ItemId.Id : null,
+                                                         det.ItemId != null ? det.ItemId.ItemName : null,
+                                                        det.TransDetPrice.HasValue ?  det.TransDetPrice.Value.ToString() : null,
+                                                         det.TransDetQty.HasValue ?  det.TransDetQty.Value.ToString() : null,
+                                                        det.TransDetDisc.HasValue ?   det.TransDetDisc.Value.ToString() : null,
+                                                        det.TransDetTotal.HasValue ?   det.TransDetTotal.Value.ToString() : null,
+                                                         det.TransDetDesc
+                                                     }
+                                      });
+            if (usePrice.Equals(false.ToString()))
+            {
+                result = (
+                           from det in transDets
+                           select new
+                           {
+                               i = det.Id.ToString(),
+                               cell = new string[]
+                                                     {
+                                                         det.Id,
+                                                         det.ItemId != null ? det.ItemId.Id : null,
+                                                         det.ItemId != null ? det.ItemId.ItemName : null,
+                                                       det.TransDetQty.HasValue ?    det.TransDetQty.Value.ToString() : null,
+                                                         det.TransDetDesc
+                                                     }
+                           });
+            }
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = result.ToArray()
+                //userdata: {price:1240.00} 
+            };
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
+        [Transaction]
+        public virtual ActionResult GetListTransRef(string sidx, string sord, int page, int rows)
+        {
+            int totalRecords = 0;
+            var transRefs = ListTransRef;
             int pageSize = rows;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
@@ -223,19 +434,17 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from det in transDets
+                    from det in transRefs
                     select new
                     {
                         i = det.Id.ToString(),
                         cell = new string[] {
-                             det.Id,
-                            det.ItemId != null ? det.ItemId.Id : null, 
-                            det.ItemId != null ? det.ItemId.ItemName : null,
-                            det.TransDetPrice.Value.ToString(),
-                            det.TransDetQty.Value.ToString(),
-                            det.TransDetDisc.Value.ToString(),
-                            det.TransDetTotal.Value.ToString(),
-                            det.TransDetDesc
+                             det.TransIdRef.Id,
+                             det.TransIdRef.Id,
+                            det.TransIdRef.TransFactur, 
+                            det.TransIdRef.TransDate.HasValue ? det.TransIdRef.TransDate.Value.ToString(Helper.CommonHelper.DateFormat) : null,
+                           det.TransIdRef.TransSubTotal.HasValue ?  det.TransIdRef.TransSubTotal.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
+                            det.TransIdRef.TransDesc
                         }
                     }).ToArray()
                 //userdata: {price:1240.00} 
@@ -262,6 +471,12 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             return Content("success");
         }
 
+        public ActionResult DeleteTransRef(TTransRef viewModel, FormCollection formCollection)
+        {
+            ListTransRef.Remove(viewModel);
+            return Content("success");
+        }
+
         public ActionResult Insert(TTransDet viewModel, FormCollection formCollection)
         {
             TTransDet transDetToInsert = new TTransDet();
@@ -276,6 +491,23 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             ListDetTrans.Add(transDetToInsert);
             return Content("success");
         }
+
+        public ActionResult InsertTransRef(TTransRef viewModel, FormCollection formCollection)
+        {
+            TTransRef transDetToInsert = new TTransRef();
+
+            transDetToInsert.SetAssignedIdTo(Guid.NewGuid().ToString());
+            transDetToInsert.TransIdRef = _tTransRepository.Get(formCollection["TransIdRef"]);
+            //transDetToInsert.TransId = _tTransRepository.Get(formCollection["TransId"]);
+            transDetToInsert.CreatedDate = DateTime.Now;
+            transDetToInsert.CreatedBy = User.Identity.Name;
+            transDetToInsert.DataStatus = EnumDataStatus.New.ToString();
+
+            ListTransRef.Add(transDetToInsert);
+            return Content("success");
+        }
+
+        
 
         private void TransferFormValuesTo(TTransDet transDet, TTransDet viewModel)
         {
@@ -303,6 +535,11 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                 Trans = new TTrans();
             }
             Trans.SetAssignedIdTo(formCollection["Trans.Id"]);
+            Trans.WarehouseId = _mWarehouseRepository.Get(formCollection["Trans.WarehouseId"]);
+            if (!string.IsNullOrEmpty(formCollection["Trans.WarehouseIdTo"]))
+            {
+                Trans.WarehouseIdTo = _mWarehouseRepository.Get(formCollection["Trans.WarehouseIdTo"]);
+            }
             Trans.CreatedDate = DateTime.Now;
             Trans.CreatedBy = User.Identity.Name;
             Trans.DataStatus = Enums.EnumDataStatus.New.ToString();
@@ -315,7 +552,10 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             EnumTransactionStatus status = (EnumTransactionStatus)Enum.Parse(typeof(EnumTransactionStatus), Trans.TransStatus);
             switch (status)
             {
-                
+                case EnumTransactionStatus.Received:
+                    addStock = true;
+                    calculateStock = true;
+                    break;
                 case EnumTransactionStatus.Adjusment:
                     addStock = true;
                     calculateStock = true;
@@ -332,11 +572,19 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     addStock = false;
                     calculateStock = true;
                     break;
-              
+                case EnumTransactionStatus.Using:
+                    addStock = false;
+                    calculateStock = true;
+                    break;
+                case EnumTransactionStatus.Mutation:
+                    addStock = false;
+                    calculateStock = true;
+                    break;
             }
 
             TTransDet detToInsert;
             IList<TTransDet> listDet = new List<TTransDet>();
+            decimal total = 0;
             foreach (TTransDet det in ListDetTrans)
             {
                 detToInsert = new TTransDet(Trans);
@@ -351,29 +599,37 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                 detToInsert.CreatedDate = DateTime.Now;
                 detToInsert.DataStatus = Enums.EnumDataStatus.New.ToString();
                 Trans.TransDets.Add(detToInsert);
+                total += det.TransDetTotal.HasValue ? det.TransDetTotal.Value : 0;
                 listDet.Add(detToInsert);
             }
+            Trans.TransSubTotal = total;
             _tTransRepository.Save(Trans);
-            _tTransRepository.DbContext.CommitTransaction();
+            //_tTransRepository.DbContext.CommitTransaction();
 
-            _tStockCardRepository.DbContext.BeginTransaction();
-            foreach (TTransDet det in listDet)
+            //_tStockCardRepository.DbContext.BeginTransaction();
+            if (calculateStock)
             {
-                //save stock
-                if (Trans.TransStatus.Equals(EnumTransactionStatus.Mutation.ToString()))
+                foreach (TTransDet det in listDet)
                 {
-                    SaveStock(Trans, det, false, Trans.WarehouseId);
-                    SaveStock(Trans, det, true, Trans.WarehouseIdTo);
-                }
-                else if (calculateStock)
-                {
-                    SaveStock(Trans, det, addStock, Trans.WarehouseId);
+                    //save stock
+                    if (Trans.TransStatus.Equals(EnumTransactionStatus.Mutation.ToString()))
+                    {
+                        SaveStock(Trans, det, false, Trans.WarehouseId);
+                        SaveStock(Trans, det, true, Trans.WarehouseIdTo);
+                        UpdateStockDetail(Trans, det, false, Trans.WarehouseId);
+                        UpdateStockDetail(Trans, det, true, Trans.WarehouseIdTo);
+                    }
+                    else
+                    {
+                        SaveStock(Trans, det, addStock, Trans.WarehouseId);
+                        UpdateStockDetail(Trans, det, addStock, Trans.WarehouseId);
+                    }
                 }
             }
 
             try
             {
-                _tStockCardRepository.DbContext.CommitTransaction();
+                _tTransRepository.DbContext.CommitTransaction();
                 TempData[EnumCommonViewData.SaveState.ToString()] = EnumSaveState.Success;
             }
             catch (Exception)
@@ -447,6 +703,110 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                 stockCard.WarehouseId = mWarehouse;
                 _tStockCardRepository.Save(stockCard);
             }
+        }
+
+        private void UpdateStockDetail(TTrans Trans, TTransDet det, bool addStock, MWarehouse mWarehouse)
+        {
+            if (addStock)
+            {
+                TStock stock = new TStock();
+                stock.SetAssignedIdTo(Guid.NewGuid().ToString());
+                stock.ItemId = det.ItemId;
+                stock.TransDetId = det;
+                stock.StockDate = Trans.TransDate;
+                stock.StockDesc = det.TransDetDesc;
+                stock.StockPrice = det.TransDetPrice;
+                stock.StockQty = det.TransDetQty;
+                stock.StockStatus = Trans.TransStatus;
+                stock.WarehouseId = mWarehouse;
+                stock.DataStatus = EnumDataStatus.New.ToString();
+                stock.CreatedBy = User.Identity.Name;
+                stock.CreatedDate = DateTime.Now;
+                _tStockRepository.Save(stock);
+            }
+            else
+            {
+                IList list = _tStockRepository.GetSisaStockList(det.ItemId, mWarehouse);
+                TStock stock;
+                decimal? qty = det.TransDetQty;
+                object[] arr;
+                decimal? sisa;
+                TStockRef stockRef;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    arr = (object[])list[i];
+                    stock = arr[0] as TStock;
+                    sisa = (decimal)arr[1];
+
+                    stockRef = new TStockRef(stock);
+                    stockRef.SetAssignedIdTo(Guid.NewGuid().ToString());
+                    //stockRef.StockId = stock;
+                    if (sisa >= qty)
+                    {
+                        stockRef.StockRefQty = qty;
+                    }
+                    else
+                    {
+                        stockRef.StockRefQty = sisa;
+                    }
+                    stockRef.TransDetId = det;
+                    stockRef.StockRefPrice = det.TransDetPrice;
+                    stockRef.StockRefDate = Trans.TransDate;
+                    stockRef.StockRefStatus = Trans.TransStatus;
+                    stockRef.StockRefDesc = det.TransDetDesc;
+                    stockRef.CreatedBy = User.Identity.Name;
+                    stockRef.CreatedDate = DateTime.Now;
+                    stockRef.DataStatus = EnumDataStatus.New.ToString();
+                    _tStockRefRepository.Save(stockRef);
+
+                    qty = qty - sisa;
+                    if (qty <= 0)
+                    {
+                        break;
+                    }
+                }
+
+
+            }
+
+        }
+
+        public ActionResult Budgeting()
+        {
+            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository);
+            viewModel.Trans = SetNewTrans(EnumTransactionStatus.Budgeting);
+            SetViewModelByStatus(viewModel, EnumTransactionStatus.Budgeting);
+
+
+            ListDetTrans = new List<TTransDet>();
+            return View(viewModel);
+        }
+
+        [ValidateAntiForgeryToken]      // Helps avoid CSRF attacks
+        [Transaction]                   // Wraps a transaction around the action
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Budgeting(TTrans Trans, FormCollection formCollection)
+        {
+            return SaveTransaction(Trans, formCollection);
+        }
+
+        [Transaction]
+        public virtual ActionResult GetListTrans(string transStatus, string warehouseId, string transBy)
+        {
+            IList<TTrans> transes;
+            //if (!string.IsNullOrEmpty(transStatus))
+            MWarehouse warehouse = _mWarehouseRepository.Get(warehouseId);
+            {
+                transes = _tTransRepository.GetByWarehouseStatusTransBy(warehouse, transStatus, transBy);
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("{0}:{1}", string.Empty, "-Pilih Faktur-");
+            foreach (TTrans trans in transes)
+            {
+                sb.AppendFormat(";{0}:{1}", trans.Id, trans.TransFactur);
+            }
+            return Content(sb.ToString());
         }
     }
 }

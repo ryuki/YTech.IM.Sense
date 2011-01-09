@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using YTech.IM.Sense.Core.Transaction;
 using YTech.IM.Sense.Core.Transaction.Accounting;
+using YTech.IM.Sense.Core.Transaction.Inventory;
 
 namespace YTech.IM.Sense.Web.Controllers.ViewModel.Reports
 {

@@ -10,6 +10,7 @@ using YTech.IM.Sense.Core.Master;
 using YTech.IM.Sense.Core.RepositoryInterfaces;
 using YTech.IM.Sense.Core.Transaction;
 using YTech.IM.Sense.Core.Transaction.Accounting;
+using YTech.IM.Sense.Data.Repository;
 using YTech.IM.Sense.Enums;
 using YTech.IM.Sense.Web.Controllers.ViewModel;
 
@@ -18,6 +19,10 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
     [HandleError]
     public class AccountingController : Controller
     {
+        public AccountingController()
+            : this(new TJournalRepository(), new TJournalDetRepository(), new MCostCenterRepository(), new MAccountRepository(), new TRecAccountRepository(), new TRecPeriodRepository(), new MAccountCatRepository())
+        { }
+
         private readonly ITJournalRepository _tJournalRepository;
         private readonly ITJournalDetRepository _tJournalDetRepository;
         private readonly IMCostCenterRepository _mCostCenterRepository;
@@ -113,6 +118,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                 journal = new TJournal();
             }
             journal.SetAssignedIdTo(formCollection["Journal.Id"]);
+            journal.CostCenterId = _mCostCenterRepository.Get(formCollection["Journal.CostCenterId"]);
             journal.CreatedDate = DateTime.Now;
             journal.CreatedBy = User.Identity.Name;
             journal.DataStatus = Enums.EnumDataStatus.New.ToString();
@@ -194,20 +200,14 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             journal.SetAssignedIdTo(Guid.NewGuid().ToString());
             journal.JournalDate = DateTime.Today;
             journal.JournalType = journalType.ToString();
+            journal.JournalVoucherNo = Helper.CommonHelper.GetVoucherNo();
             return journal;
         }
 
-        //private List<TJournalDet> _ListJournalDet;
         private List<TJournalDet> ListJournalDet
         {
             get
             {
-                //return _ListJournalDet;
-                //if (_ListJournalDet == null)
-                //{
-                //    _ListJournalDet = new List<TJournalDet>();
-                //}
-                //return _ListJournalDet;
                 if (Session["ListJournalDet"] == null)
                 {
                     Session["ListJournalDet"] = new List<TJournalDet>();
@@ -216,7 +216,6 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             }
             set
             {
-                //_ListJournalDet = value;
                 Session["ListJournalDet"] = value;
             }
         }
@@ -229,12 +228,12 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             int pageSize = rows;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
-            var totalDebet = from det in journalDets
-                             where det.JournalDetStatus == "D"
-                             select det.JournalDetAmmount;
-            var totalKredit = from det in journalDets
-                              where det.JournalDetStatus == "K"
-                              select det.JournalDetAmmount;
+            //var totalDebet = from det in journalDets
+            //                 where det.JournalDetStatus == "D"
+            //                 select det.JournalDetAmmount;
+            //var totalKredit = from det in journalDets
+            //                  where det.JournalDetStatus == "K"
+            //                  select det.JournalDetAmmount;
             var jsonData = new
              {
                  total = totalPages,

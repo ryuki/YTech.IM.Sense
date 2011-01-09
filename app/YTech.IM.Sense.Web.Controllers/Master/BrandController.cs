@@ -8,6 +8,7 @@ using SharpArch.Core;
 using SharpArch.Web.NHibernate;
 using YTech.IM.Sense.Core.Master;
 using YTech.IM.Sense.Core.RepositoryInterfaces;
+using YTech.IM.Sense.Data.Repository;
 using YTech.IM.Sense.Enums;
 
 namespace YTech.IM.Sense.Web.Controllers.Master
@@ -15,13 +16,18 @@ namespace YTech.IM.Sense.Web.Controllers.Master
     [HandleError]
     public class BrandController : Controller
     {
-        private readonly IMBrandRepository _mBrandRepository;
+        //public BrandController()
+        //    : this(new MBrandRepository())
+        //{
+        //}
+
         public BrandController(IMBrandRepository mBrandRepository)
         {
             Check.Require(mBrandRepository != null, "mBrandRepository may not be null");
 
             this._mBrandRepository = mBrandRepository;
         }
+        private readonly IMBrandRepository _mBrandRepository;
 
 
         public ActionResult Index()
@@ -62,7 +68,10 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         [Transaction]
         public ActionResult Insert(MBrand viewModel, FormCollection formCollection)
         {
+            if (!(ViewData.ModelState.IsValid && viewModel.IsValid()))
+            {
 
+            }
             MBrand mCompanyToInsert = new MBrand();
             TransferFormValuesTo(mCompanyToInsert, viewModel);
             mCompanyToInsert.SetAssignedIdTo(viewModel.Id);

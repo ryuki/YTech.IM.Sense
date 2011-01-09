@@ -96,6 +96,9 @@
     <Compile Include="Master\ItemController.cs" />
     <Compile Include="Master\MasterAreaRegistration.cs" />
     <Compile Include="Master\MItemCatController.cs" />
+    <Compile Include="Master\PacketController.cs" />
+    <Compile Include="Master\PacketItemCatController.cs" />
+    <Compile Include="Master\RoomController.cs" />
     <Compile Include="Master\SupplierController.cs" />
     <Compile Include="Master\WarehouseController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -129,6 +132,10 @@
     <ProjectReference Include="..\YTech.IM.Sense.ApplicationServices\YTech.IM.Sense.ApplicationServices.csproj">
       <Project>{A5229126-50BA-4193-A937-66D4A61EFD1F}</Project>
       <Name>YTech.IM.Sense.ApplicationServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YTech.IM.Sense.Data\YTech.IM.Sense.Data.csproj">
+      <Project>{DF906DC2-7807-4DDE-B932-83D6E5A3B035}</Project>
+      <Name>YTech.IM.Sense.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\YTech.IM.Sense.Enums\YTech.IM.Sense.Enums.csproj">
       <Project>{07256BF4-72B4-46A8-8EF4-C58E26422306}</Project>

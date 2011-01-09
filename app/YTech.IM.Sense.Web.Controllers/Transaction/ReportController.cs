@@ -11,6 +11,7 @@ using YTech.IM.Sense.Core.RepositoryInterfaces;
 using YTech.IM.Sense.Core.Transaction;
 using YTech.IM.Sense.Core.Transaction.Accounting;
 using YTech.IM.Sense.Core.Transaction.Inventory;
+using YTech.IM.Sense.Data.Repository;
 using YTech.IM.Sense.Enums;
 using YTech.IM.Sense.Web.Controllers.ViewModel;
 using Microsoft.Reporting.WebForms;
@@ -20,6 +21,10 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
     [HandleError]
     public class ReportController : Controller
     {
+        public ReportController()
+            : this(new TJournalRepository(), new TJournalDetRepository(), new MCostCenterRepository(), new MAccountRepository(), new TRecAccountRepository(), new TRecPeriodRepository(), new MBrandRepository(), new MSupplierRepository(), new MWarehouseRepository(), new MItemRepository(), new TStockCardRepository(), new TStockItemRepository(), new TTransDetRepository())
+        { }
+
         private readonly ITJournalRepository _tJournalRepository;
         private readonly ITJournalDetRepository _tJournalDetRepository;
         private readonly IMCostCenterRepository _mCostCenterRepository;
@@ -34,7 +39,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         private readonly ITStockItemRepository _tStockItemRepository;
         private readonly ITTransDetRepository _tTransDetRepository;
 
-        public ReportController(ITJournalRepository tJournalRepository, ITJournalDetRepository tJournalDetRepository, IMCostCenterRepository mCostCenterRepository, IMAccountRepository mAccountRepository, ITRecAccountRepository tRecAccountRepository, ITRecPeriodRepository tRecPeriodRepository, IMBrandRepository mBrandRepository, IMSupplierRepository mSupplierRepository, IMWarehouseRepository mWarehouseRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository,ITTransDetRepository tTransDetRepository)
+        public ReportController(ITJournalRepository tJournalRepository, ITJournalDetRepository tJournalDetRepository, IMCostCenterRepository mCostCenterRepository, IMAccountRepository mAccountRepository, ITRecAccountRepository tRecAccountRepository, ITRecPeriodRepository tRecPeriodRepository, IMBrandRepository mBrandRepository, IMSupplierRepository mSupplierRepository, IMWarehouseRepository mWarehouseRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransDetRepository tTransDetRepository)
         {
             Check.Require(tJournalRepository != null, "tJournalRepository may not be null");
             Check.Require(tJournalDetRepository != null, "tJournalDetRepository may not be null");
@@ -107,6 +112,11 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     viewModel.ShowItem = true;
                     viewModel.ShowWarehouse = true;
                     break;
+                case EnumReports.RptAnalyzeBudgetDetail:
+                    title = "Lap. Analisa Budget";
+                    viewModel.ShowItem = true;
+                    viewModel.ShowWarehouse = true;
+                    break;
             }
             ViewData["CurrentItem"] = title;
 
@@ -148,6 +158,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                 case EnumReports.RptStockItem:
                     localReport.DataSources.Add(GetStockItem(viewModel.ItemId, viewModel.WarehouseId));
                     break;
+                case EnumReports.RptAnalyzeBudgetDetail:
+                    localReport.DataSources.Add(GetTransDetForBudget(viewModel.ItemId, viewModel.WarehouseId));
+                    break;
             }
 
             string reportType = formCollection["ExportFormat"];
@@ -184,6 +197,38 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             Response.AddHeader("content-disposition", string.Format("attachment; filename={0}.{1}", reports.ToString(), fileNameExtension));
 
             return File(renderedBytes, mimeType);
+        }
+
+        private ReportDataSource GetTransDetForBudget(string itemId, string warehouseId)
+        {
+            IList<TTransDet> dets;
+            MItem item = null;
+            MWarehouse warehouse = null;
+            if (!string.IsNullOrEmpty(itemId))
+                item = _mItemRepository.Get(itemId);
+            if (!string.IsNullOrEmpty(warehouseId))
+                warehouse = _mWarehouseRepository.Get(warehouseId);
+            dets = _tTransDetRepository.GetByItemWarehouse(item, warehouse);
+
+            var list = from det in dets
+                       select new
+                                  {
+                                      det.TransDetNo,
+                                      det.TransDetQty,
+                                      det.TransDetDesc,
+                                      det.TransDetTotal,
+                                      det.TransDetPrice,
+                                      det.TransDetDisc,
+                                      ItemId = det.ItemId.Id,
+                                      det.ItemId.ItemName,
+                                      WarehouseId = det.TransId.WarehouseId.Id,
+                                      det.TransId.WarehouseId.WarehouseName,
+                                      TotalUsed = _tTransDetRepository.GetTotalUsed(det.ItemId, det.TransId.WarehouseId)
+                                  }
+            ;
+
+            ReportDataSource reportDataSource = new ReportDataSource("TransDetViewModel", list);
+            return reportDataSource;
         }
 
         private ReportDataSource GetStockItem(string itemId, string warehouseId)

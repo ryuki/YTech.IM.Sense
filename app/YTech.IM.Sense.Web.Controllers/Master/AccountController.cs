@@ -9,6 +9,7 @@ using SharpArch.Core;
 using SharpArch.Web.NHibernate;
 using YTech.IM.Sense.Core.Master;
 using YTech.IM.Sense.Core.RepositoryInterfaces;
+using YTech.IM.Sense.Data.Repository;
 using YTech.IM.Sense.Enums;
 using YTech.IM.Sense.Web.Controllers.Helper;
 
@@ -17,6 +18,9 @@ namespace YTech.IM.Sense.Web.Controllers.Master
     [HandleError]
     public class AccountController : Controller
     {
+        public AccountController() : this(new MAccountRepository() ,new MAccountCatRepository())
+        {}
+
         private readonly IMAccountRepository _mAccountRepository;
         private readonly IMAccountCatRepository _mAccountCatRepository;
 

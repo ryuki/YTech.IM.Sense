@@ -138,7 +138,7 @@
             );
 
             function GetParents() {
-                var parents = $.ajax({ url: '/Master/Account/GetList?accountCatId=' + $('#AccountCatId option:selected').val(), async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the parents.'); } }).responseText;
+                var parents = $.ajax({ url: '<%= Url.Action("GetList", "Account") %>?accountCatId=' + $('#AccountCatId option:selected').val(), async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the parents.'); } }).responseText;
                 $('#list').setColProp('ParentId', { editoptions: { value: parents} });
 //                alert(parents);
             }

@@ -83,6 +83,9 @@
     <Compile Include="NHibernateMaps\Master\MItemCatMap.cs" />
     <Compile Include="NHibernateMaps\Master\MItemMap.cs" />
     <Compile Include="NHibernateMaps\Master\MItemUomMap.cs" />
+    <Compile Include="NHibernateMaps\Master\MPacketItemCatMap.cs" />
+    <Compile Include="NHibernateMaps\Master\MPacketMap.cs" />
+    <Compile Include="NHibernateMaps\Master\MRoomMap.cs" />
     <Compile Include="NHibernateMaps\Master\MSupplierMap.cs" />
     <Compile Include="NHibernateMaps\Master\MWarehouseMap.cs" />
     <Compile Include="NHibernateMaps\Master\RefAddressMap.cs" />
@@ -95,6 +98,8 @@
     <Compile Include="NHibernateMaps\Transaction\TReferenceMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TStockCardMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TStockItemMap.cs" />
+    <Compile Include="NHibernateMaps\Transaction\TStockMap.cs" />
+    <Compile Include="NHibernateMaps\Transaction\TStockRefMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TTransDetMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TTransMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -108,6 +113,9 @@
     <Compile Include="Repository\MItemCatRepository.cs" />
     <Compile Include="Repository\MItemRepository.cs" />
     <Compile Include="Repository\MItemUomRepository.cs" />
+    <Compile Include="Repository\MPacketItemCatRepository.cs" />
+    <Compile Include="Repository\MPacketRepository.cs" />
+    <Compile Include="Repository\MRoomRepository.cs" />
     <Compile Include="Repository\MSupplierRepository.cs" />
     <Compile Include="Repository\MWarehouseRepository.cs" />
     <Compile Include="Repository\RefAddressRepository.cs" />
@@ -120,13 +128,20 @@
     <Compile Include="Repository\TReferenceRepository.cs" />
     <Compile Include="Repository\TStockCardRepository.cs" />
     <Compile Include="Repository\TStockItemRepository.cs" />
+    <Compile Include="Repository\TStockRefRepository.cs" />
+    <Compile Include="Repository\TStockRepository.cs" />
     <Compile Include="Repository\TTransDetRepository.cs" />
+    <Compile Include="Repository\TTransRefRepository.cs" />
     <Compile Include="Repository\TTransRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\YTech.IM.Sense.Core\YTech.IM.Sense.Core.csproj">
       <Project>{3FBA5ABE-E5A6-40E3-A394-F3BD728677FE}</Project>
       <Name>YTech.IM.Sense.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YTech.IM.Sense.Enums\YTech.IM.Sense.Enums.csproj">
+      <Project>{07256BF4-72B4-46A8-8EF4-C58E26422306}</Project>
+      <Name>YTech.IM.Sense.Enums</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -8,13 +8,18 @@ using SharpArch.Core;
 using SharpArch.Web.NHibernate;
 using YTech.IM.Sense.Core.Master;
 using YTech.IM.Sense.Core.RepositoryInterfaces;
+using YTech.IM.Sense.Data.Repository;
 using YTech.IM.Sense.Enums;
 
 namespace YTech.IM.Sense.Web.Controllers.Master
 {
     [HandleError]
-    public  class DepartmentController : Controller
+    public class DepartmentController : Controller
     {
+        public DepartmentController()
+            : this(new MDepartmentRepository())
+        { }
+
         private readonly IMDepartmentRepository _mDepartmentRepository;
         public DepartmentController(IMDepartmentRepository mDepartmentRepository)
         {
@@ -151,7 +156,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             var brands = _mDepartmentRepository.GetAll();
             StringBuilder sb = new StringBuilder();
             MDepartment mDepartment;
-            sb.AppendFormat("{0}:{1};",string.Empty, "-Pilih Departemen-");
+            sb.AppendFormat("{0}:{1};", string.Empty, "-Pilih Departemen-");
             for (int i = 0; i < brands.Count; i++)
             {
                 mDepartment = brands[i];

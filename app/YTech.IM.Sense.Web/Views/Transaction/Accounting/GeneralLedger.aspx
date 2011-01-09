@@ -1,8 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/MyMaster.master" AutoEventWireup="true"
     Inherits="System.Web.Mvc.ViewPage<GeneralLedgerViewModel>" %>
 
-<%@ Import Namespace="YTech.IM.Sense.Enums" %>
-<%@ Import Namespace="YTech.IM.Sense.Web.Controllers.ViewModel" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script language="javascript" type="text/javascript">
 
@@ -99,7 +97,7 @@
                 //              sortname: 'Id',
                 //              sortorder: "asc",
                 //              viewrecords: true,
-                height: 300,
+                height: 150,
                 caption: 'Daftar Detail',
                 autowidth: true,
                 loadComplete: function () {
@@ -118,7 +116,7 @@
                 deleteDialog
             );
 
-            var accounts = $.ajax({ url: '/Master/Account/GetList', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the accounts.'); } }).responseText;
+                var accounts = $.ajax({ url: '<%= ResolveUrl("~/Master/Account/GetList") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the accounts.'); } }).responseText;
         });
     </script>
 </asp:Content>
@@ -126,37 +124,15 @@
     <%= ViewData.Model.Title %>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
+<%= Html.Partial("~/Views/Shared/Status.ascx",Model) %>
     <% using (Html.BeginForm())
        {%>
     <%=Html.AntiForgeryToken()%>
     <%=Html.Hidden("Journal.Id", (ViewData.Model.Journal != null) ? ViewData.Model.Journal.Id : "")%>
-<%=Html.Hidden("Journal.JournalType", ViewData.Model.Journal.JournalType)%>
-    <%--<div>
-<%=ViewData.Model.Title%>
-</div>--%>
-<% if (TempData[EnumCommonViewData.SaveState.ToString()] != null)
-   {
-       if (TempData[EnumCommonViewData.SaveState.ToString()].Equals(EnumSaveState.Success))
-       {	%>
-    <div class="ui-state-highlight ui-corner-all" style="padding: 5pt; margin-bottom: 5pt;">
-        <p>
-            <span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
-            General Ledger berhasil disimpan.</p>
-    </div>
-    <% }
-       else if (TempData[EnumCommonViewData.SaveState.ToString()].Equals(EnumSaveState.Failed))
-       { %>
-    <div class="ui-state-error ui-corner-all" style="padding: 5pt; margin-bottom: 5pt;">
-        <p>
-            <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-            General Ledger gagal disimpan.
-        </p>
-    </div>
-   <% }
-   } %>
-
+    <%=Html.Hidden("Journal.JournalType", ViewData.Model.Journal.JournalType)%>
+    
     <div>
-        <span id="toolbar" class="ui-widget-header ui-corner-all"><a id="newJournal" href="/Transaction/Accounting/GeneralLedger">
+        <span id="toolbar" class="ui-widget-header ui-corner-all"><a id="newJournal" href="<%= Url.Action("GeneralLedger", "Accounting") %>">
             Baru</a>
             <button id="Save" type="submit">
                 Simpan</button>
@@ -190,6 +166,10 @@
                             <%= Html.ValidationMessage("Journal.JournalVoucherNo")%>
                         </td>
                     </tr>
+                </table>
+            </td>
+            <td>
+            <table>
                     <tr>
                         <td>
                             <label for="Journal_CostCenterId">
@@ -210,9 +190,8 @@
                             <%= Html.ValidationMessage("Journal.JournalDesc")%>
                         </td>
                     </tr>
-                </table>
-            </td>
-            <td>
+            
+            </table>
             </td>
         </tr>
     </table>
