@@ -21,7 +21,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
     public class InventoryController : Controller
     {
         public InventoryController()
-            : this(new TTransRepository(), new MWarehouseRepository(), new MSupplierRepository(), new MItemRepository(), new TStockCardRepository(), new TStockItemRepository(), new TTransRefRepository(), new TStockRepository(), new TStockRefRepository())
+            : this(new TTransRepository(), new MWarehouseRepository(), new MSupplierRepository(), new MItemRepository(), new TStockCardRepository(), new TStockItemRepository(), new TTransRefRepository(), new TStockRepository(), new TStockRefRepository(), new MCustomerRepository())
         {
         }
 
@@ -34,8 +34,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         private readonly ITTransRefRepository _tTransRefRepository;
         private readonly ITStockRepository _tStockRepository;
         private readonly ITStockRefRepository _tStockRefRepository;
+        private readonly IMCustomerRepository _mCustomerRepository;
 
-        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransRefRepository tTransRefRepository, ITStockRepository tStockRepository, ITStockRefRepository tStockRefRepository)
+        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransRefRepository tTransRefRepository, ITStockRepository tStockRepository, ITStockRefRepository tStockRefRepository, IMCustomerRepository mCustomerRepository)
         {
             Check.Require(tTransRepository != null, "tTransRepository may not be null");
             Check.Require(mWarehouseRepository != null, "mWarehouseRepository may not be null");
@@ -46,6 +47,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             Check.Require(tTransRefRepository != null, "tTransRefRepository may not be null");
             Check.Require(tStockRepository != null, "tStockRepository may not be null");
             Check.Require(tStockRefRepository != null, "tStockRefRepository may not be null");
+            Check.Require(mCustomerRepository != null, "mCustomerRepository may not be null");
 
             this._tTransRepository = tTransRepository;
             this._mWarehouseRepository = mWarehouseRepository;
@@ -56,21 +58,23 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             this._tTransRefRepository = tTransRefRepository;
             this._tStockRepository = tStockRepository;
             this._tStockRefRepository = tStockRefRepository;
+            this._mCustomerRepository = mCustomerRepository;
         }
 
         public ActionResult Index()
         {
-            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository);
-            viewModel.Trans = SetNewTrans(EnumTransactionStatus.PurchaseOrder);
-            SetViewModelByStatus(viewModel, EnumTransactionStatus.PurchaseOrder);
+            TransactionFormViewModel viewModel =   SetViewModelByStatus( EnumTransactionStatus.PurchaseOrder);
 
             ListDetTrans = new List<TTransDet>();
 
             return View(viewModel);
         }
 
-        private void SetViewModelByStatus(TransactionFormViewModel viewModel, EnumTransactionStatus enumTransactionStatus)
+        private TransactionFormViewModel SetViewModelByStatus(EnumTransactionStatus enumTransactionStatus)
         {
+            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository, _mCustomerRepository);
+            viewModel.Trans = SetNewTrans(enumTransactionStatus);
+
             switch (enumTransactionStatus)
             {
                 case EnumTransactionStatus.PurchaseOrder:
@@ -104,8 +108,26 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     viewModel.ViewPaymentMethod = true;
                     break;
                 case EnumTransactionStatus.Sales:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Penjualan";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewSupplier = false;
+                    viewModel.ViewCustomer = true;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = true;
                     break;
                 case EnumTransactionStatus.ReturSales:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Retur Penjualan";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewSupplier = false;
+                    viewModel.ViewCustomer = true;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = true;
                     break;
                 case EnumTransactionStatus.Using:
                     viewModel.ViewWarehouse = true;
@@ -160,6 +182,8 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
 
             ViewData["CurrentItem"] = viewModel.Title;
             //ViewData[EnumCommonViewData.SaveState.ToString()] = EnumSaveState.NotSaved;
+
+            return viewModel;
         }
 
         private TTrans SetNewTrans(EnumTransactionStatus enumTransactionStatus)
@@ -174,11 +198,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
 
         public ActionResult Purchase()
         {
-            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository);
-            viewModel.Trans = SetNewTrans(EnumTransactionStatus.Purchase);
-            SetViewModelByStatus(viewModel, EnumTransactionStatus.Purchase);
+          TransactionFormViewModel viewModel= SetViewModelByStatus(EnumTransactionStatus.Purchase);
 
-            ListTransRef = new List<TTransRef>();
+            ListDetTrans = new List<TTransDet>();
             return View(viewModel);
         }
 
@@ -187,7 +209,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Purchase(TTrans Trans, FormCollection formCollection)
         {
-            return SaveTransactionRef(Trans, formCollection);
+            return SaveTransaction(Trans, formCollection);
         }
 
         private ActionResult SaveTransactionRef(TTrans Trans, FormCollection formCollection)
@@ -240,9 +262,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
 
         public ActionResult ReturPurchase()
         {
-            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository);
-            viewModel.Trans = SetNewTrans(EnumTransactionStatus.ReturPurchase);
-            SetViewModelByStatus(viewModel, EnumTransactionStatus.ReturPurchase);
+            TransactionFormViewModel viewModel = SetViewModelByStatus( EnumTransactionStatus.ReturPurchase);
 
 
             ListDetTrans = new List<TTransDet>();
@@ -259,9 +279,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
 
         public ActionResult Using()
         {
-            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository);
-            viewModel.Trans = SetNewTrans(EnumTransactionStatus.Using);
-            SetViewModelByStatus(viewModel, EnumTransactionStatus.Using);
+            TransactionFormViewModel viewModel = SetViewModelByStatus( EnumTransactionStatus.Using);
 
 
             ListDetTrans = new List<TTransDet>();
@@ -278,9 +296,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
 
         public ActionResult Received()
         {
-            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository);
-            viewModel.Trans = SetNewTrans(EnumTransactionStatus.Received);
-            SetViewModelByStatus(viewModel, EnumTransactionStatus.Received);
+            TransactionFormViewModel viewModel = SetViewModelByStatus( EnumTransactionStatus.Received);
 
 
             ListDetTrans = new List<TTransDet>();
@@ -297,9 +313,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
 
         public ActionResult Mutation()
         {
-            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository);
-            viewModel.Trans = SetNewTrans(EnumTransactionStatus.Mutation);
-            SetViewModelByStatus(viewModel, EnumTransactionStatus.Mutation);
+            TransactionFormViewModel viewModel = SetViewModelByStatus( EnumTransactionStatus.Mutation);
 
 
             ListDetTrans = new List<TTransDet>();
@@ -317,9 +331,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         [Transaction]
         public ActionResult Adjusment()
         {
-            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository);
-            viewModel.Trans = SetNewTrans(EnumTransactionStatus.Adjusment);
-            SetViewModelByStatus(viewModel, EnumTransactionStatus.Adjusment);
+            TransactionFormViewModel viewModel =   SetViewModelByStatus( EnumTransactionStatus.Adjusment);
 
 
             ListDetTrans = new List<TTransDet>();
@@ -507,7 +519,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             return Content("success");
         }
 
-        
+
 
         private void TransferFormValuesTo(TTransDet transDet, TTransDet viewModel)
         {
@@ -578,6 +590,10 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     break;
                 case EnumTransactionStatus.Mutation:
                     addStock = false;
+                    calculateStock = true;
+                    break;
+                case EnumTransactionStatus.Purchase:
+                    addStock = true;
                     calculateStock = true;
                     break;
             }
@@ -773,9 +789,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
 
         public ActionResult Budgeting()
         {
-            TransactionFormViewModel viewModel = TransactionFormViewModel.CreateTransactionFormViewModel(_tTransRepository, _mWarehouseRepository, _mSupplierRepository);
-            viewModel.Trans = SetNewTrans(EnumTransactionStatus.Budgeting);
-            SetViewModelByStatus(viewModel, EnumTransactionStatus.Budgeting);
+            TransactionFormViewModel viewModel = SetViewModelByStatus( EnumTransactionStatus.Budgeting);
 
 
             ListDetTrans = new List<TTransDet>();
@@ -786,6 +800,40 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         [Transaction]                   // Wraps a transaction around the action
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Budgeting(TTrans Trans, FormCollection formCollection)
+        {
+            return SaveTransaction(Trans, formCollection);
+        }
+
+        public ActionResult Sales()
+        {
+            TransactionFormViewModel viewModel = SetViewModelByStatus(EnumTransactionStatus.Sales);
+
+
+            ListDetTrans = new List<TTransDet>();
+            return View(viewModel);
+        }
+
+        [ValidateAntiForgeryToken]      // Helps avoid CSRF attacks
+        [Transaction]                   // Wraps a transaction around the action
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Sales(TTrans Trans, FormCollection formCollection)
+        {
+            return SaveTransaction(Trans, formCollection);
+        }
+
+        public ActionResult ReturSales()
+        {
+            TransactionFormViewModel viewModel = SetViewModelByStatus(EnumTransactionStatus.ReturSales);
+
+
+            ListDetTrans = new List<TTransDet>();
+            return View(viewModel);
+        }
+
+        [ValidateAntiForgeryToken]      // Helps avoid CSRF attacks
+        [Transaction]                   // Wraps a transaction around the action
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ReturSales(TTrans Trans, FormCollection formCollection)
         {
             return SaveTransaction(Trans, formCollection);
         }
