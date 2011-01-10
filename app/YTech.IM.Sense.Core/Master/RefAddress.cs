@@ -26,6 +26,13 @@ namespace YTech.IM.Sense.Core.Master
         public virtual DateTime? ModifiedDate { get; set; }
         public virtual byte[] RowVersion { get; set; }
 
+        public virtual string Address
+        {
+            get
+            {
+                return string.Format("{0} {1} {2}", this.AddressLine1, this.AddressLine2, AddressLine3);
+            }
+        }
         #region Implementation of IHasAssignedId<string>
 
         public virtual void SetAssignedIdTo(string assignedId)

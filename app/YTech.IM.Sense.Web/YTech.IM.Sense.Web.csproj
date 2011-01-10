@@ -298,6 +298,7 @@
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Master\Account\Index.aspx" />
     <Content Include="Views\Master\Brand\Index.aspx" />
+    <Content Include="Views\Master\Customer\Index.aspx" />
     <Content Include="Views\Master\CostCenter\Index.aspx" />
     <Content Include="Views\Master\Department\Index.aspx" />
     <Content Include="Views\Master\Employee\Index.aspx" />
@@ -320,6 +321,8 @@
     <Content Include="Views\Transaction\Accounting\Closing.aspx" />
     <Content Include="Views\Transaction\Accounting\GeneralLedger.aspx" />
     <Content Include="Views\Transaction\Inventory\Adjusment.aspx" />
+    <Content Include="Views\Transaction\Inventory\ReturSales.aspx" />
+    <Content Include="Views\Transaction\Inventory\Sales.aspx" />
     <Content Include="Views\Transaction\Inventory\Index.aspx" />
     <Content Include="Views\Transaction\Inventory\Mutation.aspx" />
     <Content Include="Views\Transaction\Inventory\Purchase.aspx" />

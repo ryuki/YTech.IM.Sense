@@ -39,19 +39,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="EnumAccountCatType.cs" />
     <Compile Include="EnumCommonViewData.cs" />
+    <Compile Include="EnumCustomerStatus.cs" />
     <Compile Include="EnumDataStatus.cs" />
     <Compile Include="EnumExportFormat.cs" />
+    <Compile Include="EnumPersonGender.cs" />
     <Compile Include="EnumJournalStatus.cs" />
     <Compile Include="EnumJournalType.cs" />
     <Compile Include="EnumPaymentMethod.cs" />
     <Compile Include="EnumPeriodType.cs" />
     <Compile Include="EnumReferenceType.cs" />
+    <Compile Include="EnumPersonReligion.cs" />
     <Compile Include="EnumReports.cs" />
     <Compile Include="EnumRoomType.cs" />
     <Compile Include="EnumSaveState.cs" />
+    <Compile Include="EnumMassageStrength.cs" />
     <Compile Include="EnumTransactionStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

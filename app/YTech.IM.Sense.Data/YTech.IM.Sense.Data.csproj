@@ -78,6 +78,7 @@
     <Compile Include="NHibernateMaps\Master\MAccountRefMap.cs" />
     <Compile Include="NHibernateMaps\Master\MBrandMap.cs" />
     <Compile Include="NHibernateMaps\Master\MCostCenterMap.cs" />
+    <Compile Include="NHibernateMaps\Master\MCustomerMap.cs" />
     <Compile Include="NHibernateMaps\Master\MDepartmentMap.cs" />
     <Compile Include="NHibernateMaps\Master\MEmployeeMap.cs" />
     <Compile Include="NHibernateMaps\Master\MItemCatMap.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Repository\MAccountRepository.cs" />
     <Compile Include="Repository\MBrandRepository.cs" />
     <Compile Include="Repository\MCostCenterRepository.cs" />
+    <Compile Include="Repository\MCustomerRepository.cs" />
     <Compile Include="Repository\MDepartmentRepository.cs" />
     <Compile Include="Repository\MEmployeeRepository.cs" />
     <Compile Include="Repository\MItemCatRepository.cs" />

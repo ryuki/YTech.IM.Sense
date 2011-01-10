@@ -5,18 +5,21 @@ using SharpArch.Core;
 
 namespace YTech.IM.Sense.Core.Master
 {
-   public class MEmployee : EntityWithTypedId<string>, IHasAssignedId<string>
+    public class MCustomer : EntityWithTypedId<string>, IHasAssignedId<string>
     {
         [DomainSignature]
         [NotNull, NotEmpty]
         public virtual RefPerson PersonId { get; set; }
-        public virtual MDepartment DepartmentId { get; set; }
-        public virtual string EmployeeStatus { get; set; }
-        public virtual string EmployeeDesc { get; set; }
-        public virtual string EmployeeCommissionProductType { get; set; }
-        public virtual string EmployeeCommissionServiceType { get; set; }
-        public virtual decimal? EmployeeCommissionProductVal { get; set; }
-        public virtual decimal? EmployeeCommissionServiceVal { get; set; }
+        public virtual RefAddress AddressId { get; set; }
+        public virtual decimal? CustomerMaxCredit { get; set; }
+        public virtual decimal? CustomerServiceDisc { get; set; }
+        public virtual decimal? CustomerProductDisc { get; set; }
+        public virtual DateTime? CustomerJoinDate { get; set; }
+        public virtual DateTime? CustomerLastBuy { get; set; }
+        public virtual string CustomerMassageStrength { get; set; }
+        public virtual string CustomerHealthProblem { get; set; }
+        public virtual string CustomerStatus { get; set; }
+        public virtual string CustomerDesc { get; set; }
 
         public virtual string DataStatus { get; set; }
         public virtual string CreatedBy { get; set; }

@@ -6,7 +6,7 @@
         <div>
             <%=Html.ActionLinkForAreas<HomeController>(c => c.Index(), "Home") %></div>
     </div>
-    <% //if (Request.IsAuthenticated)
+    <% if (Request.IsAuthenticated)
        {
 %>
     <h3>
@@ -29,6 +29,8 @@
         </div>
         <div>
             <%= Html.ActionLinkForAreas<SupplierController>(c => c.Index(),"Master Supplier") %></div>
+        <div>
+            <%= Html.ActionLinkForAreas<CustomerController>(c => c.Index(),"Master Pelanggan") %></div>
         <div>
             <hr />
         </div>
@@ -54,6 +56,16 @@
             <%= Html.ActionLinkForAreas<InventoryController>(c => c.Purchase(), "Pembelian")%></div>
         <div>
             <%= Html.ActionLinkForAreas<InventoryController>(c => c.ReturPurchase(), "Retur Pembelian")%></div>
+            <div><hr /></div>
+        <div>
+            <%= Html.ActionLinkForAreas<InventoryController>(c => c.Sales(), "Penjualan")%></div>
+        <div>
+           <%= Html.ActionLinkForAreas<InventoryController>(c => c.ReturSales(), "Retur Penjualan")%></div>
+        <div>
+           Billing</div>
+            
+            <div><hr /></div>
+
         <div>
             <%= Html.ActionLinkForAreas<InventoryController>(c => c.Mutation(), "Mutasi Stok")%></div>
         <div>

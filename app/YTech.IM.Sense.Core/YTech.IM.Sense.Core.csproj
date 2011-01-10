@@ -68,6 +68,7 @@
     <Compile Include="Master\MAccountRef.cs" />
     <Compile Include="Master\MBrand.cs" />
     <Compile Include="Master\MCostCenter.cs" />
+    <Compile Include="Master\MCustomer.cs" />
     <Compile Include="Master\MDepartment.cs" />
     <Compile Include="Master\MEmployee.cs" />
     <Compile Include="Master\MItem.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="RepositoryInterfaces\IMAccountRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMBrandRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMCostCenterRepository.cs" />
+    <Compile Include="RepositoryInterfaces\IMCustomerRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMDepartmentRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMEmployeeRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMItemCatRepository.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Web.Mvc;
 using YTech.IM.Sense.Core.Transaction;
 using YTech.IM.Sense.Enums;
 using YTech.IM.Sense.Data.Repository;
@@ -102,29 +103,26 @@ namespace YTech.IM.Sense.Web.Controllers.Helper
             return factur;
         }
 
-        //public static IEnumerable<T> WriteHtmlLi<T>(IEnumerable<T> composites)
-        //{
-        //    foreach (var composite in composites)
-        //    {
-        //        yield return composite;
-        //    }
-        //}
+        public static string GetEnumListForGrid<T>(string defaultText)
+        {
+            if (!typeof(T).IsEnum)
+            {
+                throw new Exception("Type object must enum");
+            }
+            var lists = from T e in Enum.GetValues(typeof(T))
+                        select new { ID = e, Name = e.ToString() };
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("{0}:{1};", string.Empty, defaultText);
 
-        //public class Functional
-        //{
-
-        //    private delegate Func<A, R> Recursive<A, R>(Recursive<A, R> r);
-
-        //    public static Func<A, R> Y<A, R>(Func<Func<A, R>, Func<A, R>> f)
-        //    {
-
-        //        Recursive<A, R> rec = r => a => f(r(r))(a);
-
-        //        return rec(rec);
-
-        //    }
-
-        //}
+            for (int i = 0; i < lists.Count(); i++)
+            {
+                var obj = lists.ElementAt(i);
+                sb.AppendFormat("{0}:{1}", obj.ID, obj.Name);
+                if (i < lists.Count() - 1)
+                    sb.Append(";");
+            }
+            return (sb.ToString());
+        }
 
 
 

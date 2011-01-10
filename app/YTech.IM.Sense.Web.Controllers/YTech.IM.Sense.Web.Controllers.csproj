@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="Master\AccountController.cs" />
     <Compile Include="Master\BrandController.cs" />
+    <Compile Include="Master\CustomerController.cs" />
     <Compile Include="Master\CostCenterController.cs" />
     <Compile Include="Master\DepartmentController.cs" />
     <Compile Include="Master\EmployeeController.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Utility\UserAccountController.cs" />
     <Compile Include="Utility\UserAdministrationController.cs" />
     <Compile Include="Utility\UtilityAreaRegistration.cs" />
+    <Compile Include="ViewModel\BillingViewModel.cs" />
     <Compile Include="ViewModel\CashFormViewModel.cs" />
     <Compile Include="ViewModel\ClosingViewModel.cs" />
     <Compile Include="ViewModel\GeneralLedgerViewModel.cs" />

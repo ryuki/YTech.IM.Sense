@@ -23,13 +23,20 @@ namespace YTech.IM.Sense.Core.Master
         public virtual string PersonIdCardNo { get; set; }
         public virtual string PersonDesc { get; set; }
 
-
         public virtual string DataStatus { get; set; }
         public virtual string CreatedBy { get; set; }
         public virtual DateTime? CreatedDate { get; set; }
         public virtual string ModifiedBy { get; set; }
         public virtual DateTime? ModifiedDate { get; set; }
         public virtual byte[] RowVersion { get; set; }
+
+        public virtual string PersonName
+        {
+            get
+            {
+                return string.Format("{0} {1}", this.PersonFirstName, this.PersonLastName);
+            }
+        }
 
         #region Implementation of IHasAssignedId<string>
 
