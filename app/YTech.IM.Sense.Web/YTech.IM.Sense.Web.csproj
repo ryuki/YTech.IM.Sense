@@ -157,7 +157,6 @@
     <Reference Include="System.Web.Mobile" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Code\Utils.cs" />
     <Compile Include="CastleWindsor\ComponentRegistrar.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -170,6 +169,13 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportViewer.aspx.cs">
+      <DependentUpon>ReportViewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportViewer.aspx.designer.cs">
+      <DependentUpon>ReportViewer.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\complex.css" />
@@ -207,6 +213,7 @@
     <Content Include="Content\Images\color_palette.png" />
     <Content Include="Content\Images\compability.png" />
     <Content Include="Content\Images\ConditionalFormattingHighlight.png" />
+    <Content Include="Content\Images\cross.gif" />
     <Content Include="Content\Images\CustomFormattingHighlight.png" />
     <Content Include="Content\Images\DynamicSelectedSkins.png" />
     <Content Include="Content\Images\faq.png" />
@@ -217,6 +224,7 @@
     <Content Include="Content\Images\home-icon.png" />
     <Content Include="Content\Images\hoverSkins.png" />
     <Content Include="Content\Images\l.gif" />
+    <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\Mvc2Validation.png" />
     <Content Include="Content\Images\navigation-menu.png" />
     <Content Include="Content\Images\New.png" />
@@ -225,6 +233,7 @@
     <Content Include="Content\Images\product.png" />
     <Content Include="Content\Images\r.gif" />
     <Content Include="Content\Images\remembermilk_orange.gif" />
+    <Content Include="Content\Images\sense logo.jpg" />
     <Content Include="Content\Images\settings.png" />
     <Content Include="Content\Images\sfheader.png" />
     <Content Include="Content\Images\shadow.png" />
@@ -242,6 +251,7 @@
     <Content Include="Content\Images\topleft.png" />
     <Content Include="Content\Images\topright.png" />
     <Content Include="Content\Images\Trial-Button.png" />
+    <Content Include="Content\Images\window16.gif" />
     <Content Include="Content\img\80ade5_40x100_textures_04_highlight_hard_100.png" />
     <Content Include="Content\img\D1E6FC_40x100_textures_10_dots_medium_90.png" />
     <Content Include="Content\img\d6d6d6_40x100_textures_02_glass_80.png" />
@@ -274,7 +284,9 @@
     <Content Include="NHibernate.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\autoNumeric-1.6.2.js" />
     <Content Include="Scripts\complex.js" />
+    <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\default.js" />
     <Content Include="Scripts\grid.locale-en.js" />
     <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
@@ -286,32 +298,41 @@
     <Content Include="Scripts\jquery.layout.state.js" />
     <Content Include="Scripts\jquery.maskedinput-1.2.2.min.js" />
     <Content Include="Scripts\jquery.mousewheel-3.0.4.js" />
+    <Content Include="Scripts\NumberFormat.js" />
+    <Content Include="Scripts\jquery.tooltip.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\MicrosoftAjax.debug.js" />
     <Content Include="Scripts\MicrosoftAjax.js" />
     <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
     <Content Include="Scripts\MicrosoftMvcAjax.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
+    <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Scripts\Templates\MicrosoftAjax.js" />
     <Content Include="Scripts\Templates\MicrosoftAjaxAdoNet.js" />
     <Content Include="Scripts\Templates\MicrosoftAjaxTemplates.js" />
     <Content Include="Views\Home\Index.aspx" />
+    <Content Include="Views\Master\Account\Search.aspx" />
     <Content Include="Views\Master\Account\Index.aspx" />
     <Content Include="Views\Master\Brand\Index.aspx" />
+    <Content Include="Views\Master\Customer\Search.aspx" />
     <Content Include="Views\Master\Customer\Index.aspx" />
     <Content Include="Views\Master\CostCenter\Index.aspx" />
     <Content Include="Views\Master\Department\Index.aspx" />
+    <Content Include="Views\Master\Employee\Search.aspx" />
     <Content Include="Views\Master\Employee\Index.aspx" />
+    <Content Include="Views\Master\Item\Search.aspx" />
     <Content Include="Views\Master\Item\Index.aspx" />
     <Content Include="Views\Master\MItemCat\Index.aspx" />
     <Content Include="Views\Master\PacketItemCat\AddPacketItemCat.aspx" />
     <Content Include="Views\Master\PacketItemCat\Index.aspx" />
+    <Content Include="Views\Master\Packet\Search.aspx" />
     <Content Include="Views\Master\Packet\Index.aspx" />
     <Content Include="Views\Master\Room\Index.aspx" />
     <Content Include="Views\Master\Supplier\Index.aspx" />
     <Content Include="Views\Master\Warehouse\Index.aspx" />
     <Content Include="Views\Shared\Error.aspx" />
     <Content Include="Views\Shared\DebugFormSubmission.ascx" />
+    <Content Include="Views\Shared\Js.ascx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Shared\Menu.ascx" />
     <Content Include="Views\Shared\Status.ascx" />
@@ -320,7 +341,10 @@
     <Content Include="Views\Transaction\Accounting\CashOut.aspx" />
     <Content Include="Views\Transaction\Accounting\Closing.aspx" />
     <Content Include="Views\Transaction\Accounting\GeneralLedger.aspx" />
+    <Content Include="Views\Transaction\HR\Absent.aspx" />
     <Content Include="Views\Transaction\Inventory\Adjusment.aspx" />
+    <Content Include="Views\Transaction\Inventory\Billing.aspx" />
+    <Content Include="Views\Transaction\Inventory\Payment.ascx" />
     <Content Include="Views\Transaction\Inventory\ReturSales.aspx" />
     <Content Include="Views\Transaction\Inventory\Sales.aspx" />
     <Content Include="Views\Transaction\Inventory\Index.aspx" />
@@ -330,6 +354,7 @@
     <Content Include="Views\Transaction\Inventory\TransactionForm.ascx" />
     <Content Include="Views\Transaction\Report\Report.aspx" />
     <Content Include="Views\Transaction\Report\ReportParamForm.ascx" />
+    <Content Include="ReportViewer.aspx" />
     <Content Include="Views\Utility\UserAccount\ChangePassword.aspx" />
     <Content Include="Views\Utility\UserAccount\ChangePasswordSuccess.aspx" />
     <Content Include="Views\Utility\UserAccount\LogOn.aspx" />
@@ -346,6 +371,10 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\YTech.IM.Sense.ApplicationServices\YTech.IM.Sense.ApplicationServices.csproj">
+      <Project>{A5229126-50BA-4193-A937-66D4A61EFD1F}</Project>
+      <Name>YTech.IM.Sense.ApplicationServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\YTech.IM.Sense.Enums\YTech.IM.Sense.Enums.csproj">
       <Project>{07256BF4-72B4-46A8-8EF4-C58E26422306}</Project>
       <Name>YTech.IM.Sense.Enums</Name>
@@ -374,6 +403,7 @@
     <EmbeddedResource Include="Views\Transaction\Report\RptJournal.rdlc" />
     <EmbeddedResource Include="Views\Transaction\Report\RptLR.rdlc" />
     <EmbeddedResource Include="Views\Transaction\Report\RptNeraca.rdlc" />
+    <EmbeddedResource Include="Views\Transaction\Report\RptPrintFacturService.rdlc" />
     <EmbeddedResource Include="Views\Transaction\Report\RptStockCard.rdlc" />
     <EmbeddedResource Include="Views\Transaction\Report\RptStockItem.rdlc" />
   </ItemGroup>
@@ -391,12 +421,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1062</DevelopmentServerPort>
+          <DevelopmentServerPort>44509</DevelopmentServerPort>
           <DevelopmentServerVPath>/Sense</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost:81/sense</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

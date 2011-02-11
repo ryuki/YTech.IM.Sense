@@ -22,6 +22,10 @@ namespace YTech.IM.Sense.Data.NHibernateMaps.Master
             mapping.References(x => x.DepartmentId, "DEPARTMENT_ID").Fetch.Join();
             mapping.Map(x => x.EmployeeStatus, "EMPLOYEE_STATUS");
             mapping.Map(x => x.EmployeeDesc, "EMPLOYEE_DESC");
+            mapping.Map(x => x.EmployeeCommissionProductType, "EMPLOYEE_COMMISSION_PRODUCT_TYPE");
+            mapping.Map(x => x.EmployeeCommissionServiceType, "EMPLOYEE_COMMISSION_SERVICE_TYPE");
+            mapping.Map(x => x.EmployeeCommissionProductVal, "EMPLOYEE_COMMISSION_PRODUCT_VAL");
+            mapping.Map(x => x.EmployeeCommissionServiceVal, "EMPLOYEE_COMMISSION_SERVICE_VAL");
 
             mapping.Map(x => x.DataStatus, "DATA_STATUS");
             mapping.Map(x => x.CreatedBy, "CREATED_BY");

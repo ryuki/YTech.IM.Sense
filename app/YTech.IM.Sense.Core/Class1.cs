@@ -1,4 +1,4 @@
-namespace YTech.IM.Sense.Core
+﻿namespace YTech.IM.Sense.Core
 {
     /// <summary>
     /// This is a placeholder class so that YTech.IM.Sense.Data.NHibernateMaps.AutoPersistenceModelGenerator 

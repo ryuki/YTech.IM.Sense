@@ -11,5 +11,11 @@ namespace YTech.IM.Sense.Core.RepositoryInterfaces
         IList<TTransDet> GetByItemWarehouse(MItem item, MWarehouse warehouse);
 
         decimal? GetTotalUsed(MItem item, MWarehouse warehouse);
+
+        IList<TTransDet> GetListByRoom(MRoom room);
+
+        IList<TTransDet> GetListByTransId(string transId, Enums.EnumTransactionStatus enumTransactionStatus);
+
+        IList<TTransDet> GetListByTrans(TTrans trans);
     }
 }

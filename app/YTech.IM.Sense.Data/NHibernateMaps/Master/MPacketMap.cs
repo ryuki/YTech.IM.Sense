@@ -32,6 +32,13 @@ namespace YTech.IM.Sense.Data.NHibernateMaps.Master
             mapping.Map(x => x.ModifiedDate, "MODIFIED_DATE");
             mapping.Map(x => x.RowVersion, "ROW_VERSION").ReadOnly();
 
+            mapping.HasMany(x => x.PacketItemCats)
+                //.Access.Property()
+                .AsBag()
+                .Inverse()
+                .KeyColumn("PACKET_ID")
+                .Cascade.All();
+
         }
 
         #endregion

@@ -13,27 +13,33 @@ using YTech.IM.Sense.Enums;
 
 namespace YTech.IM.Sense.Web.Controllers.Master
 {
-     [HandleError]
+    [HandleError]
     public class WarehouseController : Controller
     {
-           public WarehouseController() : this(new MWarehouseRepository(), new RefAddressRepository(), new MEmployeeRepository(), new MCostCenterRepository())
-           {}
+        //public WarehouseController() : this(new MWarehouseRepository(), new RefAddressRepository(), new MEmployeeRepository(), new MCostCenterRepository())
+        //{}
 
         private readonly IMWarehouseRepository _mWarehouseRepository;
         private readonly IRefAddressRepository _refAddressRepository;
         private readonly IMEmployeeRepository _mEmployeeRepository;
         private readonly IMCostCenterRepository _mCostCenterRepository;
-        public WarehouseController(IMWarehouseRepository mWarehouseRepository, IRefAddressRepository refAddressRepository, IMEmployeeRepository mEmployeeRepository, IMCostCenterRepository mCostCenterRepository)
+        private readonly IMAccountRefRepository _mAccountRefRepository;
+        private readonly IMAccountRepository _mAccountRepository;
+        public WarehouseController(IMWarehouseRepository mWarehouseRepository, IRefAddressRepository refAddressRepository, IMEmployeeRepository mEmployeeRepository, IMCostCenterRepository mCostCenterRepository, IMAccountRefRepository mAccountRefRepository, IMAccountRepository mAccountRepository)
         {
             Check.Require(mWarehouseRepository != null, "mWarehouseRepository may not be null");
             Check.Require(refAddressRepository != null, "refAddressRepository may not be null");
             Check.Require(mEmployeeRepository != null, "mEmployeeRepository may not be null");
             Check.Require(mCostCenterRepository != null, "mCostCenterRepository may not be null");
+            Check.Require(mAccountRefRepository != null, "mAccountRefRepository may not be null");
+            Check.Require(mAccountRepository != null, "mAccountRepository may not be null");
 
             this._mWarehouseRepository = mWarehouseRepository;
             this._refAddressRepository = refAddressRepository;
             this._mEmployeeRepository = mEmployeeRepository;
             this._mCostCenterRepository = mCostCenterRepository;
+            this._mAccountRefRepository = mAccountRefRepository;
+            this._mAccountRepository = mAccountRepository;
         }
 
 
@@ -68,6 +74,8 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                             warehouse.EmployeeId != null?  warehouse.EmployeeId.PersonId.PersonFirstName : null,
                             warehouse.CostCenterId != null?  warehouse.CostCenterId.CostCenterName : null,
                             warehouse.CostCenterId != null?  warehouse.CostCenterId.Id : null,
+                       GetAccountRef(warehouse.Id) != null ? GetAccountRef(warehouse.Id).AccountId.Id : null,
+                         GetAccountRef(warehouse.Id) != null ? GetAccountRef(warehouse.Id).AccountId.AccountName : null,
                           warehouse.AddressId != null?  warehouse.AddressId.AddressLine1 : null,
                           warehouse.AddressId != null?  warehouse.AddressId.AddressLine2 : null,
                           warehouse.AddressId != null?  warehouse.AddressId.AddressLine3 : null,
@@ -80,6 +88,16 @@ namespace YTech.IM.Sense.Web.Controllers.Master
 
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
+        private MAccountRef GetAccountRef(string warehouseId)
+        {
+            MAccountRef accountRef = _mAccountRefRepository.GetByRefTableId(EnumReferenceTable.Warehouse, warehouseId);
+            if (accountRef != null)
+            {
+                return accountRef;
+            }
+            return null;
         }
 
         [Transaction]
@@ -104,6 +122,14 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             mWarehouseToInsert.DataStatus = EnumDataStatus.New.ToString();
             mWarehouseToInsert.AddressId = address;
             _mWarehouseRepository.Save(mWarehouseToInsert);
+
+            MAccountRef accountRef = new MAccountRef();
+            accountRef.SetAssignedIdTo(Guid.NewGuid().ToString());
+            accountRef.ReferenceId = mWarehouseToInsert.Id;
+            accountRef.ReferenceTable = EnumReferenceTable.Warehouse.ToString();
+            accountRef.ReferenceType = EnumReferenceTable.Warehouse.ToString();
+            accountRef.AccountId = _mAccountRepository.Get(formCollection["AccountId"]);
+            _mAccountRefRepository.Save(accountRef);
 
             try
             {
@@ -166,6 +192,29 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             mWarehouseToUpdate.AddressId.AddressCity = formCollection["AddressCity"];
 
             _mWarehouseRepository.Update(mWarehouseToUpdate);
+
+            bool isSave = false;
+            MAccountRef accountRef = GetAccountRef(mWarehouseToUpdate.Id);
+            if (accountRef == null)
+            {
+                accountRef = new MAccountRef();
+                accountRef.SetAssignedIdTo(Guid.NewGuid().ToString());
+                isSave = true;
+            }
+            accountRef.ReferenceId = mWarehouseToUpdate.Id;
+            accountRef.ReferenceTable = EnumReferenceTable.Warehouse.ToString();
+            accountRef.ReferenceType = EnumReferenceTable.Warehouse.ToString();
+            accountRef.AccountId = _mAccountRepository.Get(formCollection["AccountId"]);
+            if (isSave)
+            {
+                _mAccountRefRepository.Save(accountRef);
+            }
+            else
+            {
+                _mAccountRefRepository.Update(accountRef);
+
+            }
+
 
             try
             {

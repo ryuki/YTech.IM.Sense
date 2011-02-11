@@ -28,19 +28,19 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
             viewModel.WarehouseList = new SelectList(list, "Id", "WarehouseName");
             viewModel.WarehouseToList = new SelectList(list, "Id", "WarehouseName");
 
-            IList<MSupplier> listSupplier = mSupplierRepository.GetAll();
-            MSupplier mSupplier = new MSupplier();
-            mSupplier.SupplierName = "-Pilih Supplier-";
-            listSupplier.Insert(0, mSupplier);
-            viewModel.SupplierList = new SelectList(listSupplier, "Id", "SupplierName");
+            //IList<MSupplier> listSupplier = mSupplierRepository.GetAll();
+            //MSupplier mSupplier = new MSupplier();
+            //mSupplier.SupplierName = "-Pilih Supplier-";
+            //listSupplier.Insert(0, mSupplier);
+            //viewModel.SupplierList = new SelectList(listSupplier, "Id", "SupplierName");
 
-            var listCustomer = mCustomerRepository.GetAll();
-            MCustomer mCustomer = new MCustomer();
-            //mCustomer.SupplierName = "-Pilih Supplier-";
-            listCustomer.Insert(0, mCustomer);
-            var custs = from cust in listCustomer
-                        select new { Id = cust.Id, Name =cust.PersonId.PersonName };
-            viewModel.CustomerList = new SelectList(custs, "Id", "Name");
+            //var listCustomer = mCustomerRepository.GetAll();
+            //MCustomer mCustomer = new MCustomer();
+            ////mCustomer.SupplierName = "-Pilih Supplier-";
+            //listCustomer.Insert(0, mCustomer);
+            //var custs = from cust in listCustomer
+            //            select new { Id = cust.Id, Name =cust.PersonId.PersonName };
+            //viewModel.TransByList = new SelectList(custs, "Id", "Name");
 
             //fill payment method
             var values = from EnumPaymentMethod e in Enum.GetValues(typeof(EnumPaymentMethod))
@@ -49,9 +49,10 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
             viewModel.PaymentMethodList = new SelectList(values, "Id", "Name");
 
             viewModel.ViewWarehouseTo = false;
-            viewModel.ViewSupplier = false;
+            viewModel.ViewTransBy = false;
             viewModel.ViewDate = false;
             viewModel.ViewFactur = false;
+            viewModel.UsePrice = EnumPrice.None;
 
             return viewModel;
         }
@@ -61,18 +62,20 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
 
         public SelectList WarehouseList { get; internal set; }
         public SelectList WarehouseToList { get; internal set; }
-        public SelectList SupplierList { get; internal set; }
-        public SelectList CustomerList { get; internal set; }
+        //public SelectList SupplierList { get; internal set; }
+        public SelectList TransByList { get; internal set; }
         public SelectList PaymentMethodList { get; internal set; }
         public bool ViewWarehouse { get; internal set; }
         public bool ViewWarehouseTo { get; internal set; }
-        public bool ViewSupplier { get; internal set; }
+        public bool ViewTransBy { get; internal set; }
         public bool ViewCustomer { get; internal set; }
         public bool ViewDate { get; internal set; }
         public bool ViewFactur { get; internal set; }
         public bool ViewPrice { get; internal set; }
         public bool ViewPaymentMethod { get; internal set; }
         public string Title { get; internal set; }
+        public string TransByText { get; internal set; }
+        public EnumPrice UsePrice { get; internal set; }
 
     }
 }

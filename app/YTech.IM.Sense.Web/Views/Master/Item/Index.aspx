@@ -77,23 +77,38 @@
                 url: '<%= Url.Action("List", "Item") %>',
                 datatype: 'json',
                 mtype: 'GET',
-                colNames: ['Kode Produk', 'Nama', 'Kategori Produk', 'Kategori Produk', 'Merek', 'Merek', 'Satuan', 'Satuan', 'Harga', 'Keterangan'],
+                colNames: ['Kode Produk', 'Nama', 'Kategori Perawatan', 'Kategori Perawatan', 'Merek', 'Merek', 'Satuan', 'Satuan', 'Harga Beli', 'Harga Jual', 'Keterangan'],
                 colModel: [
                     { name: 'Id', index: 'Id', width: 100, align: 'left', key: true, editrules: { required: true, edithidden: false }, hidedlg: true, hidden: false, editable: true },
                     { name: 'ItemName', index: 'ItemName', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { required: true }, formoptions: { elmsuffix: ' *'} },
-                    { name: 'ItemCatId', index: 'ItemCatId', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { edithidden: true },hidden:true },
-                    { name: 'ItemCatName', index: 'ItemCatName', width: 200, align: 'left', editable: false, edittype: 'select', editrules: { edithidden: true } },
+                    { name: 'ItemCatId', index: 'ItemCatId', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { edithidden: true }, hidden: true },
+                    { name: 'ItemCatName', index: 'ItemCatName', width: 200, align: 'left', editable: false, edittype: 'select', editrules: { edithidden: true} },
                     { name: 'BrandId', index: 'BrandId', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { edithidden: true }, hidden: true },
                     { name: 'BrandName', index: 'BrandName', width: 200, align: 'left', editable: false, edittype: 'select', editrules: { edithidden: true} },
                     { name: 'ItemUomId', index: 'ItemUomId', width: 200, align: 'left', editable: false, editrules: { edithidden: true }, hidden: true },
                     { name: 'ItemUomName', index: 'ItemUomName', width: 200, editable: true, editrules: { edithidden: true} },
-                    { name: 'ItemUomPurchasePrice', index: 'ItemUomPurchasePrice', width: 200, editable: true, editrules: { edithidden: true, number: true }, formatter: 'number' },
+                    { name: 'ItemUomPurchasePrice', index: 'ItemUomPurchasePrice', width: 200, align: 'right', editable: true, editrules: { edithidden: true },
+                        editoptions: {
+                            dataInit: function (elem) {
+                                $(elem).autoNumeric();
+                                $(elem).attr("style", "text-align:right;");
+                            }
+                        }
+                    },
+                    { name: 'ItemUomSalePrice', index: 'ItemUomSalePrice', width: 200, align: 'right', editable: true, editrules: { edithidden: true },
+                        editoptions: {
+                            dataInit: function (elem) {
+                                $(elem).autoNumeric();
+                                $(elem).attr("style", "text-align:right;");
+                            }
+                        }
+                    },
                    { name: 'ItemDesc', index: 'ItemDesc', width: 200, sortable: false, align: 'left', editable: true, edittype: 'textarea', editoptions: { rows: "3", cols: "20" }, editrules: { required: false}}],
 
                 pager: $('#listPager'),
                 rowNum: 20,
                 rowList: [20, 30, 50, 100],
-                rownumbers: true, 
+                rownumbers: true,
                 sortname: 'Id',
                 sortorder: "asc",
                 viewrecords: true,
@@ -119,7 +134,7 @@
             var itemCats = $.ajax({ url: '<%= Url.Action("GetList","MItemCat") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the ItemCats.'); } }).responseText;
             var brands = $.ajax({ url: '<%= Url.Action("GetList","Brand") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the Brands.'); } }).responseText;
 
-//            alert(brands.toString());
+            //            alert(brands.toString());
         });
     </script>
     <div id="dialog" title="Status">

@@ -16,8 +16,9 @@ namespace YTech.IM.Sense.Web.Controllers.Master
     [HandleError]
     public class ItemController : Controller
     {
-        public ItemController() : this(new MItemRepository(),new MItemCatRepository(), new MBrandRepository ())
-        {}
+        public ItemController()
+            : this(new MItemRepository(), new MItemCatRepository(), new MBrandRepository())
+        { }
 
         private readonly IMItemRepository _mItemRepository;
         private readonly IMItemCatRepository _mItemCatRepository;
@@ -33,6 +34,46 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             this._mBrandRepository = mBrandRepository;
         }
 
+        public ActionResult Search()
+        {
+            return View();
+        }
+
+        [Transaction]
+        public virtual ActionResult ListSearch(string sidx, string sord, int page, int rows, string itemId, string itemName)
+        {
+            int totalRecords = 0;
+            var itemCats = _mItemRepository.GetPagedItemList(sidx, sord, page, rows, ref totalRecords, itemId, itemName);
+            int pageSize = rows;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from itemCat in itemCats
+                    select new
+                    {
+                        i = itemCat.Id.ToString(),
+                        cell = new string[] {
+                            itemCat.Id, 
+                            itemCat.ItemName, 
+                           itemCat.ItemCatId != null ? itemCat.ItemCatId.ItemCatName : null,
+                           itemCat.BrandId != null ? itemCat.BrandId.BrandName : null,
+                           itemCat.ItemUoms.Count > 0 ? itemCat.ItemUoms[0].ItemUomName : null,
+                       itemCat.ItemUoms.Count > 0 ?  itemCat.ItemUoms[0].ItemUomPurchasePrice.HasValue ? itemCat.ItemUoms[0].ItemUomPurchasePrice.Value.ToString(Helper.CommonHelper.NumberFormat) : "0" : "0",
+                       itemCat.ItemUoms.Count > 0 ?  itemCat.ItemUoms[0].ItemUomSalePrice.HasValue ? itemCat.ItemUoms[0].ItemUomSalePrice.Value.ToString(Helper.CommonHelper.NumberFormat) : "0" : "0", 
+                            itemCat.ItemDesc
+                        }
+                    }).ToArray()
+            };
+
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult Index()
         {
@@ -43,7 +84,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         public virtual ActionResult List(string sidx, string sord, int page, int rows)
         {
             int totalRecords = 0;
-            var itemCats = _mItemRepository.GetPagedItemList(sidx, sord, page, rows, ref totalRecords);
+            var itemCats = _mItemRepository.GetPagedItemList(sidx, sord, page, rows, ref totalRecords, null, null);
             int pageSize = rows;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
@@ -66,7 +107,8 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                            itemCat.BrandId != null ? itemCat.BrandId.BrandName : null,
                          itemCat.ItemUoms.Count > 0 ?   itemCat.ItemUoms[0].Id : null,
                            itemCat.ItemUoms.Count > 0 ? itemCat.ItemUoms[0].ItemUomName : null,
-                       itemCat.ItemUoms.Count > 0 ?    itemCat.ItemUoms[0].ItemUomPurchasePrice.Value.ToString() : "0",
+                            itemCat.ItemUoms.Count > 0 ?  itemCat.ItemUoms[0].ItemUomPurchasePrice.HasValue ? itemCat.ItemUoms[0].ItemUomPurchasePrice.Value.ToString(Helper.CommonHelper.NumberFormat) : null : null,
+                       itemCat.ItemUoms.Count > 0 ?  itemCat.ItemUoms[0].ItemUomSalePrice.HasValue ? itemCat.ItemUoms[0].ItemUomSalePrice.Value.ToString(Helper.CommonHelper.NumberFormat) : null : null,  
                             itemCat.ItemDesc
                         }
                     }).ToArray()
@@ -78,8 +120,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
 
         [Transaction]
         public ActionResult Insert(MItem viewModel, FormCollection formCollection)
-        {
-
+        { 
             MItem mItemToInsert = new MItem();
             TransferFormValuesTo(mItemToInsert, viewModel);
             mItemToInsert.ItemCatId = _mItemCatRepository.Get(formCollection["ItemCatId"]);
@@ -96,7 +137,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
 
             MItemUom itemUom = new MItemUom(mItemToInsert);
             itemUom.ItemUomName = formCollection["ItemUomName"];
-            itemUom.ItemUomPurchasePrice = Convert.ToDecimal(formCollection["ItemUomPurchasePrice"]);
+            UpdateNumericData(itemUom, formCollection);
             itemUom.SetAssignedIdTo(Guid.NewGuid().ToString());
 
             mItemToInsert.ItemUoms.Add(itemUom);
@@ -180,7 +221,8 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                 itemUom = mItemToUpdate.ItemUoms[0];
             }
             itemUom.ItemUomName = formCollection["ItemUomName"];
-            itemUom.ItemUomPurchasePrice = Convert.ToDecimal(formCollection["ItemUomPurchasePrice"]);
+            UpdateNumericData(itemUom, formCollection);
+           
 
             mItemToUpdate.ItemUoms.Clear();
             mItemToUpdate.ItemUoms.Add(itemUom);
@@ -200,6 +242,28 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             }
 
             return Content("success");
+        }
+
+        private static void UpdateNumericData(MItemUom itemUom, FormCollection formCollection)
+        {
+            if (!string.IsNullOrEmpty(formCollection["ItemUomPurchasePrice"]))
+            {
+                string ItemUomPurchasePrice = formCollection["ItemUomPurchasePrice"].Replace(",", "");
+                itemUom.ItemUomPurchasePrice = Convert.ToDecimal(ItemUomPurchasePrice);
+            }
+            else
+            {
+                itemUom.ItemUomPurchasePrice = null;
+            }
+            if (!string.IsNullOrEmpty(formCollection["ItemUomSalePrice"]))
+            {
+                string ItemUomSalePrice = formCollection["ItemUomSalePrice"].Replace(",", "");
+                itemUom.ItemUomSalePrice = Convert.ToDecimal(ItemUomSalePrice);
+            }
+            else
+            {
+                itemUom.ItemUomSalePrice = null;
+            }
         }
 
         private void TransferFormValuesTo(MItem mItemToUpdate, MItem mItemFromForm)
@@ -236,7 +300,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                 if (mItem.ItemUoms.Count > 0)
                 {
                     if (mItem.ItemUoms[0].ItemUomPurchasePrice.HasValue)
-                        return Content(mItem.ItemUoms[0].ItemUomPurchasePrice.Value.ToString(Helper.CommonHelper.NumberFormat).Replace(",",""));
+                        return Content(mItem.ItemUoms[0].ItemUomPurchasePrice.Value.ToString(Helper.CommonHelper.NumberFormat).Replace(",", ""));
                 }
             }
             return Content("0");

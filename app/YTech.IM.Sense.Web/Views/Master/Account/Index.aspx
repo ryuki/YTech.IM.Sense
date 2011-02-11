@@ -2,8 +2,10 @@
     Inherits="System.Web.Mvc.ViewPage<IEnumerable<MAccount>>" %>
 
 <asp:Content ID="indexContent" ContentPlaceHolderID="MainContent" runat="server">
-    Kategori Akun :
+    <div>  
+    <label for="AccountCatId">Kategori Akun :</label>   
     <%= Html.DropDownList("AccountCatId", (SelectList)ViewData["AccountCatList"])%>
+     </div>
     <table id="list" class="scroll" cellpadding="0" cellspacing="0">
     </table>
     <div id="listPager" class="scroll" style="text-align: center;">

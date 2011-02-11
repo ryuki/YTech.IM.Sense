@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using NHibernate;
 using NHibernate.Criterion;
 using SharpArch.Data.NHibernate;
 using YTech.IM.Sense.Core.Master;
 using YTech.IM.Sense.Core.RepositoryInterfaces;
+using YTech.IM.Sense.Enums;
 
 namespace YTech.IM.Sense.Data.Repository
 {
@@ -28,6 +31,22 @@ namespace YTech.IM.Sense.Data.Repository
 
             IEnumerable<MRoom> list = criteria.List<MRoom>();
             return list;
+        }
+
+        public IList<MRoom> GetListByRoomType(EnumRoomType enumRoomType)
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine(@"   select r,troom
+                                from TTransRoom as troom
+                                right outer join MRoom as r
+                                    where troom.RoomStatus = :RoomStatus ");
+
+            ICriteria criteria = Session.CreateCriteria(typeof (MRoom))
+                .Add(Expression.Eq("RoomType", enumRoomType.ToString()))
+                .Add(Expression.Not(Expression.Eq("RoomStatus", EnumRoomStatus.Off.ToString())))
+                .AddOrder(new Order("RoomOrderNo", true))
+                ;
+            return criteria.List<MRoom>();
         }
 
         #endregion

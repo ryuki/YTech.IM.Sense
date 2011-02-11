@@ -6,6 +6,7 @@ namespace YTech.IM.Sense.Core.RepositoryInterfaces
 {
     public interface IMAccountRefRepository : INHibernateRepositoryWithTypedId<MAccountRef, string>
     {
-        
+
+        MAccountRef GetByRefTableId(Enums.EnumReferenceTable enumReferenceTable, string warehouseId);
     }
 }

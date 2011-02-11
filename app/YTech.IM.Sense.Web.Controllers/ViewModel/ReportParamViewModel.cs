@@ -40,9 +40,9 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
             viewModel.SupplierList = new SelectList(listSupplier, "Id", "SupplierName");
 
             IList<TRecPeriod> listRecPeriod = tRecPeriodRepository.GetAll();
-            TRecPeriod recPeriod = new TRecPeriod();
-            recPeriod.PeriodDesc = "-Pilih Period-";
-            listRecPeriod.Insert(0, recPeriod);
+            //TRecPeriod recPeriod = new TRecPeriod();
+            //recPeriod.PeriodDesc = "-Pilih Period-";
+            //listRecPeriod.Insert(0, recPeriod);
             viewModel.RecPeriodList = new SelectList(listRecPeriod, "Id", "PeriodDesc");
 
             IList<MItem> listItem = mItemRepository.GetAll();
@@ -76,6 +76,7 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
         public string SupplierId { get; set; }
         public string RecPeriodId { get; set; }
         public string ItemId { get; set; }
+        public string TransId { get; set; }
 
         public SelectList CostCenterList { get; internal set; }
         public SelectList WarehouseList { get; internal set; }

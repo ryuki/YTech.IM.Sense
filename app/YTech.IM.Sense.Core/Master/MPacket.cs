@@ -1,4 +1,5 @@
-﻿using NHibernate.Validator.Constraints;
+﻿using System.Collections.Generic;
+using NHibernate.Validator.Constraints;
 using SharpArch.Core.DomainModel;
 using System;
 using SharpArch.Core;
@@ -8,11 +9,24 @@ namespace YTech.IM.Sense.Core.Master
 {
     public class MPacket : EntityWithTypedId<string>, IHasAssignedId<string>
     {
+        public MPacket()
+        {
+            InitMembers();
+        }
+
+        /// <summary>
+        /// Since we want to leverage automatic properties, init appropriate members here.
+        /// </summary>
+        private void InitMembers()
+        {
+            PacketItemCats = new List<MPacketItemCat>();
+        }
+
         [DomainSignature]
         [NotNull, NotEmpty]
         public virtual string PacketName { get; set; }
-        public virtual double PacketPrice { get; set; }
-        public virtual double PacketPriceVip { get; set; }
+        public virtual decimal? PacketPrice { get; set; }
+        public virtual decimal? PacketPriceVip { get; set; }
         public virtual string PacketStatus { get; set; }
         public virtual string PacketDesc { get; set; }
 
@@ -22,6 +36,8 @@ namespace YTech.IM.Sense.Core.Master
         public virtual string ModifiedBy { get; set; }
         public virtual DateTime? ModifiedDate { get; set; }
         public virtual byte[] RowVersion { get; set; }
+
+        public virtual IList<MPacketItemCat> PacketItemCats { get; protected set; }
 
         #region Implementation of IHasAssignedId<string>
 

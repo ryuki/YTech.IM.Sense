@@ -33,6 +33,12 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             this._mAccountCatRepository = mAccountCatRepository;
         }
 
+        public ActionResult Search()
+        {
+            IList<MAccountCat> list = _mAccountCatRepository.GetAll();
+            ViewData["AccountCatList"] = new SelectList(list, "Id", "AccountCatName");
+            return View();
+        }
 
         public ActionResult Index()
         {

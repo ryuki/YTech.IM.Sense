@@ -1,7 +1,7 @@
-<%@ Page Language="C#" MasterPageFile="~/Views/Shared/MasterPopup.master" AutoEventWireup="true"
+﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/MasterPopup.master" AutoEventWireup="true"
     Inherits="System.Web.Mvc.ViewPage<IEnumerable<MPacketItemCat>>" %>
 
-<asp:Content ID="popupContent" ContentPlaceHolderID="PopupContent" runat="server">
+<asp:Content ID="popupContent" ContentPlaceHolderID="MainContent" runat="server">
     <table id="list" class="scroll" cellpadding="0" cellspacing="0">
     </table>
     <div id="listPager" class="scroll" style="text-align: center;">
@@ -156,21 +156,29 @@
             $.jgrid.nav.addtext = "Tambah";
             $.jgrid.nav.edittext = "Edit";
             $.jgrid.nav.deltext = "Hapus";
-            $.jgrid.edit.addCaption = "Tambah Paket Item Kategori Baru";
-            $.jgrid.edit.editCaption = "Edit Paket Item Kategori";
-            $.jgrid.del.caption = "Hapus Produk";
-            $.jgrid.del.msg = "Anda yakin menghapus Paket Item Kategori yang dipilih?";
+            $.jgrid.edit.addCaption = "Tambah Paket Perawatan Baru";
+            $.jgrid.edit.editCaption = "Edit Paket Perawatan";
+            $.jgrid.del.caption = "Hapus Paket Perawatan";
+            $.jgrid.del.msg = "Anda yakin menghapus Paket Perawatan yang dipilih?";
 
 //            alert(packetId);
             $("#list").jqGrid({
                 url: '<%= Url.Action("List", "PacketItemCat") %>?id=' + packetId,
                 datatype: 'json',
                 mtype: 'GET',
-                colNames: ['Kode Paket Item Kategori', 'Kode Kategori Item', 'Kuantitas', 'Status', 'Deskripsi'],
+                colNames: ['Kode Paket Perawatan', 'Kategori Perawatan', 'Kategori Perawatan', 'Kuantitas', 'Status', 'Deskripsi'],
                 colModel: [
                     { name: 'Id', index: 'Id', width: 100, align: 'left', key: true, editrules: { required: true, edithidden: false }, hidedlg: true, hidden: true, editable: false },
-                    { name: 'ItemCatId', index: 'ItemCatId', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { required: true }, formoptions: { elmsuffix: ' *'} },
-                    { name: 'ItemCatQty', index: 'ItemCatQty', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { edithidden: true }, hidden: false },
+                    { name: 'ItemCatId', index: 'ItemCatId', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { required: true,edithidden: true }, formoptions: { elmsuffix: ' *'}, hidden:true },
+                    { name: 'ItemCatName', index: 'ItemCatName', width: 200, align: 'left', editable: false, edittype: 'select', editrules: { required: true,edithidden: true }, formoptions: { elmsuffix: ' *'} },
+                    { name: 'ItemCatQty', index: 'ItemCatQty', width: 200, align: 'right', editable: true, edittype: 'text', editrules: { edithidden: true }, hidden: false,
+                        editoptions: {
+                            dataInit: function (elem) {
+                                $(elem).autoNumeric();
+                                $(elem).attr("style", "text-align:right;");
+                            }
+                        }
+                    },
                     { name: 'PacketItemCatStatus', index: 'PacketItemCatStatus', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { edithidden: true} },
                     { name: 'PacketItemCatDesc', index: 'PacketItemCatDesc', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { edithidden: true }, hidden: false}],
 
@@ -182,7 +190,7 @@
                 sortorder: "asc",
                 viewrecords: true,
                 height: 250,
-                caption: 'Daftar Paket',
+                caption: 'Daftar Paket Perawatan',
                 autowidth: true,
                 loadComplete: function () {
                     $('#list').setColProp('ItemCatId', { editoptions: { value: itemCats} });

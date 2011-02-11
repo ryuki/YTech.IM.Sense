@@ -6,6 +6,6 @@ namespace YTech.IM.Sense.Core.RepositoryInterfaces
 {
     public interface IMCustomerRepository : INHibernateRepositoryWithTypedId<MCustomer, string>
     {
-        IEnumerable<MCustomer> GetPagedCustomerList(string orderCol, string orderBy, int pageIndex, int maxRows, ref int totalRows);
+        IEnumerable<MCustomer> GetPagedCustomerList(string orderCol, string orderBy, int pageIndex, int maxRows, ref int totalRows, string searchBy, string searchText);
     }
 }

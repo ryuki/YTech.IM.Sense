@@ -101,6 +101,7 @@
     <Compile Include="RepositoryInterfaces\IMWarehouseRepository.cs" />
     <Compile Include="RepositoryInterfaces\IRefAddressRepository.cs" />
     <Compile Include="RepositoryInterfaces\IRefPersonRepository.cs" />
+    <Compile Include="RepositoryInterfaces\ITAbsentRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITJournalDetRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITJournalRefRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITJournalRepository.cs" />
@@ -111,14 +112,19 @@
     <Compile Include="RepositoryInterfaces\ITStockItemRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITStockRefRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITStockRepository.cs" />
+    <Compile Include="RepositoryInterfaces\ITTransDetItemRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITTransDetRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITTransRefRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITTransRepository.cs" />
+    <Compile Include="RepositoryInterfaces\ITTransRoomRepository.cs" />
     <Compile Include="Transaction\Accounting\TJournal.cs" />
     <Compile Include="Transaction\Accounting\TJournalDet.cs" />
     <Compile Include="Transaction\Accounting\TJournalRef.cs" />
     <Compile Include="Transaction\Accounting\TRecAccount.cs" />
     <Compile Include="Transaction\Accounting\TRecPeriod.cs" />
+    <Compile Include="Transaction\HR\TAbsent.cs" />
+    <Compile Include="Transaction\Inventory\TTransDetItem.cs" />
+    <Compile Include="Transaction\Inventory\TTransRoom.cs" />
     <Compile Include="Transaction\Inventory\TStock.cs" />
     <Compile Include="Transaction\Inventory\TStockCard.cs" />
     <Compile Include="Transaction\Inventory\TStockItem.cs" />

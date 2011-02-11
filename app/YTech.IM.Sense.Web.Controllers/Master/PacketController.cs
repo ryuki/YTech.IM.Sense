@@ -24,6 +24,11 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         }
 
 
+        public ActionResult Search()
+        {
+            return View();
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -51,8 +56,8 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                             string.Empty,
                             packet.Id, 
                             packet.PacketName, 
-                           packet.PacketPrice.ToString(),
-                           packet.PacketPriceVip.ToString(),
+                         packet.PacketPrice.HasValue ?  packet.PacketPrice.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
+                          packet.PacketPriceVip.HasValue ?  packet.PacketPriceVip.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
                            packet.PacketStatus,
                            packet.PacketDesc
                         }
@@ -66,6 +71,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         [Transaction]
         public ActionResult Insert(MPacket viewModel, FormCollection formCollection)
         {
+            UpdateNumericData(viewModel, formCollection);
 
             MPacket mPacketToInsert = new MPacket();
             TransferFormValuesTo(mPacketToInsert, viewModel);
@@ -96,8 +102,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         [Transaction]
         public ActionResult Delete(MItem viewModel, FormCollection formCollection)
         {
-            MPacket mPacketToDelete = _mPacketRepository.Get(viewModel.Id);
-
+            MPacket mPacketToDelete = _mPacketRepository.Get(viewModel.Id); 
             if (mPacketToDelete != null)
             {
                 _mPacketRepository.Delete(mPacketToDelete);
@@ -121,6 +126,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         [Transaction]
         public ActionResult Update(MPacket viewModel, FormCollection formCollection)
         {
+            UpdateNumericData(viewModel, formCollection);
             MPacket mPacketToUpdate = _mPacketRepository.Get(viewModel.Id);
             TransferFormValuesTo(mPacketToUpdate, viewModel);
             mPacketToUpdate.ModifiedDate = DateTime.Now;
@@ -140,6 +146,28 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             }
 
             return Content("success");
+        }
+
+        private static void UpdateNumericData(MPacket viewModel, FormCollection formCollection)
+        {
+            if (!string.IsNullOrEmpty(formCollection["PacketPrice"]))
+            {
+                string PacketPrice = formCollection["PacketPrice"].Replace(",", "");
+                viewModel.PacketPrice = Convert.ToDecimal(PacketPrice);
+            }
+            else
+            {
+                viewModel.PacketPrice = null;
+            }
+            if (!string.IsNullOrEmpty(formCollection["PacketPriceVip"]))
+            {
+                string PacketPriceVip = formCollection["PacketPriceVip"].Replace(",", "");
+                viewModel.PacketPriceVip = Convert.ToDecimal(PacketPriceVip);
+            }
+            else
+            {
+                viewModel.PacketPriceVip = null;
+            }
         }
 
         private void TransferFormValuesTo(MPacket mPacketToUpdate, MPacket mPacketFromForm)

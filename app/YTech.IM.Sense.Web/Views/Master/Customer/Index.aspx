@@ -72,15 +72,15 @@
             $.jgrid.nav.addtext = "Tambah";
             $.jgrid.nav.edittext = "Edit";
             $.jgrid.nav.deltext = "Hapus";
-            $.jgrid.edit.addCaption = "Tambah Pelanggan Baru";
-            $.jgrid.edit.editCaption = "Edit Pelanggan";
-            $.jgrid.del.caption = "Hapus Pelanggan";
-            $.jgrid.del.msg = "Anda yakin menghapus Pelanggan yang dipilih?";
+            $.jgrid.edit.addCaption = "Tambah Konsumen Baru";
+            $.jgrid.edit.editCaption = "Edit Konsumen";
+            $.jgrid.del.caption = "Hapus Konsumen";
+            $.jgrid.del.msg = "Anda yakin menghapus Konsumen yang dipilih?";
             $("#list").jqGrid({
                 url: '<%= Url.Action("List", "Customer") %>',
                 datatype: 'json',
                 mtype: 'GET',
-                colNames: ['Kode Pelanggan',
+                colNames: ['Kode Konsumen',
                             'Nama',
                             '',
                             'Nama',
@@ -116,8 +116,22 @@
                    { name: 'CustomerHealthProblem', index: 'CustomerHealthProblem', width: 200, hidden: true, align: 'left', editable: true, edittype: 'textarea', editoptions: { rows: "3", cols: "20" }, editrules: { required: false, edithidden: true} },
                    { name: 'CustomerJoinDate', index: 'CustomerJoinDate', width: 200, hidden: true, align: 'left', editable: true, edittype: 'text', editrules: { required: false, edithidden: true} },
                    { name: 'CustomerLastBuy', index: 'CustomerLastBuy', width: 200, hidden: false, align: 'left', editable: true, edittype: 'text', editrules: { required: false, edithidden: true} },
-                   { name: 'CustomerProductDisc', index: 'CustomerProductDisc', width: 200, hidden: true, align: 'left', editable: true, edittype: 'text', editrules: { required: false, edithidden: true} },
-                   { name: 'CustomerServiceDisc', index: 'CustomerServiceDisc', width: 200, hidden: true, align: 'left', editable: true, edittype: 'text', editrules: { required: false, edithidden: true} },
+                   { name: 'CustomerProductDisc', index: 'CustomerProductDisc', width: 200, hidden: true, align: 'left', editable: true, edittype: 'text', editrules: { required: false, edithidden: true },
+                       editoptions: {
+                           dataInit: function (elem) {
+                               $(elem).autoNumeric();
+                               $(elem).attr("style", "text-align:right;");
+                           }
+                       }
+                   },
+                   { name: 'CustomerServiceDisc', index: 'CustomerServiceDisc', width: 200, hidden: true, align: 'left', editable: true, edittype: 'text', editrules: { required: false, edithidden: true },
+                       editoptions: {
+                           dataInit: function (elem) {
+                               $(elem).autoNumeric();
+                               $(elem).attr("style", "text-align:right;");
+                           }
+                       }
+                   },
                  { name: 'CustomerStatus', index: 'CustomerStatus', width: 200, hidden: true, sortable: false, align: 'left', editable: true, edittype: 'checkbox', editoptions: { value: "Aktif:Tidak Aktif" }, editrules: { required: false} },
                    { name: 'CustomerMassageStrength', index: 'CustomerMassageStrength', width: 200, hidden: true, align: 'left', editable: true, edittype: 'select', editrules: { required: false, edithidden: true} },
                      { name: 'CustomerDesc', index: 'CustomerDesc', width: 200, hidden: true, sortable: false, align: 'left', editable: true, edittype: 'textarea', editoptions: { rows: "3", cols: "20" }, editrules: { required: false, edithidden: true} }
@@ -131,7 +145,7 @@
                 sortorder: "asc",
                 viewrecords: true,
                 height: 300,
-                caption: 'Daftar Pelanggan',
+                caption: 'Daftar Konsumen',
                 autowidth: true,
                 loadComplete: function () {
                     $('#list').setColProp('PersonGender', { editoptions: { value: genders} });

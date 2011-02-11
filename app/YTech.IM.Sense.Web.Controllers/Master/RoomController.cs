@@ -167,17 +167,17 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             return Content(sb.ToString());
         }
 
-        [Transaction]
-        public virtual ActionResult GetRoomType()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0}:{1};", string.Empty, "-Pilih Tipe Ruangan-");
-            sb.AppendFormat("{0}:{1}", EnumRoomType.SpaMan.ToString(), EnumRoomType.SpaMan.ToString());
-            sb.Append(";");
-            sb.AppendFormat("{0}:{1}", EnumRoomType.SpaWomen.ToString(), EnumRoomType.SpaWomen.ToString());
+        //[Transaction]
+        //public virtual ActionResult GetRoomType()
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    sb.AppendFormat("{0}:{1};", string.Empty, "-Pilih Tipe Ruangan-");
+        //    sb.AppendFormat("{0}:{1}", EnumRoomType.SpaMan.ToString(), EnumRoomType.SpaMan.ToString());
+        //    sb.Append(";");
+        //    sb.AppendFormat("{0}:{1}", EnumRoomType.SpaWomen.ToString(), EnumRoomType.SpaWomen.ToString());
             
-            return Content(sb.ToString());
-        }
+        //    return Content(sb.ToString());
+        //}
 
         [Transaction]
         public virtual ActionResult Get(string id)
@@ -187,6 +187,16 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                 MRoom mRoom = _mRoomRepository.Get(id);
             }
             return Content("0");
+        }
+
+        public virtual ActionResult GetRoomTypeList()
+        {
+            return Content(Helper.CommonHelper.GetEnumListForGrid<EnumRoomType>("-Pilih Tipe Kamar-"));
+        }
+
+        public virtual ActionResult GetRoomStatusList()
+        {
+            return Content(Helper.CommonHelper.GetEnumListForGrid<EnumRoomStatus>("-Pilih Status Kamar-"));
         }
     }
 }

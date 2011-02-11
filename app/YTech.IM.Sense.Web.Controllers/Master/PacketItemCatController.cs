@@ -59,7 +59,8 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                             itemCat.Id, 
                             //itemCat.PacketId != null ? itemCat.PacketId.Id : null, 
                            itemCat.ItemCatId != null ? itemCat.ItemCatId.Id : null,
-                           itemCat.ItemCatQty.ToString(),
+                           itemCat.ItemCatId != null ? itemCat.ItemCatId.ItemCatName : null,
+                          itemCat.ItemCatQty.HasValue ?  itemCat.ItemCatQty.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
                            itemCat.PacketItemCatStatus,
                            itemCat.PacketItemCatDesc
                         }
@@ -125,7 +126,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                            //itemCat.Id, 
                            //itemCat.PacketId != null ? itemCat.PacketId.Id : null, 
                            itemCat.ItemCatId != null ? itemCat.ItemCatId.ItemCatName : null,
-                           itemCat.ItemCatQty.ToString(),
+                            itemCat.ItemCatQty.HasValue ?  itemCat.ItemCatQty.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
                            itemCat.PacketItemCatStatus,
                            itemCat.PacketItemCatDesc
                         }
@@ -145,7 +146,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         [Transaction]
         public ActionResult Insert(MPacketItemCat viewModel, FormCollection formCollection)
         {
-
+            UpdateNumericData(viewModel, formCollection);
             MPacketItemCat mPacketItemCatToInsert = new MPacketItemCat();
             TransferFormValuesTo(mPacketItemCatToInsert, viewModel);
             mPacketItemCatToInsert.ItemCatId = _mItemCatRepository.Get(formCollection["ItemCatId"]);
@@ -181,7 +182,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         [Transaction]
         public ActionResult PopupInsert(MPacketItemCat viewModel, FormCollection formCollection, string packetId)
         {
-
+            UpdateNumericData(viewModel, formCollection);
             MPacketItemCat mPacketItemCatToInsert = new MPacketItemCat();
             TransferFormValuesTo(mPacketItemCatToInsert, viewModel);
             mPacketItemCatToInsert.ItemCatId = _mItemCatRepository.Get(formCollection["ItemCatId"]);
@@ -242,6 +243,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         [Transaction]
         public ActionResult Update(MPacketItemCat viewModel, FormCollection formCollection)
         {
+            UpdateNumericData(viewModel, formCollection);
             MPacketItemCat mPacketItemCatToUpdate = _mPacketItemCatRepository.Get(viewModel.Id);
             mPacketItemCatToUpdate.ItemCatId = _mItemCatRepository.Get(formCollection["ItemCatId"]);
             //mPacketItemCatToUpdate.PacketId = _mPacketRepository.Get(formCollection["PacketId"]);
@@ -265,6 +267,19 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             }
 
             return Content("success");
+        }
+
+        private void UpdateNumericData(MPacketItemCat viewModel, FormCollection formCollection)
+        {
+            if (!string.IsNullOrEmpty(formCollection["ItemCatQty"]))
+            {
+                string ItemCatQty = formCollection["ItemCatQty"].Replace(",", "");
+                viewModel.ItemCatQty = Convert.ToDecimal(ItemCatQty);
+            }
+            else
+            {
+                viewModel.ItemCatQty = null;
+            }
         }
 
         private void TransferFormValuesTo(MPacketItemCat mPacketItemCatToUpdate, MPacketItemCat mPacketItemCatFromForm)

@@ -86,10 +86,17 @@
                 colModel: [
                     { name: 'Id', index: 'Id', width: 100, align: 'left', key: true, editrules: { required: true, edithidden: false }, hidedlg: true, hidden: false, editable: true },
                     { name: 'CostCenterName', index: 'CostCenterName', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { required: true }, formoptions: { elmsuffix: ' *'} },
-                       { name: 'CostCenterTotalBudget', index: 'CostCenterTotalBudget', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false, number: true }, formatter: 'number' },
+                       { name: 'CostCenterTotalBudget', index: 'CostCenterTotalBudget', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false },
+                           editoptions: {
+                               dataInit: function (elem) {
+                                   $(elem).autoNumeric();
+                                   $(elem).attr("style", "text-align:right;");
+                               }
+                           }
+                       },
                    { name: 'CostCenterStatus', index: 'CostCenterStatus', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { required: false} },
-                       { name: 'CostCenterStartDate', index: 'CostCenterStartDate', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false } },
-                       { name: 'CostCenterEndDate', index: 'CostCenterEndDate', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false } },
+                       { name: 'CostCenterStartDate', index: 'CostCenterStartDate', width: 200, sortable: false, align: 'left', editable: true, editrules: { required: false} },
+                       { name: 'CostCenterEndDate', index: 'CostCenterEndDate', width: 200, sortable: false, align: 'left', editable: true, editrules: { required: false} },
                    { name: 'CostCenterDesc', index: 'CostCenterDesc', width: 200, sortable: false, align: 'left', editable: true, edittype: 'textarea', editoptions: { rows: "3", cols: "20" }, editrules: { required: false }}],
 
                 pager: $('#listPager'),

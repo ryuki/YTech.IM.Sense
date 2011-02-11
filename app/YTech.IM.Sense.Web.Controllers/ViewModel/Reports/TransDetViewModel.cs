@@ -14,5 +14,7 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel.Reports
         public decimal TotalUsed { get; set; }
         public string WarehouseId { get; set; }
         public string WarehouseName { get; set; }
+        public string PacketName { get; set; }
+        public string EmployeeName { get; set; }
     }
 }

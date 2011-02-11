@@ -34,10 +34,48 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             this._refPersonRepository = refPersonRepository;
         }
 
+        public ActionResult Search()
+        {
+            return View();
+        }
 
         public ActionResult Index()
         {
             return View();
+        }
+
+        [Transaction]
+        public virtual ActionResult ListSearch(string sidx, string sord, int page, int rows, string searchBy, string searchText)
+        {
+            int totalRecords = 0;
+            var sups = _mCustomerRepository.GetPagedCustomerList(sidx, sord, page, rows, ref totalRecords, searchBy, searchText);
+            int pageSize = rows;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            var jsonData = new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from sup in sups
+                    select new
+                    {
+                        i = sup.Id.ToString(),
+                        cell = new string[] {
+                            sup.Id,  
+                          sup.PersonId != null?  sup.PersonId.PersonName : null,  
+                          sup.PersonId != null?  sup.PersonId.PersonGender : null, 
+                            sup.CustomerHealthProblem, 
+                            sup.CustomerProductDisc.HasValue ? sup.CustomerProductDisc.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
+                            sup.CustomerServiceDisc.HasValue ? sup.CustomerServiceDisc.Value.ToString(Helper.CommonHelper.NumberFormat) : null, 
+                            sup.CustomerMassageStrength,
+                            sup.CustomerDesc,
+                        }
+                    }).ToArray()
+            };
+
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -45,7 +83,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         public virtual ActionResult List(string sidx, string sord, int page, int rows)
         {
             int totalRecords = 0;
-            var sups = _mCustomerRepository.GetPagedCustomerList(sidx, sord, page, rows, ref totalRecords);
+            var sups = _mCustomerRepository.GetPagedCustomerList(sidx, sord, page, rows, ref totalRecords, null, null);
             int pageSize = rows;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
             var jsonData = new
@@ -74,8 +112,8 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                             sup.CustomerHealthProblem,
                             sup.CustomerJoinDate.HasValue ? sup.CustomerJoinDate.Value.ToString(Helper.CommonHelper.DateFormat) : null,
                             sup.CustomerLastBuy.HasValue ? sup.CustomerLastBuy.Value.ToString(Helper.CommonHelper.DateFormat) : null,
-                            sup.CustomerProductDisc.HasValue ? sup.CustomerProductDisc.Value.ToString() : null,
-                            sup.CustomerServiceDisc.HasValue ? sup.CustomerServiceDisc.Value.ToString() : null,
+                            sup.CustomerProductDisc.HasValue ? sup.CustomerProductDisc.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
+                            sup.CustomerServiceDisc.HasValue ? sup.CustomerServiceDisc.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
                             sup.CustomerStatus,
                             sup.CustomerMassageStrength,
                             sup.CustomerDesc,
@@ -106,6 +144,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             person.DataStatus = EnumDataStatus.New.ToString();
             _refPersonRepository.Save(person);
 
+            UpdateNumericData(viewModel, formCollection);
             MCustomer mCustomerToInsert = new MCustomer();
             TransferFormValuesTo(mCustomerToInsert, viewModel);
             mCustomerToInsert.SetAssignedIdTo(viewModel.Id);
@@ -164,6 +203,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         [Transaction]
         public ActionResult Update(MCustomer viewModel, FormCollection formCollection)
         {
+            UpdateNumericData(viewModel, formCollection);
             MCustomer mCustomerToUpdate = _mCustomerRepository.Get(viewModel.Id);
             TransferFormValuesTo(mCustomerToUpdate, viewModel);
             mCustomerToUpdate.ModifiedDate = DateTime.Now;
@@ -199,6 +239,28 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             return Content("success");
         }
 
+
+        private static void UpdateNumericData(MCustomer viewModel, FormCollection formCollection)
+        {
+            if (!string.IsNullOrEmpty(formCollection["CustomerProductDisc"]))
+            {
+                string CustomerProductDisc = formCollection["CustomerProductDisc"].Replace(",", "");
+                viewModel.CustomerProductDisc = Convert.ToDecimal(CustomerProductDisc);
+            }
+            else
+            {
+                viewModel.CustomerProductDisc = null;
+            }
+            if (!string.IsNullOrEmpty(formCollection["CustomerServiceDisc"]))
+            {
+                string CustomerServiceDisc = formCollection["CustomerServiceDisc"].Replace(",", "");
+                viewModel.CustomerServiceDisc = Convert.ToDecimal(CustomerServiceDisc);
+            }
+            else
+            {
+                viewModel.CustomerServiceDisc = null;
+            }
+        }
 
         private void TransferFormValuesTo(RefPerson person, FormCollection formCollection)
         {
@@ -248,6 +310,6 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             return Content(Helper.CommonHelper.GetEnumListForGrid<EnumMassageStrength>("-Pilih Kekuatan Pijitan-"));
         }
 
-       
+
     }
 }

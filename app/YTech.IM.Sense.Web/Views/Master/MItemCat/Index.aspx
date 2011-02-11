@@ -70,29 +70,29 @@
             $.jgrid.nav.addtext = "Tambah";
             $.jgrid.nav.edittext = "Edit";
             $.jgrid.nav.deltext = "Hapus";
-            $.jgrid.edit.addCaption = "Tambah Kategori Produk Baru";
-            $.jgrid.edit.editCaption = "Edit Kategori Produk";
-            $.jgrid.del.caption = "Hapus Kategori Produk";
-            $.jgrid.del.msg = "Anda yakin menghapus Kategori Produk yang dipilih?";
+            $.jgrid.edit.addCaption = "Tambah Kategori Perawatan Baru";
+            $.jgrid.edit.editCaption = "Edit Kategori Perawatan";
+            $.jgrid.del.caption = "Hapus Kategori Perawatan";
+            $.jgrid.del.msg = "Anda yakin menghapus Kategori Perawatan yang dipilih?";
             $("#list").jqGrid({
                 url: '<%= Url.Action("List", "MItemCat") %>',
                 datatype: 'json',
                 mtype: 'GET',
-                colNames: ['Kode Kategori Item', 'Nama', 'Keterangan'],
+                colNames: ['Kode Kategori Perawatan', 'Nama', 'Keterangan'],
                 colModel: [
                     { name: 'Id', index: 'Id', width: 100, align: 'left', key: true, editrules: { required: true, edithidden: false }, hidedlg: true, hidden: false, editable: true },
                     { name: 'ItemCatName', index: 'ItemCatName', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { required: true }, formoptions: { elmsuffix: ' *'} },
-                   { name: 'ItemCatDesc', index: 'ItemCatDesc', width: 200, sortable: false, align: 'left', editable: true, edittype: 'textarea', editoptions: { rows: "3", cols: "20" }, editrules: { required: false }}],
+                   { name: 'ItemCatDesc', index: 'ItemCatDesc', width: 200, sortable: false, align: 'left', editable: true, edittype: 'textarea', editoptions: { rows: "3", cols: "20" }, editrules: { required: false}}],
 
                 pager: $('#listPager'),
                 rowNum: 20,
                 rowList: [20, 30, 50, 100],
-                rownumbers: true, 
+                rownumbers: true,
                 sortname: 'Id',
                 sortorder: "asc",
                 viewrecords: true,
                 height: 300,
-                caption: 'Daftar Kategori Produk',
+                caption: 'Daftar Kategori Perawatan',
                 autowidth: true,
                 ondblClickRow: function (rowid, iRow, iCol, e) {
                     $("#list").editGridRow(rowid, editDialog);
@@ -108,6 +108,7 @@
         });       
     </script>
     <div id="dialog" title="Status">
-        <p></p>
+        <p>
+        </p>
     </div>
 </asp:Content>

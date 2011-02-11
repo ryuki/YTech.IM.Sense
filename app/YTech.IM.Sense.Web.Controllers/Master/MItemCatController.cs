@@ -71,7 +71,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             var itemCats = _mItemCatRepository.GetAll();
             StringBuilder sb = new StringBuilder();
             MItemCat mItemCat;
-            sb.AppendFormat("{0}:{1};", string.Empty, "-Pilih Kategori Produk-");
+            sb.AppendFormat("{0}:{1};", string.Empty, "-Pilih Kategori Perawatan-");
             for (int i = 0; i < itemCats.Count; i++)
             {
                 mItemCat = itemCats[i];

@@ -8,6 +8,7 @@ namespace YTech.IM.Sense.Enums
     public enum EnumRoomType
     {
         SpaWomen,
-        SpaMan
+        SpaMan,
+        Reflexy
     }
 }

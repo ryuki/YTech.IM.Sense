@@ -80,8 +80,22 @@
                     { name: 'act', index: 'act', width: 75, sortable: false },
                     { name: 'Id', index: 'Id', width: 100, align: 'left', key: true, editrules: { required: true, edithidden: false }, hidedlg: true, hidden: false, editable: true },
                     { name: 'PacketName', index: 'PacketName', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { required: true }, formoptions: { elmsuffix: ' *'} },
-                    { name: 'PacketPrice', index: 'PacketPrice', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { edithidden: true }, hidden: false },
-                    { name: 'PacketPriceVip', index: 'ItemCatName', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { edithidden: true} },
+                    { name: 'PacketPrice', index: 'PacketPrice', width: 200, align: 'right', editable: true, edittype: 'text', editrules: { edithidden: true }, hidden: false ,
+                        editoptions: {
+                            dataInit: function (elem) {
+                                $(elem).autoNumeric();
+                                $(elem).attr("style", "text-align:right;");
+                            }
+                        }
+                    },
+                    { name: 'PacketPriceVip', index: 'ItemCatName', width: 200, align: 'right', editable: true, edittype: 'text', editrules: { edithidden: true} ,
+                        editoptions: {
+                            dataInit: function (elem) {
+                                $(elem).autoNumeric();
+                                $(elem).attr("style", "text-align:right;");
+                            }
+                        }
+                    },
                     { name: 'PacketStatus', index: 'PacketStatus', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { edithidden: true }, hidden: false },
                     { name: 'PacketDesc', index: 'PacketDesc', width: 200, align: 'left', editable: true, edittype: 'textarea', editrules: { edithidden: true}}],
 
@@ -111,6 +125,8 @@
                 subGridUrl: '<%= Url.Action("ListForSubGrid", "PacketItemCat") %>',
                 subGridModel: [{ name: [ 'Kategori Item', 'Kuantitas', 'Status', 'Deskripsi'],
                     width: [  55, 80, 80, 80],
+                       //subrig columns aligns
+                       align: ['left', 'right', 'left', 'left'],
                     params: ['Id']
                 }],
                 ondblClickRow: function (rowid, iRow, iCol, e) {

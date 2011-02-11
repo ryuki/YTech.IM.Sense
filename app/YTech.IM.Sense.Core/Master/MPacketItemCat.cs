@@ -9,6 +9,14 @@ namespace YTech.IM.Sense.Core.Master
 {
     public class MPacketItemCat : EntityWithTypedId<string>, IHasAssignedId<string>
     {
+        public MPacketItemCat() { }
+
+        public MPacketItemCat(MPacket packet)
+        {
+            Check.Require(packet != null, "packet may not be null");
+
+            PacketId = packet;
+        }
         [DomainSignature]
         [NotNull, NotEmpty]
         public virtual MPacket PacketId { get; set; }

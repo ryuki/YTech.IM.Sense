@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,15 +16,16 @@ using YTech.IM.Sense.Data.Repository;
 using YTech.IM.Sense.Enums;
 using YTech.IM.Sense.Web.Controllers.ViewModel;
 using Microsoft.Reporting.WebForms;
+using YTech.IM.Sense.Web.Controllers.ViewModel.Reports;
 
 namespace YTech.IM.Sense.Web.Controllers.Transaction
 {
     [HandleError]
     public class ReportController : Controller
     {
-        public ReportController()
-            : this(new TJournalRepository(), new TJournalDetRepository(), new MCostCenterRepository(), new MAccountRepository(), new TRecAccountRepository(), new TRecPeriodRepository(), new MBrandRepository(), new MSupplierRepository(), new MWarehouseRepository(), new MItemRepository(), new TStockCardRepository(), new TStockItemRepository(), new TTransDetRepository())
-        { }
+        //public ReportController()
+        //    : this(new TJournalRepository(), new TJournalDetRepository(), new MCostCenterRepository(), new MAccountRepository(), new TRecAccountRepository(), new TRecPeriodRepository(), new MBrandRepository(), new MSupplierRepository(), new MWarehouseRepository(), new MItemRepository(), new TStockCardRepository(), new TStockItemRepository(), new TTransDetRepository())
+        //{ }
 
         private readonly ITJournalRepository _tJournalRepository;
         private readonly ITJournalDetRepository _tJournalDetRepository;
@@ -38,8 +40,10 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         private readonly ITStockCardRepository _tStockCardRepository;
         private readonly ITStockItemRepository _tStockItemRepository;
         private readonly ITTransDetRepository _tTransDetRepository;
+        private readonly ITTransRoomRepository _tTransRoomRepository;
+        private readonly ITTransRepository _tTransRepository;
 
-        public ReportController(ITJournalRepository tJournalRepository, ITJournalDetRepository tJournalDetRepository, IMCostCenterRepository mCostCenterRepository, IMAccountRepository mAccountRepository, ITRecAccountRepository tRecAccountRepository, ITRecPeriodRepository tRecPeriodRepository, IMBrandRepository mBrandRepository, IMSupplierRepository mSupplierRepository, IMWarehouseRepository mWarehouseRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransDetRepository tTransDetRepository)
+        public ReportController(ITJournalRepository tJournalRepository, ITJournalDetRepository tJournalDetRepository, IMCostCenterRepository mCostCenterRepository, IMAccountRepository mAccountRepository, ITRecAccountRepository tRecAccountRepository, ITRecPeriodRepository tRecPeriodRepository, IMBrandRepository mBrandRepository, IMSupplierRepository mSupplierRepository, IMWarehouseRepository mWarehouseRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransDetRepository tTransDetRepository, ITTransRepository tTransRepository, ITTransRoomRepository tTransRoomRepository)
         {
             Check.Require(tJournalRepository != null, "tJournalRepository may not be null");
             Check.Require(tJournalDetRepository != null, "tJournalDetRepository may not be null");
@@ -54,6 +58,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             Check.Require(tStockCardRepository != null, "tStockCardRepository may not be null");
             Check.Require(tStockItemRepository != null, "tStockItemRepository may not be null");
             Check.Require(tTransDetRepository != null, "tTransDetRepository may not be null");
+            Check.Require(tTransRepository != null, "tTransRepository may not be null");
+            Check.Require(tTransRoomRepository != null, "tTransRoomRepository may not be null");
+
 
             this._tJournalRepository = tJournalRepository;
             this._tJournalDetRepository = tJournalDetRepository;
@@ -68,6 +75,8 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             this._tStockCardRepository = tStockCardRepository;
             this._tStockItemRepository = tStockItemRepository;
             this._tTransDetRepository = tTransDetRepository;
+            this._tTransRepository = tTransRepository;
+            this._tTransRoomRepository = tTransRoomRepository;
         }
 
         [Transaction]
@@ -132,71 +141,151 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Report(EnumReports reports, ReportParamViewModel viewModel, FormCollection formCollection)
         {
-            LocalReport localReport = new LocalReport();
-            localReport.ReportPath = Server.MapPath(string.Format("~/Views/Transaction/Report/{0}.rdlc", reports.ToString()));
-
+            ReportDataSource[] repCol = new ReportDataSource[1];
             switch (reports)
             {
                 case EnumReports.RptBrand:
-                    localReport.DataSources.Add(GetBrand());
+                    repCol[0] = GetBrand();
                     break;
                 case EnumReports.RptCostCenter:
-                    localReport.DataSources.Add(GetCostCenter());
+                    repCol[0] = GetCostCenter();
                     break;
                 case EnumReports.RptJournal:
-                    localReport.DataSources.Add(GetJournalDet(viewModel.DateFrom, viewModel.DateTo, viewModel.CostCenterId));
+                    repCol[0] = GetJournalDet(viewModel.DateFrom, viewModel.DateTo, viewModel.CostCenterId);
                     break;
                 case EnumReports.RptNeraca:
-                    localReport.DataSources.Add(GetRecAccount(EnumAccountCatType.NERACA, viewModel.CostCenterId, viewModel.RecPeriodId));
+                    repCol[0] = GetRecAccount(EnumAccountCatType.NERACA, viewModel.CostCenterId, viewModel.RecPeriodId);
                     break;
                 case EnumReports.RptLR:
-                    localReport.DataSources.Add(GetRecAccount(EnumAccountCatType.LR, viewModel.CostCenterId, viewModel.RecPeriodId));
+                    repCol[0] = GetRecAccount(EnumAccountCatType.LR, viewModel.CostCenterId, viewModel.RecPeriodId);
                     break;
                 case EnumReports.RptStockCard:
-                    localReport.DataSources.Add(GetStockCard(viewModel.DateFrom, viewModel.DateTo, viewModel.ItemId, viewModel.WarehouseId));
+                    repCol[0] = GetStockCard(viewModel.DateFrom, viewModel.DateTo, viewModel.ItemId, viewModel.WarehouseId);
                     break;
                 case EnumReports.RptStockItem:
-                    localReport.DataSources.Add(GetStockItem(viewModel.ItemId, viewModel.WarehouseId));
+                    repCol[0] = GetStockItem(viewModel.ItemId, viewModel.WarehouseId);
                     break;
                 case EnumReports.RptAnalyzeBudgetDetail:
-                    localReport.DataSources.Add(GetTransDetForBudget(viewModel.ItemId, viewModel.WarehouseId));
+                    repCol[0] = GetTransDetForBudget(viewModel.ItemId, viewModel.WarehouseId);
+                    break;
+                case EnumReports.RptPrintFacturService:
+                    repCol = new ReportDataSource[3];
+                    TTrans trans = _tTransRepository.Get(viewModel.TransId);
+                    repCol[0] = GetTrans(trans);
+                    repCol[1] = GetTransDet(trans.TransDets);
+                    repCol[2] = GetTransRoom(viewModel.TransId);
                     break;
             }
+            Session["ReportData"] = repCol;
 
-            string reportType = formCollection["ExportFormat"];
-            string mimeType, encoding, fileNameExtension;
+            var e = new
+            {
+                Success = true,
+                Message = "redirect",
+                UrlReport = string.Format("{0}", reports.ToString())
+            };
+            return Json(e, JsonRequestBehavior.AllowGet);
+            //string reportType = formCollection["ExportFormat"];
+            //string mimeType, encoding, fileNameExtension;
 
-            //The DeviceInfo settings should be changed based on the reportType
-            //http://msdn2.microsoft.com/en-us/library/ms155397.aspx
+            ////The DeviceInfo settings should be changed based on the reportType
+            ////http://msdn2.microsoft.com/en-us/library/ms155397.aspx
 
-            string deviceInfo =
-            "<DeviceInfo>" +
-            string.Format("  <OutputFormat>{0}</OutputFormat>", formCollection["ExportFormat"]) +
-            "  <PageWidth>8.5in</PageWidth>" +
-            "  <PageHeight>11in</PageHeight>" +
-            "  <MarginTop>0.5in</MarginTop>" +
-            "  <MarginLeft>0.5in</MarginLeft>" +
-            "  <MarginRight>0.5in</MarginRight>" +
-            "  <MarginBottom>0.5in</MarginBottom>" +
-            "</DeviceInfo>";
+            //string deviceInfo =
+            //"<DeviceInfo>" +
+            //string.Format("  <OutputFormat>{0}</OutputFormat>", formCollection["ExportFormat"]) +
+            //"  <PageWidth>8.5in</PageWidth>" +
+            //"  <PageHeight>11in</PageHeight>" +
+            //"  <MarginTop>0.5in</MarginTop>" +
+            //"  <MarginLeft>0.5in</MarginLeft>" +
+            //"  <MarginRight>0.5in</MarginRight>" +
+            //"  <MarginBottom>0.5in</MarginBottom>" +
+            //"</DeviceInfo>";
 
-            Warning[] warnings;
-            string[] streams;
-            byte[] renderedBytes;
+            //Warning[] warnings;
+            //string[] streams;
+            //byte[] renderedBytes;
 
-            //Render the report
-            renderedBytes = localReport.Render(
-                reportType,
-                deviceInfo,
-                out mimeType,
-                out encoding,
-                out fileNameExtension,
-                out streams,
-                out warnings);
+            ////Render the report
+            //renderedBytes = localReport.Render(
+            //    reportType,
+            //    deviceInfo,
+            //    out mimeType,
+            //    out encoding,
+            //    out fileNameExtension,
+            //    out streams,
+            //    out warnings);
 
-            Response.AddHeader("content-disposition", string.Format("attachment; filename={0}.{1}", reports.ToString(), fileNameExtension));
+            //Response.AddHeader("content-disposition", string.Format("attachment; filename={0}.{1}", reports.ToString(), fileNameExtension));
 
-            return File(renderedBytes, mimeType);
+            //return File(renderedBytes, mimeType);
+        }
+
+        private ReportDataSource GetTransRoom(string TransId)
+        {
+            TTransRoom troom = _tTransRoomRepository.Get(TransId);
+            IList<TTransRoom> listTransroom = new List<TTransRoom>();
+            listTransroom.Add(troom);
+            var listRoom = from det in listTransroom
+                           select new
+                           {
+                               det.RoomId.Id,
+                               det.RoomInDate,
+                               det.RoomOutDate,
+                               det.RoomStatus,
+                               det.RoomVoucherPaid,
+                               det.RoomCashPaid,
+                               det.RoomCreditPaid,
+                               det.RoomCommissionProduct,
+                               det.RoomCommissionService
+                           }
+      ;
+            ReportDataSource reportDataSource = new ReportDataSource("TransRoomViewModel", listRoom.ToList());
+            return reportDataSource;
+        }
+
+        private static ReportDataSource GetTransDet(IList<TTransDet> transDets)
+        {
+            var listDet = from det in transDets
+                          select new
+                          {
+                              // det.PacketId,
+                              EmployeeId = det.EmployeeId.Id,
+                              EmployeeName = det.EmployeeId.PersonId.PersonName,
+                              PacketId = det.PacketId.Id,
+                              det.PacketId.PacketName,
+                              det.TransDetPrice,
+                              det.TransDetQty,
+                              det.TransDetDisc,
+                              det.TransDetCommissionProduct,
+                              det.TransDetCommissionService,
+                              det.TransDetNo,
+                              det.TransDetTotal
+                          }
+      ;
+            ReportDataSource reportDataSource = new ReportDataSource("TransDetViewModel", listDet.ToList());
+            return reportDataSource;
+        }
+
+        private static ReportDataSource GetTrans(TTrans trans)
+        {
+            IList<TTrans> listTrans = new List<TTrans>();
+            listTrans.Add(trans);
+            var list = from det in listTrans
+                       select new
+                       {
+                           det.TransFactur,
+                           det.TransDate,
+                           det.TransSubTotal,
+                           det.TransBy,
+                           det.TransDesc,
+                           det.TransDiscount,
+                           det.TransStatus
+                           // EmployeeId = det.EmployeeId.Id
+                       }
+       ;
+            ReportDataSource reportDataSource = new ReportDataSource("TransViewModel", list.ToList());
+            return reportDataSource;
         }
 
         private ReportDataSource GetTransDetForBudget(string itemId, string warehouseId)
@@ -227,7 +316,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                                   }
             ;
 
-            ReportDataSource reportDataSource = new ReportDataSource("TransDetViewModel", list);
+            ReportDataSource reportDataSource = new ReportDataSource("TransDetViewModel", list.ToList());
             return reportDataSource;
         }
 
@@ -254,9 +343,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                            stock.WarehouseId.WarehouseName,
                            stock.ItemStockRack
                        }
-            ;
-
-            ReportDataSource reportDataSource = new ReportDataSource("StockItemViewModel", list);
+             ;
+            //return list.ToList();
+            ReportDataSource reportDataSource = new ReportDataSource("StockItemViewModel", list.ToList());
             return reportDataSource;
         }
 
@@ -286,7 +375,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                        }
             ;
 
-            ReportDataSource reportDataSource = new ReportDataSource("StockCardViewModel", list);
+            ReportDataSource reportDataSource = new ReportDataSource("StockCardViewModel", list.ToList());
             return reportDataSource;
         }
 
@@ -320,7 +409,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                        }
             ;
 
-            ReportDataSource reportDataSource = new ReportDataSource("RecAccountViewModel", list);
+            ReportDataSource reportDataSource = new ReportDataSource("RecAccountViewModel", list.ToList());
             return reportDataSource;
         }
 
@@ -353,7 +442,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                                   }
             ;
 
-            ReportDataSource reportDataSource = new ReportDataSource("JournalDetViewModel", list);
+            ReportDataSource reportDataSource = new ReportDataSource("JournalDetViewModel", list.ToList());
             return reportDataSource;
         }
 

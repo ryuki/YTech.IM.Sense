@@ -15,7 +15,7 @@ body
     font-family: Verdana;
     margin: 0;
     padding: 0;
-    background: #5E9CC1 /*url(../images/background.jpg)*/ no-repeat scroll center top;
+    background:/* #5E9CC1 url(../images/background.jpg)*/ no-repeat scroll center top;
 }
 
 input, select

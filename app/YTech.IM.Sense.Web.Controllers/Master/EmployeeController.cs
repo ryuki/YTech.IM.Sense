@@ -41,12 +41,16 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             return View();
         }
 
+        public ActionResult Search()
+        {
+            return View();
+        }
 
         [Transaction]
         public virtual ActionResult List(string sidx, string sord, int page, int rows)
         {
             int totalRecords = 0;
-            var itemCats = _mEmployeeRepository.GetPagedEmployeeList(sidx, sord, page, rows, ref totalRecords);
+            var employees = _mEmployeeRepository.GetPagedEmployeeList(sidx, sord, page, rows, ref totalRecords);
             int pageSize = rows;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
@@ -56,18 +60,22 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from itemCat in itemCats
+                    from employee in employees
                     select new
                     {
-                        i = itemCat.Id.ToString(),
+                        i = employee.Id.ToString(),
                         cell = new string[] {
-                            itemCat.Id, 
-                        itemCat.PersonId != null ?    itemCat.PersonId.PersonFirstName : null, 
-                          itemCat.PersonId != null ?    itemCat.PersonId.PersonLastName : null, 
-                         itemCat.EmployeeStatus, 
-                          itemCat.PersonId != null ?    itemCat.PersonId.PersonGender : null, 
-                        itemCat.DepartmentId != null?  itemCat.DepartmentId.Id:null, 
-                        itemCat.DepartmentId != null?  itemCat.DepartmentId.DepartmentName:null, 
+                            employee.Id, 
+                        employee.PersonId != null ?    employee.PersonId.PersonFirstName : null, 
+                          employee.PersonId != null ?    employee.PersonId.PersonLastName : null, 
+                         employee.EmployeeStatus, 
+                          employee.PersonId != null ?    employee.PersonId.PersonGender : null, 
+                        employee.DepartmentId != null?  employee.DepartmentId.Id:null, 
+                        employee.DepartmentId != null?  employee.DepartmentId.DepartmentName:null,
+                        employee.EmployeeCommissionProductType,
+                        employee.EmployeeCommissionProductVal.HasValue ?  employee.EmployeeCommissionProductVal.Value.ToString(Helper.CommonHelper.NumberFormat):null,  
+                        employee.EmployeeCommissionServiceType,
+                        employee.EmployeeCommissionServiceVal.HasValue ?  employee.EmployeeCommissionServiceVal.Value.ToString(Helper.CommonHelper.NumberFormat):null, 
                           //itemCat.PersonId != null ?    itemCat.PersonId.PersonDob.Value.ToString(Helper.CommonHelper.DateFormat) : null, 
                           //itemCat.PersonId != null ?    itemCat.PersonId.PersonPob : null, 
                           //itemCat.PersonId != null ?    itemCat.PersonId.PersonPhone : null, 
@@ -77,12 +85,42 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                           //itemCat.PersonId != null ?    itemCat.PersonId.PersonRace : null, 
                           //itemCat.PersonId != null ?    itemCat.PersonId.PersonIdCardType : null, 
                           //itemCat.PersonId != null ?    itemCat.PersonId.PersonIdCardNo : null, 
-                         itemCat.EmployeeDesc
+                         employee.EmployeeDesc
                         }
                     }).ToArray()
             };
 
 
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
+        [Transaction]
+        public virtual ActionResult ListSearch(string sidx, string sord, int page, int rows)
+        {
+            int totalRecords = 0;
+            var employees = _mEmployeeRepository.GetPagedEmployeeList(sidx, sord, page, rows, ref totalRecords);
+            int pageSize = rows;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from employee in employees
+                    select new
+                    {
+                        i = employee.Id.ToString(),
+                        cell = new string[] {
+                            employee.Id, 
+                        employee.PersonId != null ?    employee.PersonId.PersonName : null, 
+                        employee.PersonId != null ?    employee.PersonId.PersonGender : null,  
+                        employee.DepartmentId != null?  employee.DepartmentId.DepartmentName:null,  
+                         employee.EmployeeDesc
+                        }
+                    }).ToArray()
+            }; 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
@@ -97,10 +135,11 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             person.DataStatus = EnumDataStatus.New.ToString();
             _refPersonRepository.Save(person);
 
+            UpdateNumericData(viewModel, formCollection);
             MEmployee mEmployeeToInsert = new MEmployee();
             TransferFormValuesTo(mEmployeeToInsert, viewModel);
             mEmployeeToInsert.DepartmentId = _mDepartmentRepository.Get(formCollection["DepartmentId"]);
-            mEmployeeToInsert.SetAssignedIdTo(Guid.NewGuid().ToString());
+            mEmployeeToInsert.SetAssignedIdTo(viewModel.Id);
             mEmployeeToInsert.CreatedDate = DateTime.Now;
             mEmployeeToInsert.CreatedBy = User.Identity.Name;
             mEmployeeToInsert.DataStatus = EnumDataStatus.New.ToString();
@@ -170,6 +209,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         public ActionResult Update(MEmployee viewModel, FormCollection formCollection)
         {
 
+            UpdateNumericData(viewModel, formCollection);
 
             MEmployee mEmployeeToUpdate = _mEmployeeRepository.Get(viewModel.Id);
             TransferFormValuesTo(mEmployeeToUpdate, viewModel);
@@ -217,11 +257,37 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             return Content("success");
         }
 
+        private static void UpdateNumericData(MEmployee viewModel, FormCollection formCollection)
+        {
+            if (!string.IsNullOrEmpty(formCollection["EmployeeCommissionProductVal"]))
+            {
+                string EmployeeCommissionProductVal = formCollection["EmployeeCommissionProductVal"].Replace(",", "");
+                viewModel.EmployeeCommissionProductVal = Convert.ToDecimal(EmployeeCommissionProductVal);
+            }
+            else
+            {
+                viewModel.EmployeeCommissionProductVal = null;
+            }
+            if (!string.IsNullOrEmpty(formCollection["EmployeeCommissionServiceVal"]))
+            {
+                string ItemUomSalePrice = formCollection["EmployeeCommissionServiceVal"].Replace(",", "");
+                viewModel.EmployeeCommissionServiceVal = Convert.ToDecimal(ItemUomSalePrice);
+            }
+            else
+            {
+                viewModel.EmployeeCommissionServiceVal = null;
+            }
+        }
+
         private void TransferFormValuesTo(MEmployee mEmployeeToUpdate, MEmployee mEmployeeFromForm)
         {
             mEmployeeToUpdate.DepartmentId = mEmployeeFromForm.DepartmentId;
             mEmployeeToUpdate.EmployeeStatus = mEmployeeFromForm.EmployeeStatus;
             mEmployeeToUpdate.EmployeeDesc = mEmployeeFromForm.EmployeeDesc;
+            mEmployeeToUpdate.EmployeeCommissionProductType = mEmployeeFromForm.EmployeeCommissionProductType;
+            mEmployeeToUpdate.EmployeeCommissionProductVal = mEmployeeFromForm.EmployeeCommissionProductVal;
+            mEmployeeToUpdate.EmployeeCommissionServiceType = mEmployeeFromForm.EmployeeCommissionServiceType;
+            mEmployeeToUpdate.EmployeeCommissionServiceVal = mEmployeeFromForm.EmployeeCommissionServiceVal;
         }
 
 
@@ -240,6 +306,11 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                     sb.Append(";");
             }
             return Content(sb.ToString());
+        }
+
+        public virtual ActionResult GetCommissionTypeList()
+        {
+            return Content(Helper.CommonHelper.GetEnumListForGrid<EnumCommissionType>("-Pilih Tipe Komisi-"));
         }
     }
 }

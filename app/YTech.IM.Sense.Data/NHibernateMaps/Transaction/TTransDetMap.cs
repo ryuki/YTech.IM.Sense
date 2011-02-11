@@ -28,6 +28,10 @@ namespace YTech.IM.Sense.Data.NHibernateMaps.Transaction
             mapping.Map(x => x.TransDetDisc, "TRANS_DET_DISC");
             mapping.Map(x => x.TransDetTotal, "TRANS_DET_TOTAL");
             mapping.Map(x => x.TransDetDesc, "TRANS_DET_DESC");
+            mapping.References(x => x.EmployeeId, "EMPLOYEE_ID");
+            mapping.References(x => x.PacketId, "PACKET_ID");
+            mapping.Map(x => x.TransDetCommissionProduct, "TRANS_DET_COMMISSION_PRODUCT");
+            mapping.Map(x => x.TransDetCommissionService, "TRANS_DET_COMMISSION_SERVICE");
 
             mapping.Map(x => x.DataStatus, "DATA_STATUS");
             mapping.Map(x => x.CreatedBy, "CREATED_BY");

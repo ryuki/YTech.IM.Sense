@@ -16,18 +16,24 @@ namespace YTech.IM.Sense.Web.Controllers.Master
     [HandleError]
     public class SupplierController : Controller
     {
-         public SupplierController() : this(new MSupplierRepository(), new RefAddressRepository())
-         {}
+         //public SupplierController() : this(new MSupplierRepository(), new RefAddressRepository())
+         //{}
 
         private readonly IMSupplierRepository _mSupplierRepository;
         private readonly IRefAddressRepository _refAddressRepository;
-        public SupplierController(IMSupplierRepository mSupplierRepository, IRefAddressRepository refAddressRepository)
+        private readonly IMAccountRefRepository _mAccountRefRepository;
+        private readonly IMAccountRepository _mAccountRepository;
+        public SupplierController(IMSupplierRepository mSupplierRepository, IRefAddressRepository refAddressRepository, IMAccountRefRepository mAccountRefRepository, IMAccountRepository mAccountRepository)
         {
             Check.Require(mSupplierRepository != null, "mSupplierRepository may not be null");
             Check.Require(refAddressRepository != null, "refAddressRepository may not be null");
+            Check.Require(mAccountRefRepository != null, "mAccountRefRepository may not be null");
+            Check.Require(mAccountRepository != null, "mAccountRepository may not be null");
 
             this._mSupplierRepository = mSupplierRepository;
             this._refAddressRepository = refAddressRepository;
+            this._mAccountRefRepository = mAccountRefRepository;
+            this._mAccountRepository = mAccountRepository;
         }
 
 
@@ -57,7 +63,9 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                         cell = new string[] {
                             sup.Id, 
                             sup.SupplierName, 
-                            sup.SupplierMaxDebt.HasValue ? sup.SupplierMaxDebt.Value.ToString() : null,
+                            sup.SupplierMaxDebt.HasValue ? sup.SupplierMaxDebt.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
+                       GetAccountRef(sup.Id) != null ? GetAccountRef(sup.Id).AccountId.Id : null,
+                         GetAccountRef(sup.Id) != null ? GetAccountRef(sup.Id).AccountId.AccountName : null,
                             sup.SupplierStatus,
                           sup.AddressId != null?  sup.AddressId.AddressLine1 : null,
                           sup.AddressId != null?  sup.AddressId.AddressLine2 : null,
@@ -73,6 +81,16 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
+        private MAccountRef GetAccountRef(string supId)
+        {
+            MAccountRef accountRef = _mAccountRefRepository.GetByRefTableId(EnumReferenceTable.Supplier, supId);
+            if (accountRef != null)
+            {
+                return accountRef;
+            }
+            return null;
+        }
+
         [Transaction]
         public ActionResult Insert(MSupplier viewModel, FormCollection formCollection)
         {
@@ -84,6 +102,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             address.DataStatus = EnumDataStatus.New.ToString();
             _refAddressRepository.Save(address);
 
+            UpdateNumericData(viewModel, formCollection);
             MSupplier mSupplierToInsert = new MSupplier();
             TransferFormValuesTo(mSupplierToInsert, viewModel);
             mSupplierToInsert.SetAssignedIdTo(viewModel.Id);
@@ -95,6 +114,13 @@ namespace YTech.IM.Sense.Web.Controllers.Master
 
             _mSupplierRepository.Save(mSupplierToInsert);
 
+            MAccountRef accountRef = new MAccountRef();
+            accountRef.SetAssignedIdTo(Guid.NewGuid().ToString());
+            accountRef.ReferenceId = mSupplierToInsert.Id;
+            accountRef.ReferenceTable = EnumReferenceTable.Supplier.ToString();
+            accountRef.ReferenceType = EnumReferenceTable.Supplier.ToString();
+            accountRef.AccountId = _mAccountRepository.Get(formCollection["AccountId"]);
+            _mAccountRefRepository.Save(accountRef);
             try
             {
                 _mSupplierRepository.DbContext.CommitChanges();
@@ -150,6 +176,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         [Transaction]
         public ActionResult Update(MSupplier viewModel, FormCollection formCollection)
         {
+            UpdateNumericData(viewModel, formCollection);
             MSupplier mSupplierToUpdate = _mSupplierRepository.Get(viewModel.Id);
             TransferFormValuesTo(mSupplierToUpdate, viewModel);
             mSupplierToUpdate.ModifiedDate = DateTime.Now;
@@ -163,7 +190,29 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             address.DataStatus = EnumDataStatus.Updated.ToString();
 
             _mSupplierRepository.Update(mSupplierToUpdate);
-            
+
+
+            bool isSave = false;
+            MAccountRef accountRef = GetAccountRef(mSupplierToUpdate.Id);
+            if (accountRef == null)
+            {
+                accountRef = new MAccountRef();
+                accountRef.SetAssignedIdTo(Guid.NewGuid().ToString());
+                isSave = true;
+            }
+            accountRef.ReferenceId = mSupplierToUpdate.Id;
+            accountRef.ReferenceTable = EnumReferenceTable.Supplier.ToString();
+            accountRef.ReferenceType = EnumReferenceTable.Supplier.ToString();
+            accountRef.AccountId = _mAccountRepository.Get(formCollection["AccountId"]);
+            if (isSave)
+            {
+                _mAccountRefRepository.Save(accountRef);
+            }
+            else
+            {
+                _mAccountRefRepository.Update(accountRef);
+
+            }
             try
             {
                 _mSupplierRepository.DbContext.CommitChanges();
@@ -177,6 +226,19 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             }
 
             return Content("success");
+        }
+
+        private static void UpdateNumericData(MSupplier viewModel, FormCollection formCollection)
+        {
+            if (!string.IsNullOrEmpty(formCollection["SupplierMaxDebt"]))
+            {
+                string SupplierMaxDebt = formCollection["SupplierMaxDebt"].Replace(",", "");
+                viewModel.SupplierMaxDebt = Convert.ToDecimal(SupplierMaxDebt);
+            }
+            else
+            {
+                viewModel.SupplierMaxDebt = null;
+            }
         }
 
         private static void TransferFormValuesTo(MSupplier mSupplierToUpdate, MSupplier mSupplierFromForm)

@@ -54,7 +54,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                         cell = new string[] {
                             itemCat.Id, 
                             itemCat.CostCenterName, 
-                          itemCat.CostCenterTotalBudget.HasValue ?  itemCat.CostCenterTotalBudget.Value.ToString() : null, 
+                          itemCat.CostCenterTotalBudget.HasValue ?  itemCat.CostCenterTotalBudget.Value.ToString(Helper.CommonHelper.NumberFormat) : null, 
                             itemCat.CostCenterStatus, 
                              itemCat.CostCenterStartDate.HasValue ?  itemCat.CostCenterStartDate.Value.ToString(Helper.CommonHelper.DateFormat) : null,
                               itemCat.CostCenterEndDate.HasValue ?  itemCat.CostCenterEndDate.Value.ToString(Helper.CommonHelper.DateFormat) : null, 
@@ -71,6 +71,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         public ActionResult Insert(MCostCenter viewModel, FormCollection formCollection)
         {
 
+            UpdateNumericData(viewModel, formCollection);
             MCostCenter mCompanyToInsert = new MCostCenter();
             TransferFormValuesTo(mCompanyToInsert, viewModel);
             mCompanyToInsert.SetAssignedIdTo(viewModel.Id);
@@ -123,6 +124,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         [Transaction]
         public ActionResult Update(MCostCenter viewModel, FormCollection formCollection)
         {
+            UpdateNumericData(viewModel, formCollection);
             MCostCenter mCompanyToUpdate = _mCostCenterRepository.Get(viewModel.Id);
             TransferFormValuesTo(mCompanyToUpdate, viewModel);
             mCompanyToUpdate.ModifiedDate = DateTime.Now;
@@ -145,6 +147,18 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             return Content("success");
         }
 
+        private void UpdateNumericData(MCostCenter viewModel, FormCollection formCollection)
+        {
+            if (!string.IsNullOrEmpty(formCollection["CostCenterTotalBudget"]))
+            {
+                string CostCenterTotalBudget = formCollection["CostCenterTotalBudget"].Replace(",", "");
+                viewModel.CostCenterTotalBudget = Convert.ToDecimal(CostCenterTotalBudget);
+            }
+            else
+            {
+                viewModel.CostCenterTotalBudget = null;
+            }
+        }
         private void TransferFormValuesTo(MCostCenter mCompanyToUpdate, MCostCenter mCompanyFromForm)
         {
             mCompanyToUpdate.CostCenterName = mCompanyFromForm.CostCenterName;

@@ -83,7 +83,7 @@
                     { name: 'RoomName', index: 'RoomName', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { required: true }, formoptions: { elmsuffix: ' *'} },
                     { name: 'RoomOrderNo', index: 'RoomOrderNo', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { edithidden: true }, hidden: false },
                     { name: 'RoomType', index: 'RoomType', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { edithidden: true} },
-                    { name: 'RoomStatus', index: 'RoomStatus', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { edithidden: true }, hidden: false },
+                    { name: 'RoomStatus', index: 'RoomStatus', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { edithidden: true }, hidden: false },
                     { name: 'RoomDesc', index: 'RoomDesc', width: 200, align: 'left', editable: true, edittype: 'textarea', editrules: { edithidden: true}}],
 
                 pager: $('#listPager'),
@@ -98,6 +98,7 @@
                 autowidth: true,
                 loadComplete: function () {
                     $('#list').setColProp('RoomType', { editoptions: { value: types} });
+                    $('#list').setColProp('RoomStatus', { editoptions: { value: status} });
                  },
                 ondblClickRow: function (rowid, iRow, iCol, e) {
                     $('#list').editGridRow(rowid, editDialog);
@@ -111,8 +112,9 @@
                 deleteDialog
             );
 
-                var types = $.ajax({ url: '<%= Url.Action("GetRoomType","Room") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the RoomType.'); } }).responseText;
-                
+                var types = $.ajax({ url: '<%= Url.Action("GetRoomTypeList","Room") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the RoomType.'); } }).responseText;
+
+                var status = $.ajax({ url: '<%= Url.Action("GetRoomStatusList","Room") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the RoomType.'); } }).responseText;
         });
     </script>
     <div id="dialog" title="Status">

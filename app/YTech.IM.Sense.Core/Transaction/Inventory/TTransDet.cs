@@ -29,6 +29,10 @@ namespace YTech.IM.Sense.Core.Transaction
         public virtual decimal? TransDetDisc { get; set; }
         public virtual decimal? TransDetTotal { get; set; }
         public virtual string TransDetDesc { get; set; }
+        public virtual MPacket PacketId { get; set; }
+        public virtual MEmployee EmployeeId { get; set; }
+        public virtual decimal? TransDetCommissionProduct { get; set; }
+        public virtual decimal? TransDetCommissionService { get; set; }
 
         public virtual string DataStatus { get; set; }
         public virtual string CreatedBy { get; set; }

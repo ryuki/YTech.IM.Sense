@@ -91,6 +91,7 @@
     <Compile Include="NHibernateMaps\Master\MWarehouseMap.cs" />
     <Compile Include="NHibernateMaps\Master\RefAddressMap.cs" />
     <Compile Include="NHibernateMaps\Master\RefPersonMap.cs" />
+    <Compile Include="NHibernateMaps\Transaction\TAbsentMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TJournalDetMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TJournalMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TJournalRefMap.cs" />
@@ -101,8 +102,10 @@
     <Compile Include="NHibernateMaps\Transaction\TStockItemMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TStockMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TStockRefMap.cs" />
+    <Compile Include="NHibernateMaps\Transaction\TTransDetItemMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TTransDetMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TTransMap.cs" />
+    <Compile Include="NHibernateMaps\Transaction\TTransRoomMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\MAccountCatRepository.cs" />
     <Compile Include="Repository\MAccountRefRepository.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="Repository\MWarehouseRepository.cs" />
     <Compile Include="Repository\RefAddressRepository.cs" />
     <Compile Include="Repository\RefPersonRepository.cs" />
+    <Compile Include="Repository\TAbsentRepository.cs" />
     <Compile Include="Repository\TJournalDetRepository.cs" />
     <Compile Include="Repository\TJournalRefRepository.cs" />
     <Compile Include="Repository\TJournalRepository.cs" />
@@ -132,9 +136,11 @@
     <Compile Include="Repository\TStockItemRepository.cs" />
     <Compile Include="Repository\TStockRefRepository.cs" />
     <Compile Include="Repository\TStockRepository.cs" />
+    <Compile Include="Repository\TTransDetItemRepository.cs" />
     <Compile Include="Repository\TTransDetRepository.cs" />
     <Compile Include="Repository\TTransRefRepository.cs" />
     <Compile Include="Repository\TTransRepository.cs" />
+    <Compile Include="Repository\TTransRoomRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\YTech.IM.Sense.Core\YTech.IM.Sense.Core.csproj">

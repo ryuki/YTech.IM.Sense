@@ -28,7 +28,7 @@ namespace YTech.IM.Sense.Data.Repository
                 sql.AppendLine(@"   and trans.WarehouseId = :warehouse");
             }
             IQuery q = Session.CreateQuery(sql.ToString());
-            q.SetString("TransStatus", "Budgeting");
+            q.SetString("TransStatus", Enums.EnumTransactionStatus.Budgeting.ToString());
             if (item != null)
             {
                 q.SetEntity("item", item);
@@ -57,7 +57,7 @@ namespace YTech.IM.Sense.Data.Repository
             }
 
             IQuery q = Session.CreateQuery(sql.ToString());
-            q.SetString("TransStatus", "Using");
+            q.SetString("TransStatus", Enums.EnumTransactionStatus.Using.ToString());
             if (item != null)
             {
                 q.SetEntity("item", item);
@@ -71,6 +71,59 @@ namespace YTech.IM.Sense.Data.Repository
                  return (decimal)q.UniqueResult();
             }
             return null;
+        }
+
+        public IList<TTransDet> GetListByRoom(MRoom room)
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine(@"   select det
+                                from TTransDet as det
+                                    left outer join det.TransId trans, TTransRoom transRoom
+                                        where trans.Id = transRoom.Id
+                                    and trans.TransStatus = :TransStatus ");
+            if (room != null)
+            {
+                sql.AppendLine(@"   and transRoom.RoomId = :room");
+            }
+            IQuery q = Session.CreateQuery(sql.ToString());
+            q.SetString("TransStatus", Enums.EnumTransactionStatus.Service.ToString());
+            if (room != null)
+            {
+                q.SetEntity("room", room);
+            } 
+            return q.List<TTransDet>();
+        }
+
+        public IList<TTransDet> GetListByTransId(string transId, Enums.EnumTransactionStatus enumTransactionStatus)
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine(@"   select det
+                                from TTransDet as det
+                                    left outer join det.TransId trans 
+                                        where trans.TransStatus = :TransStatus ");
+            if (!string.IsNullOrEmpty(transId))
+            {
+                sql.AppendLine(@"   and trans.Id = :transId");
+            }
+            IQuery q = Session.CreateQuery(sql.ToString());
+            q.SetString("TransStatus", enumTransactionStatus.ToString());
+            if (!string.IsNullOrEmpty(transId))
+            {
+                q.SetString("transId", transId);
+            }
+            return q.List<TTransDet>();
+        }
+
+        public IList<TTransDet> GetListByTrans(TTrans trans)
+        {
+            ICriteria criteria = Session.CreateCriteria(typeof(TTransDet));
+            if (trans != null)
+            {
+                criteria.Add(Expression.Eq("TransId", trans));
+            }
+
+            IList<TTransDet> list = criteria.List<TTransDet>();
+            return list;
         }
     }
 }

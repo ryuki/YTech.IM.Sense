@@ -45,8 +45,8 @@ namespace YTech.IM.Sense.Data.NHibernateMaps.Transaction
             mapping.HasMany(x => x.TransDets)
                 .AsBag()
                 .Inverse()
-                .KeyColumn("TRANS_ID")
-                .Cascade.All();
+                .KeyColumn("TRANS_ID");
+                //.Not.LazyLoad();
         }
 
         #endregion

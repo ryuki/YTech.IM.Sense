@@ -78,7 +78,7 @@
                 url: '<%= Url.Action("List", "Employee") %>',
                 datatype: 'json',
                 mtype: 'GET',
-                colNames: ['Kode Karyawan', 'Nama Depan', 'Nama Belakang', 'Status', 'Jenis Kelamin', 'Departemen', 'Departemen', 'Keterangan'],
+                colNames: ['Kode Karyawan', 'Nama Depan', 'Nama Belakang', 'Status', 'Jenis Kelamin', 'Departemen', 'Departemen', 'Tipe Komisi Produk', 'Komisi Produk', 'Tipe Komisi Jasa', 'Komisi Jasa', 'Keterangan'],
                 colModel: [
                     { name: 'Id', index: 'Id', width: 100, align: 'left', key: true, editrules: { required: true, edithidden: false }, hidedlg: true, hidden: false, editable: true },
                     { name: 'PersonFirstName', index: 'PersonFirstName', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { required: true }, formoptions: { elmsuffix: ' *'} },
@@ -87,12 +87,30 @@
                    { name: 'PersonGender', index: 'PersonGender', width: 200, sortable: false, align: 'left', editable: true, edittype: 'select', editoptions: { value: "Pria:Pria;Wanita:Wanita" }, editrules: { required: false} },
                      { name: 'DepartmentId', index: 'DepartmentId', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { edithidden: true }, hidden: true },
                     { name: 'DepartmentName', index: 'DepartmentName', width: 200, align: 'left', editable: false, edittype: 'select', editrules: { edithidden: true} },
+                     { name: 'EmployeeCommissionProductType', index: 'EmployeeCommissionProductType', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { edithidden: true} },
+                    { name: 'EmployeeCommissionProductVal', index: 'EmployeeCommissionProductVal', width: 200, align: 'right', editable: true, editrules: { edithidden: true },
+                        editoptions: {
+                            dataInit: function (elem) {
+                                $(elem).autoNumeric();
+                                $(elem).attr("style", "text-align:right;");
+                            }
+                        }
+                    },
+                     { name: 'EmployeeCommissionServiceType', index: 'EmployeeCommissionServiceType', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { edithidden: true} },
+                    { name: 'EmployeeCommissionServiceVal', index: 'EmployeeCommissionServiceVal', width: 200, align: 'right', editable: true, editrules: { edithidden: true },
+                        editoptions: {
+                            dataInit: function (elem) {
+                                $(elem).autoNumeric();
+                                $(elem).attr("style", "text-align:right;");
+                            }
+                        }
+                    },
                    { name: 'EmployeeDesc', index: 'EmployeeDesc', width: 200, sortable: false, align: 'left', editable: true, edittype: 'textarea', editoptions: { rows: "3", cols: "20" }, editrules: { required: false }, formoptions: { elmsuffix: ' *'}}],
 
                 pager: $('#listPager'),
                 rowNum: 20,
                 rowList: [20, 30, 50, 100],
-                rownumbers: true, 
+                rownumbers: true,
                 sortname: 'Id',
                 sortorder: "asc",
                 viewrecords: true,
@@ -101,6 +119,8 @@
                 autowidth: true,
                 loadComplete: function () {
                     $('#list').setColProp('DepartmentId', { editoptions: { value: departments} });
+                    $('#list').setColProp('EmployeeCommissionProductType', { editoptions: { value: commissiontype} });
+                    $('#list').setColProp('EmployeeCommissionServiceType', { editoptions: { value: commissiontype} });
                 },
                 ondblClickRow: function (rowid, iRow, iCol, e) {
                     $("#list").editGridRow(rowid, editDialog);
@@ -114,10 +134,12 @@
                 deleteDialog
             );
 
-                var departments = $.ajax({ url: '<%= Url.Action("GetList","Department") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the Department.'); } }).responseText;
+            var departments = $.ajax({ url: '<%= Url.Action("GetList","Department") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the Department.'); } }).responseText;
+            var commissiontype = $.ajax({ url: '<%= Url.Action("GetCommissionTypeList","Employee") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the commissiontype.'); } }).responseText;
         });       
     </script>
     <div id="dialog" title="Status">
-        <p></p>
+        <p>
+        </p>
     </div>
 </asp:Content>

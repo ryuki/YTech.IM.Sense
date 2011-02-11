@@ -1,9 +1,18 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="System.Web.Mvc.ViewUserControl<YTech.IM.Sense.Web.Controllers.ViewModel.ReportParamViewModel>" %>
-<% using (Html.BeginForm())
-   { %>
+<%--<% using (Html.BeginForm())
+   { %>--%>
+     <% using (Ajax.BeginForm(new AjaxOptions
+                                       {
+                                           //UpdateTargetId = "status",
+                                           InsertionMode = InsertionMode.Replace,
+                                           OnSuccess = "onSavedSuccess"
+                                       }
+
+          ))
+                       {%>
 <%= Html.AntiForgeryToken() %>
 <table>
-    <tr>
+  <%--  <tr>
         <td>
             <label for="ExportFormat">
                 Format Laporan :</label>
@@ -11,7 +20,7 @@
         <td>
             <%= Html.DropDownList("ExportFormat")%>
         </td>
-    </tr>
+    </tr>--%>
     <% if (ViewData.Model.ShowDateFrom)
        {	%>
     <tr>
@@ -87,12 +96,19 @@
     <tr>
         <td colspan="2" align="center">
             <button id="Save" type="submit" name="Save">
-                Download Laporan</button>
+                Lihat Laporan</button>
         </td>
     </tr>
 </table>
 <% } %>
 <script language="javascript" type="text/javascript">
+    function onSavedSuccess(e) {
+        var json = e.get_response().get_object();
+        var urlreport ='<%= ResolveUrl("~/ReportViewer.aspx?rpt=") %>' + json.UrlReport;
+        //alert(urlreport);
+        window.open(urlreport);
+    }
+    
     $(document).ready(function () {
         $("#Save").button();
         $("#DateFrom").datepicker({ dateFormat: "dd-M-yy" });

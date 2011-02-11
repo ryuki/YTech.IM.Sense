@@ -15,7 +15,7 @@
         <div>
             <%= Html.ActionLinkForAreas<WarehouseController>(c => c.Index(),"Master Gudang") %></div>
         <div>
-            <%= Html.ActionLinkForAreas<MItemCatController>(c => c.Index(),"Master Kategori Produk") %></div>
+            <%= Html.ActionLinkForAreas<MItemCatController>(c => c.Index(),"Master Kategori Perawatan") %></div>
         <div>
             <%= Html.ActionLinkForAreas<BrandController>(c => c.Index(),"Master Merek") %></div>
         <div>
@@ -30,7 +30,7 @@
         <div>
             <%= Html.ActionLinkForAreas<SupplierController>(c => c.Index(),"Master Supplier") %></div>
         <div>
-            <%= Html.ActionLinkForAreas<CustomerController>(c => c.Index(),"Master Pelanggan") %></div>
+            <%= Html.ActionLinkForAreas<CustomerController>(c => c.Index(),"Master Konsumen") %></div>
         <div>
             <hr />
         </div>
@@ -62,8 +62,7 @@
         <div>
            <%= Html.ActionLinkForAreas<InventoryController>(c => c.ReturSales(), "Retur Penjualan")%></div>
         <div>
-           Billing</div>
-            
+         <%= Html.ActionLinkForAreas<InventoryController>(c => c.Billing(), "Billing")%></div>
             <div><hr /></div>
 
         <div>
@@ -92,6 +91,14 @@
                             <div>Pembayaran Hutang</div>
                             <div>Pembayaran Gaji</div>--%>
     </div>
+     <h3>
+        <a href="#">Absensi</a></h3>
+    <div>
+      <div>
+            <%= Html.ActionLinkForAreas<HRController>(c => c.Absent(), "Absen Karyawan")%>
+        </div>
+         </div>
+
     <h3>
         <a href="#">Laporan</a></h3>
     <div>
