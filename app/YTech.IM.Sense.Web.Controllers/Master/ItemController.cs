@@ -40,10 +40,15 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         }
 
         [Transaction]
-        public virtual ActionResult ListSearch(string sidx, string sord, int page, int rows, string itemId, string itemName)
+        public virtual ActionResult ListSearch(string sidx, string sord, int page, int rows, string itemId, string itemName, string itemCatId)
         {
             int totalRecords = 0;
-            var itemCats = _mItemRepository.GetPagedItemList(sidx, sord, page, rows, ref totalRecords, itemId, itemName);
+            MItemCat itemCat = null;
+            if (!string.IsNullOrEmpty(itemCatId))
+            {
+                itemCat = _mItemCatRepository.Get(itemCatId);
+            }
+            var items = _mItemRepository.GetPagedItemList(sidx, sord, page, rows, ref totalRecords, itemId, itemName, itemCat);
             int pageSize = rows;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
@@ -53,19 +58,19 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from itemCat in itemCats
+                    from item in items
                     select new
                     {
-                        i = itemCat.Id.ToString(),
+                        i = item.Id.ToString(),
                         cell = new string[] {
-                            itemCat.Id, 
-                            itemCat.ItemName, 
-                           itemCat.ItemCatId != null ? itemCat.ItemCatId.ItemCatName : null,
-                           itemCat.BrandId != null ? itemCat.BrandId.BrandName : null,
-                           itemCat.ItemUoms.Count > 0 ? itemCat.ItemUoms[0].ItemUomName : null,
-                       itemCat.ItemUoms.Count > 0 ?  itemCat.ItemUoms[0].ItemUomPurchasePrice.HasValue ? itemCat.ItemUoms[0].ItemUomPurchasePrice.Value.ToString(Helper.CommonHelper.NumberFormat) : "0" : "0",
-                       itemCat.ItemUoms.Count > 0 ?  itemCat.ItemUoms[0].ItemUomSalePrice.HasValue ? itemCat.ItemUoms[0].ItemUomSalePrice.Value.ToString(Helper.CommonHelper.NumberFormat) : "0" : "0", 
-                            itemCat.ItemDesc
+                            item.Id, 
+                            item.ItemName, 
+                           item.ItemCatId != null ? item.ItemCatId.ItemCatName : null,
+                           item.BrandId != null ? item.BrandId.BrandName : null,
+                           item.ItemUoms.Count > 0 ? item.ItemUoms[0].ItemUomName : null,
+                       item.ItemUoms.Count > 0 ?  item.ItemUoms[0].ItemUomPurchasePrice.HasValue ? item.ItemUoms[0].ItemUomPurchasePrice.Value.ToString(Helper.CommonHelper.NumberFormat) : "0" : "0",
+                       item.ItemUoms.Count > 0 ?  item.ItemUoms[0].ItemUomSalePrice.HasValue ? item.ItemUoms[0].ItemUomSalePrice.Value.ToString(Helper.CommonHelper.NumberFormat) : "0" : "0", 
+                            item.ItemDesc
                         }
                     }).ToArray()
             };
@@ -84,7 +89,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         public virtual ActionResult List(string sidx, string sord, int page, int rows)
         {
             int totalRecords = 0;
-            var itemCats = _mItemRepository.GetPagedItemList(sidx, sord, page, rows, ref totalRecords, null, null);
+            var itemCats = _mItemRepository.GetPagedItemList(sidx, sord, page, rows, ref totalRecords, null, null, null);
             int pageSize = rows;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
@@ -120,7 +125,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
 
         [Transaction]
         public ActionResult Insert(MItem viewModel, FormCollection formCollection)
-        { 
+        {
             MItem mItemToInsert = new MItem();
             TransferFormValuesTo(mItemToInsert, viewModel);
             mItemToInsert.ItemCatId = _mItemCatRepository.Get(formCollection["ItemCatId"]);
@@ -222,7 +227,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
             }
             itemUom.ItemUomName = formCollection["ItemUomName"];
             UpdateNumericData(itemUom, formCollection);
-           
+
 
             mItemToUpdate.ItemUoms.Clear();
             mItemToUpdate.ItemUoms.Add(itemUom);

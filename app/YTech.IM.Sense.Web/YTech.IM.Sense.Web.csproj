@@ -78,6 +78,11 @@
     <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Microsoft.ReportViewer.ProcessingObjectModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -224,6 +229,7 @@
     <Content Include="Content\Images\home-icon.png" />
     <Content Include="Content\Images\hoverSkins.png" />
     <Content Include="Content\Images\l.gif" />
+    <Content Include="Content\Images\logo.jpg" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\Mvc2Validation.png" />
     <Content Include="Content\Images\navigation-menu.png" />
@@ -298,6 +304,7 @@
     <Content Include="Scripts\jquery.layout.state.js" />
     <Content Include="Scripts\jquery.maskedinput-1.2.2.min.js" />
     <Content Include="Scripts\jquery.mousewheel-3.0.4.js" />
+    <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\NumberFormat.js" />
     <Content Include="Scripts\jquery.tooltip.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -344,6 +351,7 @@
     <Content Include="Views\Transaction\HR\Absent.aspx" />
     <Content Include="Views\Transaction\Inventory\Adjusment.aspx" />
     <Content Include="Views\Transaction\Inventory\Billing.aspx" />
+    <Content Include="Views\Transaction\Inventory\DetailItem.aspx" />
     <Content Include="Views\Transaction\Inventory\Payment.ascx" />
     <Content Include="Views\Transaction\Inventory\ReturSales.aspx" />
     <Content Include="Views\Transaction\Inventory\Sales.aspx" />
@@ -398,14 +406,14 @@
     <Content Include="Views\Shared\UIMaster.Master" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\Transaction\Report\RptBrand.rdlc" />
-    <EmbeddedResource Include="Views\Transaction\Report\RptCostCenter.rdlc" />
-    <EmbeddedResource Include="Views\Transaction\Report\RptJournal.rdlc" />
-    <EmbeddedResource Include="Views\Transaction\Report\RptLR.rdlc" />
-    <EmbeddedResource Include="Views\Transaction\Report\RptNeraca.rdlc" />
-    <EmbeddedResource Include="Views\Transaction\Report\RptPrintFacturService.rdlc" />
-    <EmbeddedResource Include="Views\Transaction\Report\RptStockCard.rdlc" />
-    <EmbeddedResource Include="Views\Transaction\Report\RptStockItem.rdlc" />
+    <Content Include="Views\Transaction\Report\RptBrand.rdlc" />
+    <Content Include="Views\Transaction\Report\RptCostCenter.rdlc" />
+    <Content Include="Views\Transaction\Report\RptJournal.rdlc" />
+    <Content Include="Views\Transaction\Report\RptLR.rdlc" />
+    <Content Include="Views\Transaction\Report\RptNeraca.rdlc" />
+    <Content Include="Views\Transaction\Report\RptPrintFacturService.rdlc" />
+    <Content Include="Views\Transaction\Report\RptStockCard.rdlc" />
+    <Content Include="Views\Transaction\Report\RptStockItem.rdlc" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\MasterPopup.master" />

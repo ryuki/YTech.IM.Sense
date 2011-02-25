@@ -64,13 +64,14 @@ namespace YTech.IM.Sense.Web.Controllers.Helper
                 if (char.IsUpper(transactionStatus.ToString(), i))
                     tipeTrans += transactionStatus.ToString().Substring(i, 1);
             }
-            string formatFactur = "SENSE/[TRANS]/[XXX]/[MONTH]/[YEAR]";
+            string formatFactur = "TIRTA/[TRANS]/[YEAR]/[MONTH]/[DAY]/[XXX]";
             StringBuilder result = new StringBuilder();
             result.Append(formatFactur);
             result.Replace("[TRANS]", tipeTrans);
             result.Replace("[XXX]", GetFactur(5, no));
+            result.Replace("[DAY]", DateTime.Today.Day.ToString());
             result.Replace("[MONTH]", DateTime.Today.ToString("MMM").ToUpper());
-            result.Replace("[YEAR]", DateTime.Now.Year.ToString());
+            result.Replace("[YEAR]", DateTime.Today.Year.ToString());
             return result.ToString();
         }
 
@@ -83,12 +84,13 @@ namespace YTech.IM.Sense.Web.Controllers.Helper
             referenceRepository.Update(refer);
             referenceRepository.DbContext.CommitChanges();
 
-            string formatFactur = "SENSE/[XXX]/[MONTH]/[YEAR]";
+            string formatFactur = "TIRTA/VOUCHER/[YEAR]/[MONTH]/[DAY]/[XXX]";
             StringBuilder result = new StringBuilder();
             result.Append(formatFactur);
             result.Replace("[XXX]", GetFactur(5, no));
+            result.Replace("[DAY]", DateTime.Today.Day.ToString());
             result.Replace("[MONTH]", DateTime.Today.ToString("MMM").ToUpper());
-            result.Replace("[YEAR]", DateTime.Now.Year.ToString());
+            result.Replace("[YEAR]", DateTime.Today.Year.ToString());
             return result.ToString();
         }
 

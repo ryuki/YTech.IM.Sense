@@ -389,10 +389,10 @@ var imgerror = '<%= Url.Content("~/Content/Images/cross.gif") %>';
                 insertDialog,
                 deleteDialog
             );
-
-        var items = $.ajax({ url:  '<%= ResolveUrl("~/Master/Item/GetList") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the items.'); } }).responseText;
-               
     });
+
+//        var items = $.ajax({ url:  '<%= ResolveUrl("~/Master/Item/GetList") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the items.'); } }).responseText;
+               
 
     
 //function to generate tooltips

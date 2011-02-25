@@ -19,6 +19,7 @@ namespace YTech.IM.Sense.Enums
         Mutation,
         Adjusment,
         Received,
-        Budgeting
+        Budgeting,
+        Service
     }
 }

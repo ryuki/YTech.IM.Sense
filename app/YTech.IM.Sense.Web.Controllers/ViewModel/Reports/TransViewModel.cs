@@ -8,5 +8,6 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel.Reports
 {
     public class TransViewModel : TTrans
     {
+        public string CustomerName { get; set; }
     }
 }

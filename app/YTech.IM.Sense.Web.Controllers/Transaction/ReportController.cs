@@ -249,7 +249,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             var listDet = from det in transDets
                           select new
                           {
-                              // det.PacketId,
+                              //det.PacketId,
                               EmployeeId = det.EmployeeId.Id,
                               EmployeeName = det.EmployeeId.PersonId.PersonName,
                               PacketId = det.PacketId.Id,
@@ -280,8 +280,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                            det.TransBy,
                            det.TransDesc,
                            det.TransDiscount,
-                           det.TransStatus
-                           // EmployeeId = det.EmployeeId.Id
+                           det.TransStatus,
+                           EmployeeId = det.EmployeeId.Id,
+                           EmployeeName = det.EmployeeId.PersonId.PersonName
                        }
        ;
             ReportDataSource reportDataSource = new ReportDataSource("TransViewModel", list.ToList());

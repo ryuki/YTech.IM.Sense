@@ -161,7 +161,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             {
                 detToInsert = new TJournalDet(journal);
                 detToInsert.SetAssignedIdTo(Guid.NewGuid().ToString());
-                detToInsert.AccountId = _mAccountRepository.Get(formCollection["AccountId"]);
+                detToInsert.AccountId = _mAccountRepository.Get(formCollection["CashAccountId"]);
 
                 if (journal.JournalType == EnumJournalType.CashIn.ToString())
                 {

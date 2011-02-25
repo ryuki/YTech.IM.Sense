@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Printing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -9,6 +12,7 @@ using Microsoft.Reporting.WebForms;
 using YTech.IM.Sense.Core.RepositoryInterfaces;
 using YTech.IM.Sense.Core.Transaction;
 using YTech.IM.Sense.Data.Repository;
+using YTech.IM.Sense.Web.Controllers.Helper;
 
 namespace YTech.IM.Sense.Web
 {
@@ -23,6 +27,11 @@ namespace YTech.IM.Sense.Web
                 string rpt = Request.QueryString["rpt"];
 
                 rv.ProcessingMode = ProcessingMode.Local;
+                //if (rpt.Equals(Enums.EnumReports.RptPrintFacturService.ToString()))
+                //{
+                //    SetPaper(rpt);
+                //}
+                //else
                 rv.LocalReport.ReportPath = Server.MapPath(string.Format("~/Views/Transaction/Report/{0}.rdlc", rpt));
 
                 rv.LocalReport.DataSources.Clear();
@@ -41,6 +50,28 @@ namespace YTech.IM.Sense.Web
 
                 rv.LocalReport.Refresh();
             }
+        }
+
+        void SetPaper(string rpt)
+        {
+            int rowCount = (int)Session["DetailRowCount"];
+            float h = (rowCount - 1) * 1.27f;
+            SizeF sizePage = new SizeF(7.6f, 8.5f + h);
+            PointF pointMarginsLT = new PointF(0f, 0f);
+
+            PointF pointMarginsRB = new PointF(0f, 0f);
+
+            string path = Server.MapPath(string.Format("~/Views/Transaction/Report/{0}.rdlc", rpt));
+            StreamReader sr = new StreamReader(path);
+            string sXMLData = sr.ReadToEnd();
+            ReportViewerHelper reportHelper = new ReportViewerHelper(sXMLData);
+
+            reportHelper.SetPageSize(sizePage, pointMarginsLT, pointMarginsRB);
+
+            //Change the report here with the helper     
+            rv.LocalReport.LoadReportDefinition(reportHelper.GetReport());
+
+
         }
     }
 }

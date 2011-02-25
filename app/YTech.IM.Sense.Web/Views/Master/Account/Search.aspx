@@ -65,7 +65,12 @@
                 ondblClickRow: function (rowid, iRow, iCol, e) {
                     var list = $("#list");
                     var rowData = list.getRowData(rowid);
-                    window.parent.SetAccountDetail(rowData["Id"], rowData["AccountName"]);
+                     <% if (!string.IsNullOrEmpty(Request.QueryString["src"])) {	%>
+                      window.parent.SetAccountDetail('<%= Request.QueryString["src"] %>',rowData["Id"], rowData["AccountName"]);
+  <%} else {%>
+   window.parent.SetAccountDetail(rowData["Id"], rowData["AccountName"]);
+  <%}%>
+                   
                     return false;
                 }
             }).navGrid('#listPager',
@@ -92,4 +97,5 @@
         <p>
         </p>
     </div>
+  
 </asp:Content>

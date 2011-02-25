@@ -207,12 +207,12 @@
                 insertDialog,
                 deleteDialog
             );
+        });
 
             var packets = $.ajax({ url: '<%= Url.Action("GetList","Packet") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the Packets.'); } }).responseText;
             var itemCats = $.ajax({ url: '<%= Url.Action("GetList","MItemCat") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the ItemCats.'); } }).responseText;
 
             //alert(itemCats.toString());
-        });
     </script>
     <div id="dialog" title="Status">
         <p>

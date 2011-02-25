@@ -9,8 +9,8 @@
     <style type="text/css">
         .button_room
         {
-            width: 110px;
-            height: 75px;
+            width: 90px;
+            height: 65px;
             margin: 5px;
         }
         .used
@@ -26,8 +26,6 @@
             margin: 3px;--%>
         }
     </style>
-</asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="title" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
     <table>
@@ -238,7 +236,7 @@
         </div>
     </div>
     <div id='popup'>
-        <iframe width='100%' height='380px' id="popup_frame"></iframe>
+        <iframe width='100%' height='100%' id="popup_frame"></iframe>
     </div>
     <div id="dialog" title="Status">
         <p>
@@ -312,8 +310,6 @@
               $("#TransBy").val(trans.TransBy);
               $("#TransDiscount").val(trans.TransDiscount);
               $("#txtCustomerName").val(trans.CustomerName);
-              
-
         }
 
         function onSavedSuccess(e)
@@ -331,9 +327,9 @@
     window.open(urlreport);
 }
 
-                $('#dialog p:first').text(msg);
-                $("#dialog").dialog("open"); 
-                     return false   
+//                $('#dialog p:first').text(msg);
+//                $("#dialog").dialog("open"); 
+                     return false ;  
                 }
 }
              var roomstatus = json.RoomStatus;
@@ -362,7 +358,7 @@
     function CalculateTotal() {
         var price = $('#TransDetPrice').val().replace(",","");
         var qty = $('#TransDetQty').val().replace(",","");
-        var disc = $('#TransDetDisc').val().replace(",","");
+        var disc = 0; // $('#TransDetDisc').val().replace(",","");
         var subtotal = (price * qty)
         var total = subtotal - (disc * subtotal / 100);
 
@@ -371,14 +367,14 @@
 
     function CalculatePaymentSisa()
     {
-     var grandtotal = parseFloat($('#paymentGrandTotal').text().replace(",",""));
+        var grandtotal = parseFloat($('#paymentGrandTotal').text().replace(",",""));
         var voucher = parseFloat($('#paymentVoucher').val().replace(",",""));
         var cash = parseFloat($('#paymentCash').val().replace(",",""));
         var creditcard = parseFloat($('#paymentCreditCard').val().replace(",",""));
         var totalpaid =  (voucher + cash + creditcard);
-//        alert(totalpaid);
+        //        alert(totalpaid);
         var sisa = totalpaid - grandtotal;
-       $('#paymentSisa').text(FormatNumberBy3(sisa));
+        $('#paymentSisa').text(FormatNumberBy3(sisa));
     }
 
         function GetTotal()
@@ -417,6 +413,9 @@
                  buttons: { 
                 "OK": function() {
                     $(this).dialog("close");
+                    $('#hidpaymentCash').val($('#paymentCash').val());
+                    $('#hidpaymentVoucher').val($('#paymentVoucher').val());
+                    $('#hidpaymentCreditCard').val($('#paymentCreditCard').val());
                     $('#btnPaid').click();
                 },
                 "Batal": function() { 
@@ -429,15 +428,17 @@
                 autoOpen: false,
                 modal:true,
                 title:'Detail Transaksi',
-                width:'900px'
+                width:'900px',
+                height: 380
             });
             $("#popup").dialog({
                 autoOpen: false,
-                height: 420,
+                height: 480,
                 width: '80%',
                 modal: true,
                 close: function (event, ui) {
                     $("#list").trigger("reloadGrid");
+                    GetTotal();
                 }
             }); 
             $('#imgCustomerId').click(function(){
@@ -539,11 +540,14 @@
                     return [true, ''];
                 }
                 , afterComplete: function (response, postdata, formid) {
-                    $('#dialog p:first').text(response.responseText);
-                    $("#dialog").dialog("open");
-                    
-                    GetTotal();
-                  
+//                    $('#dialog p:first').text(response.responseText);
+//                    $("#dialog").dialog("open");
+
+                    //get packet id and qty base ajax
+                    var res = JSON.parse(response.responseText);
+//                    alert(res);
+                    OpenPopupTransDetItem(res.Id,res.PacketId,res.TransDetQty);
+                    //GetTotal();
                 }
                 , width: "400"
         };
@@ -573,7 +577,9 @@
                 },
             datatype: 'json',
             mtype: 'GET',
-            colNames: ['Id', 'Kode Paket', 'Nama Paket', 'Kuantitas', 'Harga', 'Diskon', 'Total', 'Kode Terapis', 'Nama Terapis'],
+            colNames: ['Id', 'Kode Paket', 'Nama Paket', 'Kuantitas', 'Harga', 
+            //'Diskon', 
+            'Total', 'Kode Terapis', 'Nama Terapis'],
             colModel: [
                     { name: 'Id', index: 'Id', width: 100, align: 'left', key: true, editrules: { required: true, edithidden: false }, hidedlg: true, hidden: true, editable: false },
                     { name: 'PacketId', index: 'PacketId', width: 200, align: 'left', editable: true, edittype: 'text', editrules: {  required: true,edithidden: true }, hidden: true,
@@ -598,14 +604,14 @@
                            }
                        }
                         },
-                   { name: 'TransDetDisc', index: 'TransDetDisc', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false },
-                       editoptions: {
-                           dataInit: function (elem) {
-                               $(elem).autoNumeric();
-                               $(elem).attr("style","text-align:right;");
-                           }
-                       }
-                        },
+//                   { name: 'TransDetDisc', index: 'TransDetDisc', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false },
+//                       editoptions: {
+//                           dataInit: function (elem) {
+//                               $(elem).autoNumeric();
+//                               $(elem).attr("style","text-align:right;");
+//                           }
+//                       }
+//                        },
                    { name: 'TransDetTotal', index: 'TransDetTotal', width: 200, sortable: false, align: 'right', editable: true, editrules: { required: false } ,
                        editoptions: {
                            dataInit: function (elem) {
@@ -708,6 +714,21 @@
             $("#popup").dialog("close");
           $('#EmployeeId').attr('value', employeeId);
           $('#EmployeeName').attr('value', employeeName);        
+        }
+        
+            
+        function OpenPopupTransDetItem(detailId,packetId,transDetQty)
+        {
+            var src = '<%= Url.Action("DetailItem", "Inventory") %>';
+            src += '?detailId='+detailId+'&packetId='+packetId+'&transDetQty='+transDetQty;
+            $("#popup_frame").attr("src", src);
+            $("#popup").dialog("open");
+            return false;   
+        }
+
+        function ClosePopUp()
+        {
+         $("#popup").dialog("close");
         }
     </script>
 </asp:Content>

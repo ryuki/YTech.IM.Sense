@@ -4,6 +4,7 @@ using SharpArch.Core.DomainModel;
 using System;
 using SharpArch.Core;
 using YTech.IM.Sense.Core.Master;
+using YTech.IM.Sense.Core.Transaction.Inventory;
 
 namespace YTech.IM.Sense.Core.Transaction
 {
@@ -16,6 +17,7 @@ namespace YTech.IM.Sense.Core.Transaction
             Check.Require(trans != null, "trans may not be null");
 
             TransId = trans;
+            TTransDetItems = new List<TTransDetItem>();
         }
 
         [DomainSignature]
@@ -40,6 +42,8 @@ namespace YTech.IM.Sense.Core.Transaction
         public virtual string ModifiedBy { get; set; }
         public virtual DateTime? ModifiedDate { get; set; }
         public virtual byte[] RowVersion { get; set; }
+
+        public virtual IList<TTransDetItem> TTransDetItems { get; protected set; }
 
         #region Implementation of IHasAssignedId<string>
 

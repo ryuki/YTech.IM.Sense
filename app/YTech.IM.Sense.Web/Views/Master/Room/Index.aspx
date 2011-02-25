@@ -111,11 +111,11 @@
                 insertDialog,
                 deleteDialog
             );
+        });
 
                 var types = $.ajax({ url: '<%= Url.Action("GetRoomTypeList","Room") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the RoomType.'); } }).responseText;
 
                 var status = $.ajax({ url: '<%= Url.Action("GetRoomStatusList","Room") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the RoomType.'); } }).responseText;
-        });
     </script>
     <div id="dialog" title="Status">
         <p>

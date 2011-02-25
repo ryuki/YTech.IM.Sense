@@ -36,6 +36,9 @@
             $.jgrid.del.msg = "Anda yakin menghapus Produk yang dipilih?";
             $("#list").jqGrid({
                 url: '<%=Url.Action("ListSearch", "Item")%>',
+                  postData: {
+                    itemCatId: function () { return '<%= Request.QueryString["itemCatId"] %>'; }
+                },
                 datatype: 'json',
                 mtype: 'GET',
                 colNames: ['Kode Produk', 'Nama', 'Kategori Perawatan', 'Merek', 'Satuan', 'Harga Beli', 'Harga Jual', 'Keterangan'],
@@ -95,7 +98,11 @@ var price = rowData["ItemUomPurchasePrice"];
 var price = 0;
    <%
     }%>
-                    window.parent.SetItemDetail(rowData["Id"], rowData["ItemName"], price);
+    <% if (!string.IsNullOrEmpty(Request.QueryString["src"])) {	%>
+                      window.parent.SetItemDetail('<%= Request.QueryString["src"] %>',rowData["Id"], rowData["ItemName"], price);
+  <%} else {%>
+   window.parent.SetItemDetail(rowData["Id"], rowData["ItemName"], price);
+  <%}%>
                     return false;
                 }
             }).navGrid('#listPager',
@@ -105,7 +112,9 @@ var price = 0;
             );
 
             $('#btnSearch').click(function () {
-                var newurl = '<%= Url.Action("ListSearch", "Item") %>';
+                var newurl = '<%= Url.Action("ListSearch", "Item") %>';                
+//                var itemCatId = '<%= Request.QueryString["itemCatId"] %>';
+//                newurl += '?itemCatId='+itemCatId;
                 var searchby = $("#ddlSearchBy option:selected").val();
                 if (searchby == "0") {
                     newurl += '?itemId=';

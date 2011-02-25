@@ -20,8 +20,8 @@ namespace YTech.IM.Sense.Data.NHibernateMaps.Transaction
                  .GeneratedBy.Assigned();
 
             mapping.References(x => x.TransId, "TRANS_ID").Not.Nullable();
-            mapping.References(x => x.ItemId, "ITEM_ID").Fetch.Join();
-            mapping.References(x => x.ItemUomId, "ITEM_UOM_ID").Fetch.Join();
+            mapping.References(x => x.ItemId, "ITEM_ID");
+            mapping.References(x => x.ItemUomId, "ITEM_UOM_ID");
             mapping.Map(x => x.TransDetNo, "TRANS_DET_NO");
             mapping.Map(x => x.TransDetQty  , "TRANS_DET_QTY");
             mapping.Map(x => x.TransDetPrice, "TRANS_DET_PRICE");
@@ -39,6 +39,13 @@ namespace YTech.IM.Sense.Data.NHibernateMaps.Transaction
             mapping.Map(x => x.ModifiedBy, "MODIFIED_BY");
             mapping.Map(x => x.ModifiedDate, "MODIFIED_DATE");
             mapping.Map(x => x.RowVersion, "ROW_VERSION").ReadOnly();
+
+            mapping.HasMany(x => x.TTransDetItems)
+                //.Access.Property()
+                .AsBag()
+                .Inverse()
+                .KeyColumn("TRANS_DET_ID")
+                .Cascade.All();
         }
 
         #endregion

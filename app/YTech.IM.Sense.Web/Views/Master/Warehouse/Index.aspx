@@ -138,9 +138,9 @@
                 insertDialog,
                 deleteDialog
             );
+        });    
             var employees = $.ajax({ url: '<%= Url.Action("GetList","Employee") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the employees.'); } }).responseText;
             var costCenters = $.ajax({ url: '<%= Url.Action("GetList","CostCenter") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the costCenters.'); } }).responseText;
-        });    
         
          function OpenPopupAccountSearch()
         {
@@ -160,12 +160,11 @@
        
         }   
     </script>
-
     <div id="dialog" title="Status">
-	<p></p>
-</div>
-<div id='popup'>
-    <iframe width='100%' height='380px' id="popup_frame"></iframe>
-</div>
-
+        <p>
+        </p>
+    </div>
+    <div id='popup'>
+        <iframe width='100%' height='380px' id="popup_frame"></iframe>
+    </div>
 </asp:Content>

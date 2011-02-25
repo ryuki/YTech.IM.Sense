@@ -133,10 +133,10 @@
                 insertDialog,
                 deleteDialog
             );
+        });       
 
             var departments = $.ajax({ url: '<%= Url.Action("GetList","Department") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the Department.'); } }).responseText;
             var commissiontype = $.ajax({ url: '<%= Url.Action("GetCommissionTypeList","Employee") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the commissiontype.'); } }).responseText;
-        });       
     </script>
     <div id="dialog" title="Status">
         <p>

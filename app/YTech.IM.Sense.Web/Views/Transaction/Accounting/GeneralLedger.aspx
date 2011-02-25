@@ -112,6 +112,9 @@
         <p>
         </p>
     </div>
+<div id='popup'>
+    <iframe width='100%' height='380px' id="popup_frame"></iframe>
+</div>
     <%
         }
     %>
@@ -172,6 +175,16 @@ function ajaxValidate() {
         $("div#error").dialog({
             autoOpen: false
         });
+            
+            $("#popup").dialog({
+                autoOpen: false,
+                height: 420,
+                width: '80%',
+                modal: true,
+                close: function(event, ui) {                 
+                    $("#list").trigger("reloadGrid");
+                 }
+            });
 
             var editDialog = {
                 url: '<%= Url.Action("Update", "Accounting") %>'
@@ -191,6 +204,9 @@ function ajaxValidate() {
                 }
                 , afterShowForm: function (eparams) {
                     $('#Id').attr('disabled', 'disabled');
+                     $('#imgAccountId').click(function () {
+                                   OpenPopupAccountSearch();
+                               });
                 }
                 , width: "400"
                 , afterComplete: function (response, postdata, formid) {
@@ -206,6 +222,9 @@ function ajaxValidate() {
                 , afterShowForm: function (eparams) {
                     $('#Id').attr('disabled', '');
                     $('#JournalDetAmmount').attr('value', '0');
+                     $('#imgAccountId').click(function () {
+                                   OpenPopupAccountSearch();
+                               });
 
                 }
                 , afterComplete: function (response, postdata, formid) {
@@ -231,6 +250,7 @@ function ajaxValidate() {
             $.jgrid.edit.editCaption = "Edit Detail";
             $.jgrid.del.caption = "Hapus Detail";
             $.jgrid.del.msg = "Anda yakin menghapus Detail yang dipilih?";
+            var imgLov = '<%= Url.Content("~/Content/Images/window16.gif") %>';
             $("#list").jqGrid({
                 url: '<%= Url.Action("List", "Accounting") %>',
                 datatype: 'json',
@@ -238,8 +258,11 @@ function ajaxValidate() {
                 colNames: ['Id', 'Akun', 'Akun', 'No Bukti', 'Status', 'Jumlah', 'Debet', 'Kredit', 'Keterangan'],
                 colModel: [
                     { name: 'Id', index: 'Id', width: 100, align: 'left', key: true, editrules: { required: true, edithidden: false }, hidedlg: true, hidden: true, editable: false },
-                    { name: 'AccountId', index: 'AccountId', width: 200, align: 'left', editable: true, edittype: 'select', editrules: { edithidden: true }, hidden: true },
-                    { name: 'AccountName', index: 'AccountName', width: 200, align: 'left', editable: false, sortable: false, edittype: 'select', editrules: { edithidden: true} },
+                     { name: 'AccountId', index: 'AccountId', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { required: false },
+                       formoptions: {
+                        "elmsuffix": "&nbsp;<img src='" + imgLov + "' style='cursor:hand;' id='imgAccountId' />"
+                    } },
+                   { name: 'AccountName', index: 'AccountName', width: 200, align: 'left', editable: true, edittype: 'text', editrules: { required: false} },
                     { name: 'JournalDetEvidenceNo', index: 'JournalDetEvidenceNo', width: 200, sortable: false, align: 'left', editable: true, editrules: { edithidden: true} },
                     { name: 'JournalDetStatus', index: 'JournalDetStatus', width: 200, align: 'left', editable: true, edittype: 'select', editoptions: { value: "D:Debet;K:Kredit" }, editrules: { edithidden: true }, hidden: true },
                     { name: 'JournalDetAmmount', index: 'JournalDetAmmount', width: 200, align: 'left', editable: true, editrules: { edithidden: true }, hidden: true,
@@ -264,8 +287,7 @@ function ajaxValidate() {
                 height: 150,
                 caption: 'Daftar Detail',
                 autowidth: true,
-                loadComplete: function () {
-                    $('#list').setColProp('AccountId', { editoptions: { value: accounts} });
+                loadComplete: function () { 
                     $('#listPager_center').hide();
                 },
                 ondblClickRow: function (rowid, iRow, iCol, e) {
@@ -304,5 +326,23 @@ function ajaxValidate() {
 					}
 			});
 		}
+
+         function OpenPopupAccountSearch()
+        {
+          $("#popup_frame").attr("src", "<%= ResolveUrl("~/Master/Account/Search") %>");
+            $("#popup").dialog("open");
+            return false;   
+        }
+
+         function SetAccountDetail(accountId, accountName)
+        {
+//        alert(itemId);
+//        alert(itemName);
+//        alert(price);
+  $("#popup").dialog("close");
+          $('#AccountId').attr('value', accountId);
+          $('#AccountName').attr('value', accountName); 
+       
+        }   
     </script>
 </asp:Content>

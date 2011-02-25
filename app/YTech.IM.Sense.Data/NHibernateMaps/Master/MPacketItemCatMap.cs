@@ -19,7 +19,7 @@ namespace YTech.IM.Sense.Data.NHibernateMaps.Master
             mapping.Id(x => x.Id, "PACKET_ITEM_CAT_ID")
                  .GeneratedBy.Assigned();
 
-            mapping.References(x => x.PacketId, "PACKET_ID").Fetch.Join();
+            mapping.References(x => x.PacketId, "PACKET_ID");
             mapping.References(x => x.ItemCatId, "ITEM_CAT_ID").Fetch.Join();
             mapping.Map(x => x.ItemCatQty, "ITEM_CAT_QTY");
             mapping.Map(x => x.PacketItemCatStatus, "PACKET_ITEM_CAT_STATUS");

@@ -12,6 +12,7 @@
     <link rel="Stylesheet" type="text/css" href="<%= Url.Content("~/Content/css/layout-default-latest.css")%>" />
     <link rel="Stylesheet" type="text/css" href="<%= Url.Content("~/Content/css/complex.css")%>" />
    
+    <script src="<%= Url.Content("~/Scripts/json2.js") %>" type="text/javascript"></script>
     <script src="<%= Url.Content("~/Scripts/MicrosoftAjax.debug.js") %>" type="text/javascript"></script>
     <script src="<%= Url.Content("~/Scripts/MicrosoftMvcAjax.debug.js") %>" type="text/javascript"></script>
   <%--<script src="<% = Url.Content("~/Scripts/Templates/MicrosoftAjaxAdoNet.js") %>" type="text/javascript"></script>

@@ -36,7 +36,9 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
             return viewModel;
         }
 
-        public TJournal Journal { get; internal set; }
+      public TJournal Journal { get; internal set; }
+      public string CashAccountId { get; internal set; }
+      public string CashAccountName { get; internal set; }
         public IList<TJournalDet> ListOfJournalDet { get; internal set; }
 
         public SelectList CostCenterList { get; internal set; }

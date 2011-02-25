@@ -84,8 +84,16 @@
                                 Akun Kas :</label>
                         </td>
                         <td>
-                            <%= Html.DropDownList("AccountId", Model.AccountList)%>
-                            <%= Html.ValidationMessage("AccountId")%>
+                            <%= Html.TextBox("CashAccountId", Model.CashAccountId)%>&nbsp;<img src='<%= Url.Content("~/Content/Images/window16.gif") %>' style='cursor:hand;' id='imgCashAccountId' />
+                            <%= Html.ValidationMessage("CashAccountId")%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> 
+                        </td>
+                        <td>
+                            <%= Html.TextBox("CashAccountName", Model.CashAccountName)%>
+                            <%= Html.ValidationMessage("CashAccountName")%>
                         </td>
                     </tr>
                     <tr>
@@ -212,6 +220,10 @@ function ajaxValidate() {
                     $("#list").trigger("reloadGrid");
                  }
             });
+            
+                     $('#imgCashAccountId').click(function () {
+                                   OpenPopupCashAccountSearch();
+                               });
 
         var editDialog = {
             url: '<%= Url.Action("Update", "Accounting") %>'
@@ -354,22 +366,37 @@ function ajaxValidate() {
 					}
 			});
 		}
-        
-         function OpenPopupAccountSearch()
-        {
-          $("#popup_frame").attr("src", "<%= ResolveUrl("~/Master/Account/Search") %>");
+
+        function OpenPopupCashAccountSearch()
+  {
+          $("#popup_frame").attr("src", "<%= ResolveUrl("~/Master/Account/Search") %>?src=CashAccountId");
             $("#popup").dialog("open");
             return false;   
         }
 
-         function SetAccountDetail(accountId, accountName)
+         function OpenPopupAccountSearch()
+        {
+          $("#popup_frame").attr("src", "<%= ResolveUrl("~/Master/Account/Search") %>?src=AccountId");
+            $("#popup").dialog("open");
+            return false;   
+        }
+
+         function SetAccountDetail(src,accountId, accountName)
         {
 //        alert(itemId);
 //        alert(itemName);
 //        alert(price);
   $("#popup").dialog("close");
-          $('#AccountId').attr('value', accountId);
+  if (src == 'AccountId') {
+     $('#AccountId').attr('value', accountId);
           $('#AccountName').attr('value', accountName); 
+}
+         
+ else if (src == 'CashAccountId') {
+     $('#CashAccountId').attr('value', accountId);
+          $('#CashAccountName').attr('value', accountName);
+
+  }
        
         }   
 </script>

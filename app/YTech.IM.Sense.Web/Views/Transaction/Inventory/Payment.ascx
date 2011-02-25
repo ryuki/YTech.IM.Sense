@@ -1,4 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="System.Web.Mvc.ViewUserControl" %>
+ <input id="hidpaymentCash" name="hidpaymentCash" type="hidden" />
+                    <input id="hidpaymentVoucher" name="hidpaymentVoucher" type="hidden" />
+                    <input id="hidpaymentCreditCard" name="hidpaymentCreditCard" type="hidden" /> 
 <div id="payment"> 
     <table>
         <tr>

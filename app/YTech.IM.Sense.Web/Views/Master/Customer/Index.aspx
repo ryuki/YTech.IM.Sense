@@ -163,10 +163,10 @@
                 insertDialog,
                 deleteDialog
             );
+        });       
                 var genders = $.ajax({ url: '<%= Url.Action("GetGenderList","Customer") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the genders.'); } }).responseText;
                 var religions = $.ajax({ url: '<%= Url.Action("GetReligionList","Customer") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the religions.'); } }).responseText;
                 var massage = $.ajax({ url: '<%= Url.Action("GetMassageStrengthList","Customer") %>', async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the massage.'); } }).responseText;
-        });       
     </script>
     <div id="dialog" title="Status">
         <p>

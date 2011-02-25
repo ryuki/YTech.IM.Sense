@@ -41,9 +41,10 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         private readonly ITTransDetRepository _tTransDetRepository;
         private readonly ITTransRoomRepository _tTransRoomRepository;
         private readonly IMPacketRepository _mPacketRepository;
+        private readonly IMPacketItemCatRepository _mPacketItemCatRepository;
+        private readonly ITTransDetItemRepository _tTransDetItemRepository;
 
-
-        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransRefRepository tTransRefRepository, ITStockRepository tStockRepository, ITStockRefRepository tStockRefRepository, IMCustomerRepository mCustomerRepository, IMRoomRepository mRoomRepository, IMEmployeeRepository mEmployeeRepository, ITTransDetRepository tTransDetRepository, ITTransRoomRepository tTransRoomRepository, IMPacketRepository mPacketRepository)
+        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransRefRepository tTransRefRepository, ITStockRepository tStockRepository, ITStockRefRepository tStockRefRepository, IMCustomerRepository mCustomerRepository, IMRoomRepository mRoomRepository, IMEmployeeRepository mEmployeeRepository, ITTransDetRepository tTransDetRepository, ITTransRoomRepository tTransRoomRepository, IMPacketRepository mPacketRepository, IMPacketItemCatRepository mPacketItemCatRepository, ITTransDetItemRepository tTransDetItemRepository)
         {
             Check.Require(tTransRepository != null, "tTransRepository may not be null");
             Check.Require(mWarehouseRepository != null, "mWarehouseRepository may not be null");
@@ -60,6 +61,8 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             Check.Require(tTransDetRepository != null, "tTransDetRepository may not be null");
             Check.Require(tTransRoomRepository != null, "tTransRoomRepository may not be null");
             Check.Require(mPacketRepository != null, "mPacketRepository may not be null");
+            Check.Require(mPacketItemCatRepository != null, "mPacketItemCatRepository may not be null");
+            Check.Require(tTransDetItemRepository != null, "tTransDetItemRepository may not be null");
 
             this._tTransRepository = tTransRepository;
             this._mWarehouseRepository = mWarehouseRepository;
@@ -76,6 +79,8 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             this._tTransDetRepository = tTransDetRepository;
             this._tTransRoomRepository = tTransRoomRepository;
             this._mPacketRepository = mPacketRepository;
+            this._mPacketItemCatRepository = mPacketItemCatRepository;
+            this._tTransDetItemRepository = tTransDetItemRepository;
         }
 
         public ActionResult Index()
@@ -502,7 +507,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             int totalRecords = 0;
             IList<TTransDet> transDets = new List<TTransDet>();
             if (!string.IsNullOrEmpty(TransId))
-            { 
+            {
                 transDets = _tTransDetRepository.GetListByTransId(TransId, EnumTransactionStatus.Service);
             }
 
@@ -521,7 +526,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                                                          det.PacketId != null ? det.PacketId.PacketName : null,
                                                          det.TransDetQty.HasValue ?  det.TransDetQty.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
                                                         det.TransDetPrice.HasValue ?  det.TransDetPrice.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
-                                                        det.TransDetDisc.HasValue ?   det.TransDetDisc.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
+                                                        //det.TransDetDisc.HasValue ?   det.TransDetDisc.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
                                                         det.TransDetTotal.HasValue ?   det.TransDetTotal.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
                                                      det.EmployeeId != null ? det.EmployeeId.Id : null,
                                                       det.EmployeeId != null ? det.EmployeeId.PersonId.PersonName : null
@@ -646,7 +651,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
 
         public ActionResult InsertBill(TTransDet viewModel, FormCollection formCollection, string transId)
         {
-            _tTransDetRepository.DbContext.BeginTransaction();
+            //_tTransDetRepository.DbContext.BeginTransaction();
             TTrans trans = _tTransRepository.Get(transId);
 
             UpdateNumericData(viewModel, formCollection);
@@ -665,26 +670,32 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             {
                 transDetToInsert.TransDetCommissionService = emp.EmployeeCommissionServiceVal;
             }
-
-
-
             transDetToInsert.CreatedDate = DateTime.Now;
             transDetToInsert.CreatedBy = User.Identity.Name;
             transDetToInsert.DataStatus = EnumDataStatus.New.ToString();
-            _tTransDetRepository.Save(transDetToInsert);
-            try
-            {
-                _tTransDetRepository.DbContext.CommitTransaction();
-                TempData[EnumCommonViewData.SaveState.ToString()] = EnumSaveState.Success;
-                return Content("success");
-            }
-            catch (Exception ex)
-            {
-                _tTransDetRepository.DbContext.RollbackTransaction();
-                TempData[EnumCommonViewData.SaveState.ToString()] = EnumSaveState.Failed;
-                return Content(ex.Message);
-            }
+            //_tTransDetRepository.Save(transDetToInsert);
+            //try
+            //{
+            //    _tTransDetRepository.DbContext.CommitTransaction();
+            //    TempData[EnumCommonViewData.SaveState.ToString()] = EnumSaveState.Success;
+            //    return Content("success");
+            //}
+            //catch (Exception ex)
+            //{
+            //    _tTransDetRepository.DbContext.RollbackTransaction();
+            //    TempData[EnumCommonViewData.SaveState.ToString()] = EnumSaveState.Failed;
+            //    return Content(ex.Message);
+            //}
 
+            //save temporary to session, then display transdetitem form
+            Session["TransDet"] = transDetToInsert;
+            var e = new
+                        {
+                            transDetToInsert.Id,
+                            PacketId = transDetToInsert.PacketId.Id,
+                            transDetToInsert.TransDetQty
+                        };
+            return Json(e, JsonRequestBehavior.AllowGet);
         }
 
         private static void UpdateNumericData(TTransDet viewModel, FormCollection formCollection)
@@ -1113,15 +1124,14 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             else if (formCollection["btnPrint"] != null)
             {
                 SetReportDataForPrint(formCollection["TransId"]);
-               
-       
+
                 var e = new
                 {
                     Success = false,
                     Message = "redirect",
                     RoomStatus = EnumTransRoomStatus.New.ToString()
                 };
-                return Json(e, JsonRequestBehavior.AllowGet); 
+                return Json(e, JsonRequestBehavior.AllowGet);
             }
             return View();
         }
@@ -1132,27 +1142,27 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             TTrans trans = _tTransRepository.Get(TransId);
             IList<TTrans> listTrans = new List<TTrans>();
             listTrans.Add(trans);
-            var list = from det in listTrans
+            var list = from t in listTrans
                        select new
-                       {
-                           det.TransFactur,
-                           det.TransDate,
-                           det.TransSubTotal,
-                           det.TransBy,
-                           det.TransDesc,
-                           det.TransDiscount,
-                           det.TransStatus
-                           // EmployeeId = det.EmployeeId.Id
-                       }
+                                  {
+                                      t.TransFactur,
+                                      t.TransDate,
+                                      t.TransSubTotal,
+                                      t.TransBy,
+                                      t.TransDesc,
+                                      t.TransDiscount,
+                                      t.TransStatus,
+                                      CustomerName = GetCustomerName(t.TransBy)
+                                  }
        ;
             ReportDataSource reportDataSource = new ReportDataSource("TransViewModel", list.ToList());
             repCol[0] = reportDataSource;
 
             IList<TTransDet> listDetail = trans.TransDets;
+            Session["DetailRowCount"] = listDetail.Count;
             var listDet = from det in listDetail
                           select new
                           {
-                              // det.PacketId,
                               EmployeeId = det.EmployeeId.Id,
                               EmployeeName = det.EmployeeId.PersonId.PersonName,
                               PacketId = det.PacketId.Id,
@@ -1191,6 +1201,19 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             Session["ReportData"] = repCol;
         }
 
+        private string GetCustomerName(string customerId)
+        {
+            if (!string.IsNullOrEmpty(customerId))
+            {
+                MCustomer cust = _mCustomerRepository.Get(customerId);
+                if (cust != null)
+                {
+                    return cust.PersonId.PersonName;
+                }
+            }
+            return string.Empty;
+        }
+
         private ActionResult DeleteTransRoom(TTrans Trans, FormCollection formCollection)
         {
             _tTransRoomRepository.DbContext.BeginTransaction();
@@ -1222,8 +1245,8 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             }
             var e = new
             {
-                Success ,
-                Message ,
+                Success,
+                Message,
                 RoomStatus = EnumTransRoomStatus.New.ToString()
             };
             return Json(e, JsonRequestBehavior.AllowGet);
@@ -1233,28 +1256,35 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         {
             _tTransRoomRepository.DbContext.BeginTransaction();
             TTrans trans = _tTransRepository.Get(formCollection["TransId"]);
-            if (!string.IsNullOrEmpty(formCollection["hidPaymentSubTotal"]))
+
+            if (!string.IsNullOrEmpty(formCollection["TransDiscount"]))
             {
-                string hidPaymentSubTotal = formCollection["hidPaymentSubTotal"].Replace(",", "");
-                trans.TransSubTotal = Convert.ToDecimal(hidPaymentSubTotal);
+                string TransDiscount = formCollection["TransDiscount"].Replace(",", "");
+                trans.TransDiscount = Convert.ToDecimal(TransDiscount);
             }
+            trans.TransPaymentMethod = EnumPaymentMethod.Tunai.ToString();
+            trans.TransBy = Trans.TransBy;
+            trans.TransDate = DateTime.Today;
+            trans.TransFactur = Helper.CommonHelper.GetFacturNo(EnumTransactionStatus.Service);
+            //update subtotal 
+            trans.TransSubTotal = trans.TransDets.Sum(x => x.TransDetTotal);
             _tTransRepository.Update(trans);
 
             TTransRoom troom = _tTransRoomRepository.Get(formCollection["TransId"]);
             troom.RoomStatus = EnumTransRoomStatus.Paid.ToString();
-            if (!string.IsNullOrEmpty(formCollection["paymentCash"]))
+            if (!string.IsNullOrEmpty(formCollection["hidpaymentCash"]))
             {
-                string paymentCash = formCollection["paymentCash"].Replace(",", "");
+                string paymentCash = formCollection["hidpaymentCash"].Replace(",", "");
                 troom.RoomCashPaid = Convert.ToDecimal(paymentCash);
             }
-            if (!string.IsNullOrEmpty(formCollection["paymentVoucher"]))
+            if (!string.IsNullOrEmpty(formCollection["hidpaymentVoucher"]))
             {
-                string paymentVoucher = formCollection["paymentVoucher"].Replace(",", "");
+                string paymentVoucher = formCollection["hidpaymentVoucher"].Replace(",", "");
                 troom.RoomVoucherPaid = Convert.ToDecimal(paymentVoucher);
             }
-            if (!string.IsNullOrEmpty(formCollection["paymentCreditCard"]))
+            if (!string.IsNullOrEmpty(formCollection["hidpaymentCreditCard"]))
             {
-                string paymentCreditCard = formCollection["paymentCreditCard"].Replace(",", "");
+                string paymentCreditCard = formCollection["hidpaymentCreditCard"].Replace(",", "");
                 troom.RoomCreditPaid = Convert.ToDecimal(paymentCreditCard);
             }
             troom.RoomOutDate = DateTime.Now;
@@ -1279,7 +1309,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             }
             var e = new
                         {
-                            Success ,
+                            Success,
                             Message,
                             RoomStatus = EnumTransRoomStatus.Paid.ToString()
                         };
@@ -1341,7 +1371,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             }
             var e = new
             {
-                Success ,
+                Success,
                 Message,
                 RoomStatus = EnumTransRoomStatus.In.ToString()
             };
@@ -1401,5 +1431,60 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                         };
             return Json(j, JsonRequestBehavior.AllowGet);
         }
+
+        public virtual ActionResult DetailItem(string detailId, string packetId, decimal? transDetQty)
+        {
+            DetailItemFormViewModel viewModel = DetailItemFormViewModel.Create(packetId, _mPacketItemCatRepository);
+            return View(viewModel);
+        }
+
+        [ValidateAntiForgeryToken]      // Helps avoid CSRF attacks
+        [Transaction]                   // Wraps a transaction around the action
+        [AcceptVerbs(HttpVerbs.Post)]
+        public virtual ActionResult DetailItem(FormCollection formCollection, string detailId, string packetId, decimal? transDetQty)
+        {
+            _tTransDetItemRepository.DbContext.BeginTransaction();
+            TTransDet det = (TTransDet)Session["TransDet"];
+            _tTransDetRepository.Save(det);
+
+            TTransDetItem detItem;
+
+            //loop item cat packet
+            MPacketItemCat packetItemCat;
+            IList<MPacketItemCat> list = _mPacketItemCatRepository.GetByPacketId(packetId);
+            for (int i = 0; i < list.Count; i++)
+            {
+                packetItemCat = list[i];
+                detItem = new TTransDetItem(det);
+                detItem.SetAssignedIdTo(Guid.NewGuid().ToString());
+                detItem.ItemCatId = packetItemCat.ItemCatId;
+                detItem.ItemId = _mItemRepository.Get(formCollection["txtItemId_" + packetItemCat.ItemCatId.Id]);
+                detItem.ItemQty = transDetQty * packetItemCat.ItemCatQty;
+                detItem.CreatedBy = User.Identity.Name;
+                detItem.CreatedDate = DateTime.Now;
+                _tTransDetItemRepository.Save(detItem);
+            }
+            string Message = "Data berhasil disimpan";
+            bool Success = true;
+            try
+            {
+                _tTransDetItemRepository.DbContext.CommitTransaction();
+                TempData[EnumCommonViewData.SaveState.ToString()] = EnumSaveState.Success;
+            }
+            catch (Exception ex)
+            {
+                Success = false;
+                Message = ex.Message;
+                _tTransDetItemRepository.DbContext.RollbackTransaction();
+                TempData[EnumCommonViewData.SaveState.ToString()] = EnumSaveState.Failed;
+            }
+            var e = new
+            {
+                Success,
+                Message
+            };
+            return Json(e, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
