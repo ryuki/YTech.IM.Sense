@@ -15,6 +15,9 @@ namespace YTech.IM.Sense.Enums
         RptStockCard,
         RptStockItem,
         RptAnalyzeBudgetDetail,
-        RptPrintFacturService
+        RptPrintFacturService,
+        RptServiceOmzet,
+        RptCommissionRecap,
+        RptCommission
     }
 }

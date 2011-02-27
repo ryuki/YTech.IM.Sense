@@ -20,7 +20,11 @@ namespace YTech.IM.Sense.Web.Controllers.Helper
         }
         public static string DateTimeFormat
         {
-            get { return "dd-MMM-yyyy HH24:mm"; }
+            get { return "dd-MMM-yyyy HH:mm"; }
+        }
+        public static string TimeFormat
+        {
+            get { return "HH:mm"; }
         }
         public static string NumberFormat
         {

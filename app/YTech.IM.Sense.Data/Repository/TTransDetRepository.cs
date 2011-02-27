@@ -7,6 +7,7 @@ using SharpArch.Data.NHibernate;
 using YTech.IM.Sense.Core.Master;
 using YTech.IM.Sense.Core.RepositoryInterfaces;
 using YTech.IM.Sense.Core.Transaction;
+using YTech.IM.Sense.Enums;
 
 namespace YTech.IM.Sense.Data.Repository
 {
@@ -124,6 +125,22 @@ namespace YTech.IM.Sense.Data.Repository
 
             IList<TTransDet> list = criteria.List<TTransDet>();
             return list;
+        }
+
+        public IList<TTransDet> GetListByDate(EnumTransactionStatus TransStatus, DateTime? dateFrom, DateTime? dateTo)
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine(@"   select det
+                                from TTransDet as det
+                                    left outer join det.TransId trans 
+                                        where trans.TransStatus = :TransStatus ");
+            sql.AppendLine(@"   and trans.TransDate between :dateFrom and :dateTo ");
+
+            IQuery q = Session.CreateQuery(sql.ToString());
+            q.SetString("TransStatus", TransStatus.ToString());
+            q.SetDateTime("dateFrom", dateFrom.Value);
+            q.SetDateTime("dateTo", dateTo.Value);
+            return q.List<TTransDet>();
         }
     }
 }

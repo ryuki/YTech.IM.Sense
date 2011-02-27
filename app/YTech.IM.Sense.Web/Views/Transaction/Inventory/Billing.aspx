@@ -151,7 +151,7 @@
                             <td>
                                 <%=Html.TextBox("RoomInDate",
                                           Model.TransRoom.RoomInDate.HasValue
-                                              ? Model.TransRoom.RoomInDate.Value.ToString("HH:mm")
+                                              ? Model.TransRoom.RoomInDate.Value.ToString(CommonHelper.TimeFormat)
                                               : null)%>
                             </td>
                         </tr>
@@ -347,6 +347,7 @@
             $('#btnOut').attr('disabled', 'disabled');
             $('#btnCancel').attr('disabled', 'disabled');
             $('#btnPrint').attr('disabled', '');
+            $('#btnPrint').click();
 }
            else if (roomstatus == 'New') {
     $("#payment").dialog("close");
@@ -550,6 +551,7 @@
                     //GetTotal();
                 }
                 , width: "400"
+                , recreateForm : true
         };
         var deleteDialog = {
             url: '<%= Url.Action("DeleteBill", "Inventory") %>'

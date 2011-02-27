@@ -19,7 +19,7 @@ namespace YTech.IM.Sense.Data.NHibernateMaps.Transaction
             mapping.Id(x => x.Id, "TRANS_ID")
                  .GeneratedBy.Assigned();
 
-            //mapping.References(x => x.Id, "TRANS_ID").Fetch.Join();
+            mapping.References(x => x.TransId, "TRANS_ID").LazyLoad();
             mapping.References(x => x.RoomId, "ROOM_ID").Fetch.Join();
             mapping.Map(x => x.RoomBookDate, "ROOM_BOOK_DATE");
             mapping.Map(x => x.RoomInDate, "ROOM_IN_DATE");

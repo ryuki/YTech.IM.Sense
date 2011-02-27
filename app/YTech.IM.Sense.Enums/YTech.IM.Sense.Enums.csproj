@@ -59,6 +59,7 @@
     <Compile Include="EnumRoomType.cs" />
     <Compile Include="EnumSaveState.cs" />
     <Compile Include="EnumMassageStrength.cs" />
+    <Compile Include="EnumShiftNo.cs" />
     <Compile Include="EnumTransactionStatus.cs" />
     <Compile Include="EnumTransRoomStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

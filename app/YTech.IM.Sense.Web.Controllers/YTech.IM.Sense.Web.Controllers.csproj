@@ -110,6 +110,7 @@
     <Compile Include="Transaction\HRController.cs" />
     <Compile Include="Transaction\InventoryController.cs" />
     <Compile Include="Transaction\ReportController.cs" />
+    <Compile Include="Utility\ShiftController.cs" />
     <Compile Include="Transaction\TransactionAreaRegistration.cs" />
     <Compile Include="Utility\UserAccountController.cs" />
     <Compile Include="Utility\UserAdministrationController.cs" />
@@ -122,11 +123,13 @@
     <Compile Include="ViewModel\ReportParamViewModel.cs" />
     <Compile Include="ViewModel\Reports\JournalDetViewModel.cs" />
     <Compile Include="ViewModel\Reports\RecAccountViewModel.cs" />
+    <Compile Include="ViewModel\Reports\ShiftViewModel.cs" />
     <Compile Include="ViewModel\Reports\StockCardViewModel.cs" />
     <Compile Include="ViewModel\Reports\StockItemViewModel.cs" />
     <Compile Include="ViewModel\Reports\TransDetViewModel.cs" />
     <Compile Include="ViewModel\Reports\TransRoomViewModel.cs" />
     <Compile Include="ViewModel\Reports\TransViewModel.cs" />
+    <Compile Include="ViewModel\ShiftFormViewModel.cs" />
     <Compile Include="ViewModel\TransactionFormViewModel.cs" />
     <Compile Include="ViewModel\UserAdministration\DetailsViewModel.cs" />
     <Compile Include="ViewModel\UserAdministration\IndexViewModel.cs" />

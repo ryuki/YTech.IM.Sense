@@ -29,7 +29,7 @@
                 Tanggal :</label>
         </td>
         <td>
-            <%= Html.TextBox("DateFrom", (Model.DateFrom.HasValue) ? Model.DateFrom.Value.ToString("dd-MMM-yyyy") : "")%>
+            <%= Html.TextBox("DateFrom", (Model.DateFrom.HasValue) ? Model.DateFrom.Value.ToString(CommonHelper.DateFormat) : "")%>
         </td>
     </tr>
     <% } %>
@@ -41,7 +41,7 @@
                 Sampai Tanggal :</label>
         </td>
         <td>
-            <%= Html.TextBox("DateTo", (Model.DateTo.HasValue) ? Model.DateTo.Value.ToString("dd-MMM-yyyy") : "")%>
+            <%= Html.TextBox("DateTo", (Model.DateTo.HasValue) ? Model.DateTo.Value.ToString(CommonHelper.DateFormat) : "")%>
         </td>
     </tr>
     <% } %>
@@ -90,6 +90,18 @@
         </td>
         <td>
             <%= Html.DropDownList("RecPeriodId", Model.RecPeriodList)%>
+        </td>
+    </tr>
+    <% } %>
+      <% if (ViewData.Model.ShowShiftNo)
+       {	%>
+    <tr>
+        <td>
+            <label for="ShiftNo">
+                Item :</label>
+        </td>
+        <td>
+            <%= Html.DropDownList("ShiftNo", Model.ShiftNoList)%>
         </td>
     </tr>
     <% } %>

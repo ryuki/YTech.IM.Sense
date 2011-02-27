@@ -7,21 +7,18 @@ using YTech.IM.Sense.Core.Master;
 
 namespace YTech.IM.Sense.Core.Transaction.Inventory
 {
-    public class TStock : EntityWithTypedId<string>, IHasAssignedId<string>
+    public class TShift : EntityWithTypedId<string>, IHasAssignedId<string>
     {
 
         [DomainSignature]
         [NotNull, NotEmpty]
-        public virtual MItem ItemId { get; set; }
-        public virtual MWarehouse WarehouseId { get; set; }
-        public virtual TTransDet TransDetId { get; set; }
-        public virtual DateTime? StockDate { get; set; }
-        public virtual decimal? StockQty { get; set; }
-        public virtual decimal? StockPrice { get; set; }
-        public virtual string StockStatus { get; set; }
-        public virtual string StockDesc { get; set; }
-
-        public virtual IList<TStockRef> StockRefs { get; protected set; }
+        public virtual MEmployee EmployeeId { get; set; }
+        public virtual DateTime? ShiftDate { get; set; }
+        public virtual int? ShiftNo { get; set; }
+        public virtual DateTime? ShiftDateFrom { get; set; }
+        public virtual DateTime? ShiftDateTo { get; set; }
+        public virtual string ShiftStatus { get; set; }
+        public virtual string ShiftDesc { get; set; }
 
         public virtual string DataStatus { get; set; }
         public virtual string CreatedBy { get; set; }

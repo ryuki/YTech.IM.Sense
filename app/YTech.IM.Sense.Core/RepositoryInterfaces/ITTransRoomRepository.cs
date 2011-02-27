@@ -10,5 +10,7 @@ namespace YTech.IM.Sense.Core.RepositoryInterfaces
     {
 
         TTransRoom GetByRoom(MRoom room);
+
+        IList<TTransRoom> GetListByTransDate(System.DateTime? dateFrom, System.DateTime? dateTo);
     }
 }

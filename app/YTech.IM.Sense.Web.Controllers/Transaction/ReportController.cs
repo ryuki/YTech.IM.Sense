@@ -42,8 +42,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         private readonly ITTransDetRepository _tTransDetRepository;
         private readonly ITTransRoomRepository _tTransRoomRepository;
         private readonly ITTransRepository _tTransRepository;
+        private readonly ITShiftRepository _tShiftRepository;
 
-        public ReportController(ITJournalRepository tJournalRepository, ITJournalDetRepository tJournalDetRepository, IMCostCenterRepository mCostCenterRepository, IMAccountRepository mAccountRepository, ITRecAccountRepository tRecAccountRepository, ITRecPeriodRepository tRecPeriodRepository, IMBrandRepository mBrandRepository, IMSupplierRepository mSupplierRepository, IMWarehouseRepository mWarehouseRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransDetRepository tTransDetRepository, ITTransRepository tTransRepository, ITTransRoomRepository tTransRoomRepository)
+        public ReportController(ITJournalRepository tJournalRepository, ITJournalDetRepository tJournalDetRepository, IMCostCenterRepository mCostCenterRepository, IMAccountRepository mAccountRepository, ITRecAccountRepository tRecAccountRepository, ITRecPeriodRepository tRecPeriodRepository, IMBrandRepository mBrandRepository, IMSupplierRepository mSupplierRepository, IMWarehouseRepository mWarehouseRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransDetRepository tTransDetRepository, ITTransRepository tTransRepository, ITTransRoomRepository tTransRoomRepository, ITShiftRepository tShiftRepository)
         {
             Check.Require(tJournalRepository != null, "tJournalRepository may not be null");
             Check.Require(tJournalDetRepository != null, "tJournalDetRepository may not be null");
@@ -60,6 +61,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             Check.Require(tTransDetRepository != null, "tTransDetRepository may not be null");
             Check.Require(tTransRepository != null, "tTransRepository may not be null");
             Check.Require(tTransRoomRepository != null, "tTransRoomRepository may not be null");
+            Check.Require(tShiftRepository != null, "tShiftRepository may not be null");
 
 
             this._tJournalRepository = tJournalRepository;
@@ -77,6 +79,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             this._tTransDetRepository = tTransDetRepository;
             this._tTransRepository = tTransRepository;
             this._tTransRoomRepository = tTransRoomRepository;
+            this._tShiftRepository = tShiftRepository;
         }
 
         [Transaction]
@@ -125,6 +128,21 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     title = "Lap. Analisa Budget";
                     viewModel.ShowItem = true;
                     viewModel.ShowWarehouse = true;
+                    break;
+                case EnumReports.RptServiceOmzet:
+                    title = "Lap. Omzet Penjualan";
+                    viewModel.ShowShiftNo = true;
+                    viewModel.ShowDateFrom = true;
+                    break;
+                case EnumReports.RptCommissionRecap:
+                    title = "Lap. Rekap Komisi Terapis";
+                    viewModel.ShowDateFrom = true;
+                    viewModel.ShowDateTo = true;
+                    break;
+                case EnumReports.RptCommission:
+                    title = "Lap. Komisi Terapis";
+                    viewModel.ShowDateFrom = true;
+                    viewModel.ShowDateTo = true;
                     break;
             }
             ViewData["CurrentItem"] = title;
@@ -175,6 +193,18 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     repCol[1] = GetTransDet(trans.TransDets);
                     repCol[2] = GetTransRoom(viewModel.TransId);
                     break;
+                case EnumReports.RptServiceOmzet:
+                    repCol = new ReportDataSource[2];
+                    TShift s = _tShiftRepository.GetByDateAndShiftNo(viewModel.DateFrom, viewModel.ShiftNo);
+                    repCol[0] = GetShiftViewModel(s);
+                    repCol[1] = GetServiceOmzet(s.ShiftDateFrom, s.ShiftDateTo);
+                    break;
+                case EnumReports.RptCommissionRecap:
+                    repCol[0] = GetTransDetByDate(viewModel.DateFrom, viewModel.DateTo);
+                    break;
+                case EnumReports.RptCommission:
+                    repCol[0] = GetTransDetByDate(viewModel.DateFrom, viewModel.DateTo);
+                    break;
             }
             Session["ReportData"] = repCol;
 
@@ -219,6 +249,68 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             //Response.AddHeader("content-disposition", string.Format("attachment; filename={0}.{1}", reports.ToString(), fileNameExtension));
 
             //return File(renderedBytes, mimeType);
+        }
+
+        private ReportDataSource GetTransDetByDate(DateTime? dateFrom, DateTime? dateTo)
+        {
+            IList<TTransDet> dets = _tTransDetRepository.GetListByDate(EnumTransactionStatus.Service, dateFrom, dateTo);
+
+            var list = from det in dets
+                       select new
+                       {
+                           EmployeeId = det.EmployeeId.Id,
+                           EmployeeName = det.EmployeeId.PersonId.PersonName,
+                           det.TransDetCommissionService,
+                           det.TransId.TransFactur,
+                           det.TransId.TransDate,
+                           det.PacketId.PacketName,
+                           det.TransDetQty,
+                           det.TransDetTotal
+                       }
+            ;
+
+            ReportDataSource reportDataSource = new ReportDataSource("TransDetViewModel", list.ToList());
+            return reportDataSource;
+        }
+
+        private ReportDataSource GetShiftViewModel(TShift s)
+        {
+            IList<TShift> listShift = new List<TShift>();
+            listShift.Add(s);
+            var listRoom = from shift in listShift
+                           select new
+                           {
+                               shift.ShiftNo,
+                               shift.ShiftDate,
+                               shift.ShiftDateFrom,
+                               shift.ShiftDateTo
+                           }
+      ;
+            ReportDataSource reportDataSource = new ReportDataSource("ShiftViewModel", listRoom.ToList());
+            return reportDataSource;
+        }
+
+        private ReportDataSource GetServiceOmzet(DateTime? dateFrom, DateTime? dateTo)
+        {
+            IList<TTransRoom> listTransroom = _tTransRoomRepository.GetListByTransDate(dateFrom, dateTo);
+            var listRoom = from t in listTransroom
+                           select new
+                           {
+                               t.RoomVoucherPaid,
+                               t.RoomCashPaid,
+                               t.RoomCreditPaid,
+                               t.RoomDesc,
+                               t.RoomInDate,
+                               t.RoomOutDate,
+                               t.RoomStatus,
+                               t.TransId.TransFactur,
+                               t.TransId.TransSubTotal,
+                               t.TransId.TransDiscount,
+                               t.TransId.TransDate
+                           }
+      ;
+            ReportDataSource reportDataSource = new ReportDataSource("TransRoomViewModel", listRoom.ToList());
+            return reportDataSource;
         }
 
         private ReportDataSource GetTransRoom(string TransId)

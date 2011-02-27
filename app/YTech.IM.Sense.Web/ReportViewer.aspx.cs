@@ -27,15 +27,10 @@ namespace YTech.IM.Sense.Web
                 string rpt = Request.QueryString["rpt"];
 
                 rv.ProcessingMode = ProcessingMode.Local;
-                //if (rpt.Equals(Enums.EnumReports.RptPrintFacturService.ToString()))
-                //{
-                //    SetPaper(rpt);
-                //}
-                //else
                 rv.LocalReport.ReportPath = Server.MapPath(string.Format("~/Views/Transaction/Report/{0}.rdlc", rpt));
 
                 rv.LocalReport.DataSources.Clear();
-                ReportDataSource[] repCol = Session["ReportData"] as ReportDataSource[];
+                ReportDataSource[] repCol = GetReportData();
                 if (repCol != null)
                 {
                     foreach (ReportDataSource d in repCol)
@@ -44,34 +39,17 @@ namespace YTech.IM.Sense.Web
                     }
                 }
 
-                //ReportDataSource d = Session["ReportData"] as ReportDataSource;// new ReportDataSource();
-                //d.Name = Session["ReportDataName"].ToString();
-                //d.Value = Session["ReportData"] as IEnumerable;
-
                 rv.LocalReport.Refresh();
             }
         }
 
-        void SetPaper(string rpt)
+        private ReportDataSource[] GetReportData()
         {
-            int rowCount = (int)Session["DetailRowCount"];
-            float h = (rowCount - 1) * 1.27f;
-            SizeF sizePage = new SizeF(7.6f, 8.5f + h);
-            PointF pointMarginsLT = new PointF(0f, 0f);
-
-            PointF pointMarginsRB = new PointF(0f, 0f);
-
-            string path = Server.MapPath(string.Format("~/Views/Transaction/Report/{0}.rdlc", rpt));
-            StreamReader sr = new StreamReader(path);
-            string sXMLData = sr.ReadToEnd();
-            ReportViewerHelper reportHelper = new ReportViewerHelper(sXMLData);
-
-            reportHelper.SetPageSize(sizePage, pointMarginsLT, pointMarginsRB);
-
-            //Change the report here with the helper     
-            rv.LocalReport.LoadReportDefinition(reportHelper.GetReport());
-
-
+            //if (Session["ReportData"] != null)
+            //{
+            //    ViewState["ReportData"] = Session["ReportData"];
+            //}
+            return Session["ReportData"] as ReportDataSource[];
         }
     }
 }

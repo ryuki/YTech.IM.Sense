@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,6 +52,14 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
             listItem.Insert(0, item);
             viewModel.ItemList = new SelectList(listItem, "Id", "ItemName");
 
+            ArrayList arr = new ArrayList();
+            for (int i = 1; i <= 5; i++)
+            {
+                var sel = new { Id = i };
+                arr.Add(sel);
+            }
+            viewModel.ShiftNoList = new SelectList(arr, "Id", "Id");
+
             viewModel.DateFrom = DateTime.Today;
             viewModel.DateTo = DateTime.Today;
             return viewModel;
@@ -68,6 +77,7 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
         public bool ShowSupplier { get; internal set; }
         public bool ShowRecPeriod { get; internal set; }
         public bool ShowItem { get; internal set; }
+        public bool ShowShiftNo { get; internal set; }
 
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
@@ -77,12 +87,14 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
         public string RecPeriodId { get; set; }
         public string ItemId { get; set; }
         public string TransId { get; set; }
+        public int? ShiftNo { get; set; }
 
         public SelectList CostCenterList { get; internal set; }
         public SelectList WarehouseList { get; internal set; }
         public SelectList SupplierList { get; internal set; }
         public SelectList RecPeriodList { get; internal set; }
         public SelectList ItemList { get; internal set; }
+        public SelectList ShiftNoList { get; internal set; }
 
         
     }

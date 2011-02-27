@@ -31,5 +31,17 @@ namespace YTech.IM.Sense.Data.Repository
             }
             return q.UniqueResult<TTransRoom>();
         }
+
+        public IList<TTransRoom> GetListByTransDate(DateTime? dateFrom, DateTime? dateTo)
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine(@"   select troom
+                                from TTransRoom as troom
+                                    where troom.RoomOutDate between :dateFrom and :dateTo ");
+            IQuery q = Session.CreateQuery(sql.ToString());
+            q.SetDateTime("dateFrom", dateFrom.Value);
+            q.SetDateTime("dateTo", dateTo.Value);
+            return q.List<TTransRoom>();
+        }
     }
 }

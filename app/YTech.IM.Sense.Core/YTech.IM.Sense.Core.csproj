@@ -108,6 +108,7 @@
     <Compile Include="RepositoryInterfaces\ITRecAccountRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITRecPeriodRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITReferenceRepository.cs" />
+    <Compile Include="RepositoryInterfaces\ITShiftRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITStockCardRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITStockItemRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITStockRefRepository.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Transaction\Accounting\TRecAccount.cs" />
     <Compile Include="Transaction\Accounting\TRecPeriod.cs" />
     <Compile Include="Transaction\HR\TAbsent.cs" />
+    <Compile Include="Transaction\Inventory\TShift.cs" />
     <Compile Include="Transaction\Inventory\TTransDetItem.cs" />
     <Compile Include="Transaction\Inventory\TTransRoom.cs" />
     <Compile Include="Transaction\Inventory\TStock.cs" />

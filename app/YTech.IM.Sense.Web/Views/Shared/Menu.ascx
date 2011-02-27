@@ -112,6 +112,15 @@
             <hr />
         </div>
         <div>
+            <%= Html.ActionLinkForAreas<ReportController>(c => c.Report(EnumReports.RptServiceOmzet), "Laporan Omzet Penjualan")%>
+        </div>
+        <div>
+            <%= Html.ActionLinkForAreas<ReportController>(c => c.Report(EnumReports.RptCommissionRecap), "Laporan Rekap Komisi Terapis")%>
+        </div>
+        <div>
+            <%= Html.ActionLinkForAreas<ReportController>(c => c.Report(EnumReports.RptCommission), "Laporan Komisi Terapis")%>
+        </div>
+        <div>
             <%= Html.ActionLinkForAreas<ReportController>(c => c.Report(EnumReports.RptStockCard), "Kartu Stok")%>
         </div>
         <div>
@@ -134,6 +143,9 @@
         <a href="#">Utiliti</a></h3>
     <div>
         <div>
+        <div>
+            <%= Html.ActionLinkForAreas<ShiftController>(c => c.Closing(), "Tutup Shift")%>
+        </div>
             <%= Html.ActionLinkForAreas<UserAdministrationController>(c => c.Index(null), "Daftar Pengguna")%></div>
         <div>
             Ganti Password</div>

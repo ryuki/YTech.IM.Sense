@@ -98,6 +98,7 @@
     <Compile Include="NHibernateMaps\Transaction\TRecAccountMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TRecPeriodMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TReferenceMap.cs" />
+    <Compile Include="NHibernateMaps\Transaction\TShiftMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TStockCardMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TStockItemMap.cs" />
     <Compile Include="NHibernateMaps\Transaction\TStockMap.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Repository\TRecAccountRepository.cs" />
     <Compile Include="Repository\TRecPeriodRepository.cs" />
     <Compile Include="Repository\TReferenceRepository.cs" />
+    <Compile Include="Repository\TShiftRepository.cs" />
     <Compile Include="Repository\TStockCardRepository.cs" />
     <Compile Include="Repository\TStockItemRepository.cs" />
     <Compile Include="Repository\TStockRefRepository.cs" />

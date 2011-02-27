@@ -16,5 +16,7 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel.Reports
         public string WarehouseName { get; set; }
         public string PacketName { get; set; }
         public string EmployeeName { get; set; }
+        public DateTime? TransDate { get; set; }
+        public string TransFactur { get; set; }
     }
 }

@@ -62,11 +62,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <EmbeddedResource Include="RptBrand.rdlc" />
+    <EmbeddedResource Include="RptCommission.rdlc" />
+    <EmbeddedResource Include="RptCommissionRecap.rdlc" />
     <EmbeddedResource Include="RptCostCenter.rdlc" />
     <EmbeddedResource Include="RptJournal.rdlc" />
     <EmbeddedResource Include="RptLR.rdlc" />
     <EmbeddedResource Include="RptNeraca.rdlc" />
     <EmbeddedResource Include="RptPrintFacturService.rdlc" />
+    <EmbeddedResource Include="RptServiceOmzet.rdlc" />
     <EmbeddedResource Include="RptStockCard.rdlc" />
     <EmbeddedResource Include="RptStockItem.rdlc" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Core.Master.MAccount.datasource" />
@@ -82,10 +85,13 @@
     <None Include="Properties\DataSources\YTech.IM.Sense.Core.Master.MWarehouse.datasource" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Core.Master.RefAddress.datasource" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Core.Master.RefPerson.datasource" />
+    <None Include="Properties\DataSources\YTech.IM.Sense.Core.Transaction.Inventory.TShift.datasource" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Core.Transaction.TTrans.datasource" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Core.Transaction.TTransDet.datasource" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Web.Controllers.ViewModel.Reports.JournalDetViewModel.datasource" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Web.Controllers.ViewModel.Reports.RecAccountViewModel.datasource" />
+    <None Include="Properties\DataSources\YTech.IM.Sense.Web.Controllers.ViewModel.Reports.ServiceOmzetViewModel.datasource" />
+    <None Include="Properties\DataSources\YTech.IM.Sense.Web.Controllers.ViewModel.Reports.ShiftViewModel.datasource" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Web.Controllers.ViewModel.Reports.StockCardViewModel.datasource" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Web.Controllers.ViewModel.Reports.StockItemViewModel.datasource" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Web.Controllers.ViewModel.Reports.TransDetViewModel.datasource" />
@@ -102,6 +108,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\YTech.IM.Sense.Core\YTech.IM.Sense.Core.csproj">
+      <Project>{3FBA5ABE-E5A6-40E3-A394-F3BD728677FE}</Project>
+      <Name>YTech.IM.Sense.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\YTech.IM.Sense.Web.Controllers\YTech.IM.Sense.Web.Controllers.csproj">
       <Project>{21E72368-D226-423D-AF4D-AF00D5180EB6}</Project>
       <Name>YTech.IM.Sense.Web.Controllers</Name>

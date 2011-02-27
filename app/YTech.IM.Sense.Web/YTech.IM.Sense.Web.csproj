@@ -363,6 +363,7 @@
     <Content Include="Views\Transaction\Report\Report.aspx" />
     <Content Include="Views\Transaction\Report\ReportParamForm.ascx" />
     <Content Include="ReportViewer.aspx" />
+    <Content Include="Views\Utility\Shift\Closing.aspx" />
     <Content Include="Views\Utility\UserAccount\ChangePassword.aspx" />
     <Content Include="Views\Utility\UserAccount\ChangePasswordSuccess.aspx" />
     <Content Include="Views\Utility\UserAccount\LogOn.aspx" />
@@ -417,6 +418,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\MasterPopup.master" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Transaction\Report\RptCommissionRecap.rdlc" />
+    <Content Include="Views\Transaction\Report\RptServiceOmzet.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Transaction\Report\RptCommission.rdlc" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

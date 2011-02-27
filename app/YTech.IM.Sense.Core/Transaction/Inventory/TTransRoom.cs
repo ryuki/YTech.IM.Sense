@@ -11,7 +11,7 @@ namespace YTech.IM.Sense.Core.Transaction
     {  
         [DomainSignature]
         [NotNull, NotEmpty]
-        //public virtual TTrans Id { get; set; }
+        public virtual TTrans TransId { get; set; }
         public virtual MRoom RoomId { get; set; }
         public virtual DateTime? RoomBookDate { get; set; }
         public virtual DateTime? RoomInDate { get; set; }

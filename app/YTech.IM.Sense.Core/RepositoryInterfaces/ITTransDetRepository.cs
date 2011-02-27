@@ -17,5 +17,7 @@ namespace YTech.IM.Sense.Core.RepositoryInterfaces
         IList<TTransDet> GetListByTransId(string transId, Enums.EnumTransactionStatus enumTransactionStatus);
 
         IList<TTransDet> GetListByTrans(TTrans trans);
+
+        IList<TTransDet> GetListByDate(Enums.EnumTransactionStatus enumTransactionStatus, System.DateTime? dateFrom, System.DateTime? dateTo);
     }
 }
