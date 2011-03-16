@@ -30,7 +30,8 @@ namespace YTech.IM.Sense.Data.Repository
             {
                 q.SetString("searchText", string.Format("%{0}%", searchText));
             }
-            
+
+            totalRows = Convert.ToInt32(q.UniqueResult());
             //totalRows = (int)q.UniqueResult();// q.FutureValue<int>().Value;
 
 
