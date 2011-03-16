@@ -117,6 +117,7 @@
                     </div>
                     <%= Html.AntiForgeryToken() %>
                     <%= Html.Hidden("TransId", (ViewData.Model.Trans != null) ? ViewData.Model.Trans.Id : "")%>
+                    <input id="HidIsVipRoom" type="hidden" />
                     <table>
                         <tr>
                             <td colspan="2" align="center">
@@ -145,7 +146,19 @@
                         </tr>
                         <tr>
                             <td>
-                                <label for="TransRoom_RoomInDate">
+                                <label for="TransDate">
+                                    Tanggal :</label>
+                            </td>
+                            <td>
+                                <%=Html.TextBox("TransDate",
+                                          Model.Trans.TransDate.HasValue
+                                                                                                                      ? Model.Trans.TransDate.Value.ToString(CommonHelper.DateFormat)
+                                              : null)%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="RoomInDate">
                                     Jam Masuk :</label>
                             </td>
                             <td>
@@ -266,6 +279,23 @@
             else {
                 $("#RoomInDate").val('');
             }
+
+            //get transaction date
+            //alert('debug 1');
+            if (troom.TransDate) {
+            //alert('debug 2');
+                var transDate = new Date(parseInt(troom.TransDate.substr(6)));
+            //alert('debug 3');
+                $("#TransDate").val(transDate.format('dd-mmm-yyyy'));
+            //alert('debug 4');
+                }
+                else {
+                 $("#TransDate").val('');
+                }
+
+                //save to temporaray hidden field for is vip room used
+                $('#HidIsVipRoom').val(troom.IsVipRoom);
+                
 //           if (troom.RoomOutDate) {
 //                var dateOut = new Date(parseInt(troom.RoomOutDate.substr(6)));
 //                var dateOutTime = dateOut.format('HH:MM');
@@ -393,6 +423,7 @@
         }
 
         $(document).ready(function () {
+        $("#TransDate").datepicker({ dateFormat: "dd-M-yy" });
             $("#detail_list").hide();
                     $('#btnPaid').hide();
             $("#TransDiscount").autoNumeric();
@@ -698,7 +729,7 @@
        
         }
 
-         function SetPacketDetail(packetId, packetName, price)
+         function SetPacketDetail(packetId, packetName, price, pricevip)
         {
 //        alert(itemId);
 //        alert(itemName);
@@ -706,7 +737,12 @@
   $("#popup").dialog("close");
           $('#PacketId').attr('value', packetId);
           $('#PacketName').attr('value', packetName);
-               $('#TransDetPrice').attr('value', price.toString());
+          var isvip = $('#HidIsVipRoom').val();
+          //alert(isvip);
+          if (isvip == 'True')
+            $('#TransDetPrice').attr('value', pricevip.toString());
+        else
+         $('#TransDetPrice').attr('value', price.toString());
             CalculateTotal();
        
         }

@@ -43,5 +43,39 @@ namespace YTech.IM.Sense.Data.Repository
             q.SetDateTime("dateTo", dateTo.Value);
             return q.List<TTransRoom>();
         }
+
+        public IEnumerable<TTransRoom> GetPagedTransRoomList(string orderCol, string orderBy, int pageIndex, int maxRows, ref int totalRows, string searchBy, string searchText)
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine(@"  from TTransRoom as troom
+                                    left outer join troom.TransId trans ");
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                sql.AppendFormat(@" where {0} like :searchText", searchBy);
+            }
+            //sql.AppendFormat(@" order by  {0} {1}", orderCol, orderBy);
+
+            string queryCount = string.Format(" select count(troom.Id) {0}", sql);
+            IQuery q = Session.CreateQuery(queryCount);
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                q.SetString("searchText", string.Format("%{0}%", searchText));
+            }
+
+            totalRows = Convert.ToInt32(q.UniqueResult());
+            //totalRows = (int)q.UniqueResult();// q.FutureValue<int>().Value;
+
+
+            string query = string.Format(" select troom {0}", sql);
+            q = Session.CreateQuery(query);
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                q.SetString("searchText", string.Format("%{0}%", searchText));
+            }
+            q.SetMaxResults(maxRows);
+            q.SetFirstResult((pageIndex - 1) * maxRows);
+            IEnumerable<TTransRoom> list = q.List<TTransRoom>();
+            return list;
+        }
     }
 }

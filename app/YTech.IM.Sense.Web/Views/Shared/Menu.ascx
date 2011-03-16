@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="System.Web.Mvc.ViewUserControl" %>
+
 <div id="accordion">
     <h3>
         <a href="#">Home</a></h3>
@@ -9,6 +10,7 @@
     <% if (Request.IsAuthenticated)
        {
 %>
+<% if(Membership.GetUser().UserName.ToLower().Equals("admin")) { %> 
     <h3>
         <a href="#">Data Pokok</a></h3>
     <div>
@@ -47,6 +49,7 @@
         <div>
             <%= Html.ActionLinkForAreas<AccountController>(c => c.Index(),"Master Akun") %></div>
     </div>
+    <% } %>
     <h3>
         <a href="#">Inventori</a></h3>
     <div>
@@ -73,6 +76,9 @@
             <hr />
         </div>
     </div>
+   
+   
+<% if(Membership.GetUser().UserName.ToLower().Equals("admin")) { %> 
     <h3>
         <a href="#">Pembukuan</a></h3>
     <div>
@@ -91,6 +97,10 @@
                             <div>Pembayaran Hutang</div>
                             <div>Pembayaran Gaji</div>--%>
     </div>
+    <% } %>
+  
+  
+<% if(Membership.GetUser().UserName.ToLower().Equals("admin")) { %> 
      <h3>
         <a href="#">Absensi</a></h3>
     <div>
@@ -98,6 +108,7 @@
             <%= Html.ActionLinkForAreas<HRController>(c => c.Absent(), "Absen Karyawan")%>
         </div>
          </div>
+    <% } %>
 
     <h3>
         <a href="#">Laporan</a></h3>
@@ -126,6 +137,9 @@
         <div>
             <%= Html.ActionLinkForAreas<ReportController>(c => c.Report(EnumReports.RptStockItem), "Laporan Stok Per Gudang")%>
         </div>
+     
+     
+<% if(Membership.GetUser().UserName.ToLower().Equals("admin")) { %> 
         <div>
             <hr />
         </div>
@@ -138,14 +152,22 @@
         <div>
             <%= Html.ActionLinkForAreas<ReportController>(c => c.Report(EnumReports.RptLR), "Lap. Laba / Rugi")%>
         </div>
+        <% } %>
     </div>
+  
+  
     <h3>
         <a href="#">Utiliti</a></h3>
+<div>
     <div>
-        <div>
         <div>
             <%= Html.ActionLinkForAreas<ShiftController>(c => c.Closing(), "Tutup Shift")%>
         </div>
+        
+<% if(Membership.GetUser().UserName.ToLower().Equals("admin")) { %> 
+        <div>
+         <%= Html.ActionLinkForAreas<InventoryController>(c => c.ListBilling(), "Daftar Billing")%></div>
+
             <%= Html.ActionLinkForAreas<UserAdministrationController>(c => c.Index(null), "Daftar Pengguna")%></div>
         <div>
             Ganti Password</div>
@@ -154,6 +176,7 @@
         <div>
             <%= Html.ActionLinkForAreas<AccountingController>(c => c.Closing(), "Tutup Buku")%>
         </div>
+    <% } %>
     </div>
     <%
         }

@@ -11,22 +11,160 @@ using YTech.IM.Sense.Core.Master;
 using YTech.IM.Sense.Core.RepositoryInterfaces;
 using YTech.IM.Sense.Core.Transaction;
 using YTech.IM.Sense.Core.Transaction.Inventory;
+using YTech.IM.Sense.Data.Repository;
 using YTech.IM.Sense.Enums;
 
 namespace YTech.IM.Sense.Web.Controllers.ViewModel
 {
     public class TransactionFormViewModel
     {
-        public static TransactionFormViewModel CreateTransactionFormViewModel(ITTransRepository transRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository,IMCustomerRepository mCustomerRepository)
+        public static TransactionFormViewModel CreateTransactionFormViewModel(EnumTransactionStatus enumTransactionStatus, ITTransRepository transRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMCustomerRepository mCustomerRepository)
         {
             TransactionFormViewModel viewModel = new TransactionFormViewModel();
 
-            IList<MWarehouse> list = mWarehouseRepository.GetAll();
-            MWarehouse mWarehouse = new MWarehouse();
-            mWarehouse.WarehouseName = "-Pilih Gudang-";
-            list.Insert(0, mWarehouse);
-            viewModel.WarehouseList = new SelectList(list, "Id", "WarehouseName");
-            viewModel.WarehouseToList = new SelectList(list, "Id", "WarehouseName");
+            viewModel.Trans = SetNewTrans(enumTransactionStatus);
+
+            switch (enumTransactionStatus)
+            {
+                case EnumTransactionStatus.PurchaseOrder:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Order Pembelian";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewTransBy = true;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = false;
+                    viewModel.TransByText = "Supplier :";
+                    viewModel.TransByList = GetSupplierList();
+                    viewModel.UsePrice = EnumPrice.Purchase;
+                    break;
+                case EnumTransactionStatus.Purchase:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Pembelian";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewTransBy = true;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = true;
+                    viewModel.TransByText = "Supplier :";
+                    viewModel.TransByList = GetSupplierList();
+                    viewModel.UsePrice = EnumPrice.Purchase;
+                    break;
+                case EnumTransactionStatus.ReturPurchase:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Retur Pembelian";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewTransBy = true;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = true;
+                    viewModel.TransByText = "Supplier :";
+                    viewModel.TransByList = GetSupplierList();
+                    viewModel.UsePrice = EnumPrice.Purchase;
+                    break;
+                case EnumTransactionStatus.Sales:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Penjualan";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewTransBy = true;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = true;
+                    viewModel.TransByText = "Konsumen :";
+                    viewModel.TransByList = GetCustomerList();
+                    viewModel.UsePrice = EnumPrice.Sale;
+                    break;
+                case EnumTransactionStatus.ReturSales:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Retur Penjualan";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewTransBy = true;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = true;
+                    viewModel.TransByText = "Konsumen :";
+                    viewModel.TransByList = GetCustomerList();
+                    viewModel.UsePrice = EnumPrice.Sale;
+                    break;
+                case EnumTransactionStatus.Using:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Pemakaian Material";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewTransBy = false;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = false;
+                    viewModel.ViewPaymentMethod = false;
+                    viewModel.UsePrice = EnumPrice.None;
+                    break;
+                case EnumTransactionStatus.Mutation:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Mutasi Stok";
+                    viewModel.ViewWarehouseTo = true;
+                    viewModel.ViewTransBy = false;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = false;
+                    viewModel.ViewPaymentMethod = false;
+                    viewModel.UsePrice = EnumPrice.None;
+                    break;
+                case EnumTransactionStatus.Adjusment:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Penyesuaian Stok";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewTransBy = false;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPrice = false;
+                    viewModel.ViewPaymentMethod = false;
+                    viewModel.UsePrice = EnumPrice.None;
+                    break;
+                case EnumTransactionStatus.Received:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Penerimaan Stok";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewTransBy = true;
+                    viewModel.ViewDate = true;
+                    viewModel.ViewFactur = true;
+                    viewModel.ViewPaymentMethod = false;
+                    viewModel.UsePrice = EnumPrice.None;
+                    break;
+                case EnumTransactionStatus.Budgeting:
+                    viewModel.ViewWarehouse = true;
+                    viewModel.Title = "Rencana Anggaran Belanja";
+                    viewModel.ViewWarehouseTo = false;
+                    viewModel.ViewTransBy = false;
+                    viewModel.ViewDate = false;
+                    viewModel.ViewFactur = false;
+                    viewModel.ViewPrice = true;
+                    viewModel.ViewPaymentMethod = false;
+                    viewModel.UsePrice = EnumPrice.Purchase;
+                    break;
+            }
+
+            //get if not add stock
+            bool calculateStock = false;
+            bool addStock = false;
+            GetIsCalculateStock(enumTransactionStatus, out addStock, out calculateStock);
+            viewModel.IsAddStock = addStock;
+
+            //fill warehouse if it visible
+            if (viewModel.ViewWarehouse || viewModel.ViewWarehouseTo)
+            {
+                IList<MWarehouse> list = mWarehouseRepository.GetAll();
+                MWarehouse mWarehouse = new MWarehouse();
+                mWarehouse.WarehouseName = "-Pilih Gudang-";
+                list.Insert(0, mWarehouse);
+                viewModel.WarehouseList = new SelectList(list, "Id", "WarehouseName");
+                if (viewModel.ViewWarehouseTo)
+                    viewModel.WarehouseToList = new SelectList(list, "Id", "WarehouseName");
+            }
+
 
             //IList<MSupplier> listSupplier = mSupplierRepository.GetAll();
             //MSupplier mSupplier = new MSupplier();
@@ -48,13 +186,40 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
 
             viewModel.PaymentMethodList = new SelectList(values, "Id", "Name");
 
-            viewModel.ViewWarehouseTo = false;
-            viewModel.ViewTransBy = false;
-            viewModel.ViewDate = false;
-            viewModel.ViewFactur = false;
-            viewModel.UsePrice = EnumPrice.None;
-
+            //viewModel.MinusStock = GetIsCalculateStock(sta)
             return viewModel;
+        }
+
+        private static TTrans SetNewTrans(EnumTransactionStatus enumTransactionStatus)
+        {
+            TTrans trans = new TTrans();
+            trans.TransDate = DateTime.Today;
+            trans.TransFactur = Helper.CommonHelper.GetFacturNo(enumTransactionStatus);
+            trans.SetAssignedIdTo(Guid.NewGuid().ToString());
+            trans.TransStatus = enumTransactionStatus.ToString();
+            return trans;
+        }
+
+        private static SelectList GetSupplierList()
+        {
+            IMSupplierRepository mSupplierRepository = new MSupplierRepository();
+            IList<MSupplier> listSupplier = mSupplierRepository.GetAll();
+            MSupplier mSupplier = new MSupplier();
+            mSupplier.SupplierName = "-Pilih Supplier-";
+            listSupplier.Insert(0, mSupplier);
+            return new SelectList(listSupplier, "Id", "SupplierName");
+        }
+
+        private static SelectList GetCustomerList()
+        {
+            IMCustomerRepository mCustomerRepository = new MCustomerRepository();
+            var listCustomer = mCustomerRepository.GetAll();
+            MCustomer mCustomer = new MCustomer();
+            //mCustomer.SupplierName = "-Pilih Supplier-";
+            listCustomer.Insert(0, mCustomer);
+            var custs = from cust in listCustomer
+                        select new { Id = cust.Id, Name = cust.PersonId != null ? cust.PersonId.PersonName : "-Pilih Konsumen-" };
+            return new SelectList(custs, "Id", "Name");
         }
 
         public TTrans Trans { get; internal set; }
@@ -76,6 +241,48 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
         public string Title { get; internal set; }
         public string TransByText { get; internal set; }
         public EnumPrice UsePrice { get; internal set; }
+        public bool IsAddStock { get; internal set; }
 
+
+        internal static void GetIsCalculateStock(EnumTransactionStatus status, out bool addStock, out bool calculateStock)
+        {
+            addStock = true;
+            calculateStock = false;
+            switch (status)
+            {
+                case EnumTransactionStatus.Received:
+                    addStock = true;
+                    calculateStock = true;
+                    break;
+                case EnumTransactionStatus.Adjusment:
+                    addStock = true;
+                    calculateStock = true;
+                    break;
+                case EnumTransactionStatus.ReturPurchase:
+                    addStock = false;
+                    calculateStock = true;
+                    break;
+                case EnumTransactionStatus.ReturSales:
+                    addStock = true;
+                    calculateStock = true;
+                    break;
+                case EnumTransactionStatus.Sales:
+                    addStock = false;
+                    calculateStock = true;
+                    break;
+                case EnumTransactionStatus.Using:
+                    addStock = false;
+                    calculateStock = true;
+                    break;
+                case EnumTransactionStatus.Mutation:
+                    addStock = false;
+                    calculateStock = true;
+                    break;
+                case EnumTransactionStatus.Purchase:
+                    addStock = true;
+                    calculateStock = true;
+                    break;
+            }
+        }
     }
 }

@@ -4,7 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using YTech.IM.Sense.Core.Master;
 using YTech.IM.Sense.Core.Transaction;
+using YTech.IM.Sense.Core.Transaction.Inventory;
 using YTech.IM.Sense.Enums;
 using YTech.IM.Sense.Data.Repository;
 using YTech.IM.Sense.Core.RepositoryInterfaces;
@@ -109,6 +111,12 @@ namespace YTech.IM.Sense.Web.Controllers.Helper
             return factur;
         }
 
+        /// <summary>
+        /// get list of enum for jqgrid combobox
+        /// </summary>
+        /// <typeparam name="T">type of enum</typeparam>
+        /// <param name="defaultText">default text for display</param>
+        /// <returns>string</returns>
         public static string GetEnumListForGrid<T>(string defaultText)
         {
             if (!typeof(T).IsEnum)
@@ -130,7 +138,38 @@ namespace YTech.IM.Sense.Web.Controllers.Helper
             return (sb.ToString());
         }
 
+        /// <summary>
+        /// get default warehouse
+        /// </summary>
+        /// <returns></returns>
+        internal static MWarehouse GetDefaultWarehouse()
+        {
+            object obj = System.Web.HttpContext.Current.Cache[EnumReferenceType.DefaultWarehouse.ToString()];
+            if (obj == null)
+            {
+                TReference refer = GetReference(EnumReferenceType.DefaultWarehouse);
+                if (!string.IsNullOrEmpty(refer.ReferenceValue))
+                {
+                    IMWarehouseRepository warehouseRepository = new MWarehouseRepository();
+                    System.Web.HttpContext.Current.Cache[EnumReferenceType.DefaultWarehouse.ToString()] = warehouseRepository.Get(refer.ReferenceValue);
+                }
+            }
 
+            return System.Web.HttpContext.Current.Cache[EnumReferenceType.DefaultWarehouse.ToString()] as MWarehouse;
+        }
 
+        internal static bool CheckStock(MWarehouse mWarehouse, MItem item, decimal? qty)
+        {
+            ITStockItemRepository stockItemRepository = new TStockItemRepository();
+            TStockItem stockItem = stockItemRepository.GetByItemAndWarehouse(item, mWarehouse);
+            if (stockItem != null)
+            {
+                if (stockItem.ItemStock > qty)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

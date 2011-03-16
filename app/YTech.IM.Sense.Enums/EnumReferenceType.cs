@@ -20,6 +20,7 @@ namespace YTech.IM.Sense.Enums
         Adjusment,
         Received,
         Budgeting,
-        Service
+        Service,
+        DefaultWarehouse
     }
 }

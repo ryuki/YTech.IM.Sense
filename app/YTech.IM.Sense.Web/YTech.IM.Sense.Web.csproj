@@ -351,6 +351,7 @@
     <Content Include="Views\Transaction\HR\Absent.aspx" />
     <Content Include="Views\Transaction\Inventory\Adjusment.aspx" />
     <Content Include="Views\Transaction\Inventory\Billing.aspx" />
+    <Content Include="Views\Transaction\Inventory\ListBilling.aspx" />
     <Content Include="Views\Transaction\Inventory\DetailItem.aspx" />
     <Content Include="Views\Transaction\Inventory\Payment.ascx" />
     <Content Include="Views\Transaction\Inventory\ReturSales.aspx" />
@@ -420,11 +421,11 @@
     <Content Include="Views\Shared\MasterPopup.master" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Transaction\Report\RptCommissionRecap.rdlc" />
-    <Content Include="Views\Transaction\Report\RptServiceOmzet.rdlc" />
+    <EmbeddedResource Include="Views\Transaction\Report\RptCommissionRecap.rdlc" />
+    <EmbeddedResource Include="Views\Transaction\Report\RptServiceOmzet.rdlc" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Transaction\Report\RptCommission.rdlc" />
+    <EmbeddedResource Include="Views\Transaction\Report\RptCommission.rdlc" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

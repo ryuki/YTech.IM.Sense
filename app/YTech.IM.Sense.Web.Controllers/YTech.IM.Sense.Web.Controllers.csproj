@@ -108,7 +108,9 @@
     <Compile Include="RouteRegistrar.cs" />
     <Compile Include="Transaction\AccountingController.cs" />
     <Compile Include="Transaction\HRController.cs" />
+    <Compile Include="Transaction\InventoryController.Billing.cs" />
     <Compile Include="Transaction\InventoryController.cs" />
+    <Compile Include="Transaction\InventoryController.Stock.cs" />
     <Compile Include="Transaction\ReportController.cs" />
     <Compile Include="Utility\ShiftController.cs" />
     <Compile Include="Transaction\TransactionAreaRegistration.cs" />

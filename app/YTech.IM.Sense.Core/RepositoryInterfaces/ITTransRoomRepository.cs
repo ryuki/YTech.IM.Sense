@@ -12,5 +12,7 @@ namespace YTech.IM.Sense.Core.RepositoryInterfaces
         TTransRoom GetByRoom(MRoom room);
 
         IList<TTransRoom> GetListByTransDate(System.DateTime? dateFrom, System.DateTime? dateTo);
+
+        IEnumerable<TTransRoom> GetPagedTransRoomList(string orderCol, string orderBy, int pageIndex, int maxRows, ref int totalRows, string searchBy, string searchText);
     }
 }

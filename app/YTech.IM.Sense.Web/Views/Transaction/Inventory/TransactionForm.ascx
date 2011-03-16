@@ -27,6 +27,7 @@
 <%= Html.AntiForgeryToken() %>
 <%= Html.Hidden("Trans.Id", (ViewData.Model.Trans != null) ? ViewData.Model.Trans.Id : "")%>
 <%= Html.Hidden("Trans.TransStatus", (ViewData.Model.Trans != null) ? ViewData.Model.Trans.TransStatus : "")%>
+<%= Html.Hidden("IsAddStock", ViewData.Model.IsAddStock.ToString())%>
 <div>
     <span id="toolbar" class="ui-widget-header ui-corner-all"><a id="newTrans" href="<%= Url.Action(ViewData.Model.Trans.TransStatus.Equals(EnumTransactionStatus.PurchaseOrder.ToString()) ? "Index" : Model.Trans.TransStatus.ToString(), "Inventory") %>">
         Baru</a>
@@ -253,6 +254,11 @@ var imgerror = '<%= Url.Content("~/Content/Images/cross.gif") %>';
                 , closeAfterAdd: true
                 , closeAfterEdit: true
                 , modal: true
+                , beforeSubmit: function (postdata, formid) {
+                    postdata.IsAddStock = $('#IsAddStock').val();
+                    postdata.WarehouseId = $('#Trans_WarehouseId').val();
+                    return [true, ''];
+                }
                 , afterShowForm: function (eparams) {
                     $('#Id').attr('disabled', '');
                     $('#TransDetQty').attr('value', '1');

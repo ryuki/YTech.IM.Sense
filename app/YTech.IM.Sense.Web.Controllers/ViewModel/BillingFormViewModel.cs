@@ -45,6 +45,7 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
             TTrans trans = new TTrans();
             trans.SetAssignedIdTo(Guid.NewGuid().ToString());
             trans.TransDiscount = 0;
+            trans.TransDate = DateTime.Today;
             viewModel.Trans = trans;
 
             TTransRoom transRoom = new TTransRoom();

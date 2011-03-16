@@ -35,7 +35,7 @@
                             }
                         }
                     },
-                    { name: 'PacketPriceVip', index: 'ItemCatName', width: 200, align: 'right', editable: true, edittype: 'text', editrules: { edithidden: true },
+                    { name: 'PacketPriceVip', index: 'PacketPriceVip', width: 200, align: 'right', editable: true, edittype: 'text', editrules: { edithidden: true },
                         editoptions: {
                             dataInit: function (elem) {
                                 $(elem).autoNumeric();
@@ -71,7 +71,7 @@
                 ondblClickRow: function (rowid, iRow, iCol, e) {
                     var list = $("#list");
                     var rowData = list.getRowData(rowid);
-                    window.parent.SetPacketDetail(rowData["Id"], rowData["PacketName"], rowData["PacketPrice"]);
+                    window.parent.SetPacketDetail(rowData["Id"], rowData["PacketName"], rowData["PacketPrice"], rowData["PacketPriceVip"]);
                     return false;
                 }
             }).navGrid('#listPager',

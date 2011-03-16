@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/MyMaster.master" AutoEventWireup="true"
-    Inherits="System.Web.Mvc.ViewPage<IEnumerable<MItemCat>>" %>
+    Inherits="System.Web.Mvc.ViewPage" %>
 
 <asp:Content ID="indexContent" ContentPlaceHolderID="MainContent" runat="server">
     <table id="list" class="scroll" cellpadding="0" cellspacing="0">
@@ -7,6 +7,10 @@
     <div id="listPager" class="scroll" style="text-align: center;">
     </div>
     <div id="listPsetcols" class="scroll" style="text-align: center;">
+    </div>
+    <div id="dialog" title="Status">
+        <p>
+        </p>
     </div>
     <script type="text/javascript">
 
@@ -107,8 +111,4 @@
             );
         });       
     </script>
-    <div id="dialog" title="Status">
-        <p>
-        </p>
-    </div>
 </asp:Content>
