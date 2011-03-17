@@ -64,8 +64,6 @@
             <%= Html.ActionLinkForAreas<InventoryController>(c => c.Sales(), "Penjualan")%></div>
         <div>
            <%= Html.ActionLinkForAreas<InventoryController>(c => c.ReturSales(), "Retur Penjualan")%></div>
-        <div>
-         <%= Html.ActionLinkForAreas<InventoryController>(c => c.Billing(), "Billing")%></div>
             <div><hr /></div>
 
         <div>
@@ -76,7 +74,16 @@
             <hr />
         </div>
     </div>
-   
+    
+    <h3>
+        <a href="#">Customer </a></h3>
+    <div>
+        <div>
+            <%= Html.ActionLinkForAreas<ReservationController>(c => c.Index(), "Reservasi")%>
+        </div>
+        <div>
+         <%= Html.ActionLinkForAreas<InventoryController>(c => c.Billing(), "Billing")%></div>
+    </div>
    
 <% if(Membership.GetUser().UserName.ToLower().Equals("admin")) { %> 
     <h3>

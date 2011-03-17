@@ -105,6 +105,8 @@
     <Compile Include="Master\SupplierController.cs" />
     <Compile Include="Master\WarehouseController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CRM\CRMAreaRegistration.cs" />
+    <Compile Include="CRM\ReservationController.cs" />
     <Compile Include="RouteRegistrar.cs" />
     <Compile Include="Transaction\AccountingController.cs" />
     <Compile Include="Transaction\HRController.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="ViewModel\Reports\TransDetViewModel.cs" />
     <Compile Include="ViewModel\Reports\TransRoomViewModel.cs" />
     <Compile Include="ViewModel\Reports\TransViewModel.cs" />
+    <Compile Include="ViewModel\ReservationFormViewModel.cs" />
     <Compile Include="ViewModel\ShiftFormViewModel.cs" />
     <Compile Include="ViewModel\TransactionFormViewModel.cs" />
     <Compile Include="ViewModel\UserAdministration\DetailsViewModel.cs" />

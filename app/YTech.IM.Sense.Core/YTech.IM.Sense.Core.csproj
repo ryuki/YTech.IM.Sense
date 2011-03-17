@@ -108,6 +108,8 @@
     <Compile Include="RepositoryInterfaces\ITRecAccountRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITRecPeriodRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITReferenceRepository.cs" />
+    <Compile Include="RepositoryInterfaces\ITReservationDetailRepository.cs" />
+    <Compile Include="RepositoryInterfaces\ITReservationRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITShiftRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITStockCardRepository.cs" />
     <Compile Include="RepositoryInterfaces\ITStockItemRepository.cs" />
@@ -134,6 +136,8 @@
     <Compile Include="Transaction\Inventory\TTrans.cs" />
     <Compile Include="Transaction\Inventory\TTransDet.cs" />
     <Compile Include="Transaction\Inventory\TTransRef.cs" />
+    <Compile Include="Transaction\Reservation\TReservation.cs" />
+    <Compile Include="Transaction\Reservation\TReservationDetail.cs" />
     <Compile Include="Transaction\TReference.cs" />
   </ItemGroup>
   <ItemGroup>
