@@ -45,7 +45,12 @@
                 ondblClickRow: function (rowid, iRow, iCol, e) {
                     var list = $("#list");
                     var rowData = list.getRowData(rowid);
-                    window.parent.SetEmployeeDetail(rowData["Id"], rowData["PersonName"]);
+                     <% if (!string.IsNullOrEmpty(Request.QueryString["src"])) {	%>
+                      window.parent.SetEmployeeDetail('<%= Request.QueryString["src"] %>',rowData["Id"], rowData["PersonName"]);
+  <%} else {%>
+ window.parent.SetEmployeeDetail(rowData["Id"], rowData["PersonName"]);
+  <%}%>
+                    
                     return false;
                 }
             }).navGrid('#listPager',

@@ -317,6 +317,7 @@
     <Content Include="Scripts\Templates\MicrosoftAjax.js" />
     <Content Include="Scripts\Templates\MicrosoftAjaxAdoNet.js" />
     <Content Include="Scripts\Templates\MicrosoftAjaxTemplates.js" />
+    <Content Include="Views\CRM\Reservation\AddNew.aspx" />
     <Content Include="Views\CRM\Reservation\Index.aspx" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Master\Account\Search.aspx" />
@@ -331,6 +332,7 @@
     <Content Include="Views\Master\Item\Search.aspx" />
     <Content Include="Views\Master\Item\Index.aspx" />
     <Content Include="Views\Master\MItemCat\Index.aspx" />
+    <Content Include="Views\Master\PacketComm\PopupAdd.aspx" />
     <Content Include="Views\Master\PacketItemCat\AddPacketItemCat.aspx" />
     <Content Include="Views\Master\PacketItemCat\Index.aspx" />
     <Content Include="Views\Master\Packet\Search.aspx" />

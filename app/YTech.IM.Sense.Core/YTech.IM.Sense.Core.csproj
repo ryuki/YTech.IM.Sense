@@ -75,6 +75,7 @@
     <Compile Include="Master\MItemCat.cs" />
     <Compile Include="Master\MItemUom.cs" />
     <Compile Include="Master\MPacket.cs" />
+    <Compile Include="Master\MPacketComm.cs" />
     <Compile Include="Master\MPacketItemCat.cs" />
     <Compile Include="Master\MRoom.cs" />
     <Compile Include="Master\MSupplier.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Master\RefPerson.cs" />
     <Compile Include="MyBaseEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryInterfaces\IMPacketCommRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMAccountCatRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMAccountRefRepository.cs" />
     <Compile Include="RepositoryInterfaces\IMAccountRepository.cs" />

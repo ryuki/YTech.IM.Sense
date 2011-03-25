@@ -99,6 +99,7 @@
     <Compile Include="Master\ItemController.cs" />
     <Compile Include="Master\MasterAreaRegistration.cs" />
     <Compile Include="Master\MItemCatController.cs" />
+    <Compile Include="Master\PacketCommController.cs" />
     <Compile Include="Master\PacketController.cs" />
     <Compile Include="Master\PacketItemCatController.cs" />
     <Compile Include="Master\RoomController.cs" />

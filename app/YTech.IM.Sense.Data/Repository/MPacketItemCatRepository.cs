@@ -50,13 +50,14 @@ namespace YTech.IM.Sense.Data.Repository
                                 from MPacketItemCat as pac");
             if (!string.IsNullOrEmpty(packetId))
             {
-                sql.AppendLine(@" where pac.PacketId = :packetId");
+                sql.AppendLine(@" where pac.PacketId.Id = :packetId");
             }
             IQuery q = Session.CreateQuery(sql.ToString());
             if (!string.IsNullOrEmpty(packetId))
             {
-                MPacket mPacket = new MPacketRepository().Get(packetId);
-                q.SetEntity("packetId", mPacket);
+                //MPacket mPacket = new MPacketRepository().Get(packetId);
+                //q.SetEntity("packetId", mPacket);
+                q.SetString("packetId", packetId);
             }
 
             return q.List<MPacketItemCat>();

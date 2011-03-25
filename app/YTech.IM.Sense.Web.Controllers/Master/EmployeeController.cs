@@ -66,6 +66,7 @@ namespace YTech.IM.Sense.Web.Controllers.Master
                         i = employee.Id.ToString(),
                         cell = new string[] {
                             employee.Id, 
+                            employee.Id, 
                         employee.PersonId != null ?    employee.PersonId.PersonFirstName : null, 
                           employee.PersonId != null ?    employee.PersonId.PersonLastName : null, 
                          employee.EmployeeStatus, 
@@ -312,5 +313,6 @@ namespace YTech.IM.Sense.Web.Controllers.Master
         {
             return Content(Helper.CommonHelper.GetEnumListForGrid<EnumCommissionType>("-Pilih Tipe Komisi-"));
         }
+
     }
 }

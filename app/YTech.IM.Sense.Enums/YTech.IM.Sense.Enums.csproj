@@ -55,6 +55,7 @@
     <Compile Include="EnumReferenceType.cs" />
     <Compile Include="EnumPersonReligion.cs" />
     <Compile Include="EnumReports.cs" />
+    <Compile Include="EnumReservationStatus.cs" />
     <Compile Include="EnumRoomStatus.cs" />
     <Compile Include="EnumRoomType.cs" />
     <Compile Include="EnumSaveState.cs" />
