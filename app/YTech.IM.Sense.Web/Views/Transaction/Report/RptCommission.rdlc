@@ -1176,7 +1176,7 @@
               </Group>
               <SortExpressions>
                 <SortExpression>
-                  <Value>=Fields!EmployeeId.Value</Value>
+                  <Value>=Fields!EmployeeName.Value</Value>
                 </SortExpression>
               </SortExpressions>
               <TablixMembers>
@@ -1185,6 +1185,14 @@
                 </TablixMember>
                 <TablixMember>
                   <Group Name="Details" />
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!TransDate.Value</Value>
+                    </SortExpression>
+                    <SortExpression>
+                      <Value>=Fields!TransFactur.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
                   <Visibility>
                     <Hidden>true</Hidden>
                     <ToggleItem>EmployeeId</ToggleItem>
