@@ -8,6 +8,13 @@
     </div>
     <div id="listPsetcols" class="scroll" style="text-align: center;">
     </div>
+    <div id="dialog" title="Status">
+        <p>
+        </p>
+    </div>
+    <div id='popup'>
+        <iframe width='100%' height='340px' id="popup_frame" frameborder="0"></iframe>
+    </div>
     <script type="text/javascript">
 
         var editDialog = {
@@ -120,7 +127,7 @@
                         $(this).setRowData(ids[i], { act: be });
                     }
                 },
-                sortorder: "desc", multiselect: false,
+                multiselect: false,
                 subGrid: true,
                 subGridUrl: '<%= Url.Action("ListForSubGrid", "PacketItemCat") %>',
                 subGridModel: [{ name: [ 'Kategori Item', 'Kuantitas', 'Status', 'Deskripsi'],
@@ -158,11 +165,4 @@
             return false;   
         }
     </script>
-    <div id="dialog" title="Status">
-        <p>
-        </p>
-    </div>
-    <div id='popup'>
-        <iframe width='100%' height='340px' id="popup_frame"></iframe>
-    </div>
 </asp:Content>

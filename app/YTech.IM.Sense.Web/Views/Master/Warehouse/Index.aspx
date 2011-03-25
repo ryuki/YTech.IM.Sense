@@ -165,6 +165,6 @@
         </p>
     </div>
     <div id='popup'>
-        <iframe width='100%' height='380px' id="popup_frame"></iframe>
+        <iframe width='100%' height='380px' id="popup_frame" frameborder="0"></iframe>
     </div>
 </asp:Content>

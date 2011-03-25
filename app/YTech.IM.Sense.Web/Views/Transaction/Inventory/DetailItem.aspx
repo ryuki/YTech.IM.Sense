@@ -67,7 +67,7 @@
         <span id="error_msg"></span>
     </div>
     <div id='popup'>
-        <iframe width='100%' height='100%' id="popup_frame"></iframe>
+        <iframe width='100%' height='100%' id="popup_frame" frameborder="0"></iframe>
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
