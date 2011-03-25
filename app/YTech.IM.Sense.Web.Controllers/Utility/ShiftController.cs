@@ -31,10 +31,18 @@ namespace YTech.IM.Sense.Web.Controllers.Utility
         [Transaction]
         public ActionResult Closing()
         {
-            ShiftFormViewModel viewModel = ShiftFormViewModel.Create(_tShiftRepository);
+            ShiftFormViewModel viewModel = ShiftFormViewModel.Create(_tShiftRepository,DateTime.Today);
 
             ViewData["CurrentItem"] = "Tutup Shift";
             return View(viewModel);
+        }
+
+        [Transaction]
+        public ActionResult GetJSONLastClosing(DateTime? closingDate)
+        {
+            ShiftFormViewModel viewModel = ShiftFormViewModel.Create(_tShiftRepository, closingDate);
+
+            return Json(viewModel,JsonRequestBehavior.AllowGet);
         }
 
         [ValidateAntiForgeryToken]      // Helps avoid CSRF attacks

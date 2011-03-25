@@ -17,11 +17,11 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel
 {
     public class ShiftFormViewModel
     {
-        public static ShiftFormViewModel Create(ITShiftRepository tShiftRepository)
+        public static ShiftFormViewModel Create(ITShiftRepository tShiftRepository, DateTime? closingDate)
         {
             ShiftFormViewModel viewModel = new ShiftFormViewModel();
             TShift s = new TShift();
-            s.ShiftDate = DateTime.Today;
+            s.ShiftDate = closingDate;
            
             s.ShiftDateTo = DateTime.Now;
 

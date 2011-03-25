@@ -17,6 +17,7 @@ namespace YTech.IM.Sense.Data.Repository
             ICriteria criteria = Session.CreateCriteria(typeof(TShift));
             criteria.Add(Expression.Eq("ShiftDate", shiftDate));
             criteria.AddOrder(Order.Desc("ShiftNo"));
+            criteria.SetMaxResults(1);
             IList<TShift> list = criteria.List<TShift>();
             if (list.Count > 0)
             {

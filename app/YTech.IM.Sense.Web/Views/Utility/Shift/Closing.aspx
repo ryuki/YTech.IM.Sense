@@ -24,32 +24,34 @@
         </tr>
         <tr>
             <td>
+                <label for="lblShiftNo">
+                    Shift ke :
+                </label>
+            </td>
+            <td>
+                <%=Html.Hidden("ShiftNo", Model.Shift.ShiftNo.Value)%>                <label id="lblShiftNo">
+                <%= Model.Shift.ShiftNo.Value%></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <label for="ShiftDateFrom">
                     Dari Jam :
                 </label>
             </td>
             <td>
-                <%=Html.TextBox("ShiftDateFrom", Model.Shift.ShiftDateFrom.Value.ToString(CommonHelper.TimeFormat))%>
+                <%=Html.Hidden("ShiftDateFrom", Model.Shift.ShiftDateFrom.Value.ToString(CommonHelper.TimeFormat))%>              <label id="lblShiftDateFrom">
+                <%= Model.Shift.ShiftDateFrom.Value.ToString(CommonHelper.TimeFormat) %></label>
             </td>
         </tr>
         <tr>
             <td>
-                <label for="ShiftDateFrom">
+                <label for="ShiftDateTo">
                     s/d
                 </label>
             </td>
             <td>
                 <%=Html.TextBox("ShiftDateTo", Model.Shift.ShiftDateTo.Value.ToString(CommonHelper.TimeFormat))%>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="ShiftNo">
-                    Shift ke :
-                </label>
-            </td>
-            <td>
-                <%=Html.TextBox("ShiftNo", Model.Shift.ShiftNo.Value)%>
             </td>
         </tr>
         <tr>
@@ -65,7 +67,7 @@
     <% } %>
     <script type="text/javascript">
         $(document).ready(function () {
-            //$("#ShiftDate").datepicker({ dateFormat: "dd-M-yy" });
+            $("#ShiftDate").datepicker({ dateFormat: "dd-M-yy" });
             $("#dialog").dialog({
                 autoOpen: false
             });
@@ -79,8 +81,8 @@
                 //alert(action);
                 $.post(action, serializedForm,
                     function (result) {
-                       // alert(result);
-//                        var result = JSON.parse(result);
+                        // alert(result);
+                        //                        var result = JSON.parse(result);
                         var success = result.Success;
                         var msg = result.Message;
                         $('#dialog p:first').text(msg);
@@ -97,6 +99,22 @@
 
             jQuery().ajaxStop(function () {
                 $('form').fadeIn("slow");
+            });
+
+            $("#ShiftDate").change(function () {
+                //get Shift
+                var s = $.ajax({ url: '<%= Url.Action("GetJSONLastClosing","Shift") %>?closingDate=' + $("#ShiftDate").val(), async: false, cache: false, success: function (data, result) { if (!result) alert('Failure to retrieve the Shift.'); } }).responseText;
+               // alert(s);
+                var shift = JSON.parse(s);
+                //alert(shift);
+                //            alert('debug 4');
+                //alert(shift.Shift.ShiftNo);
+                $("#ShiftNo").val(shift.Shift.ShiftNo);
+                $("#lblShiftNo").text(shift.Shift.ShiftNo);
+                var ShiftDateFrom = new Date(parseInt(shift.Shift.ShiftDateFrom.substr(6)));
+                //alert(ShiftDateFrom.format('HH:MM'));
+                $("#ShiftDateFrom").val(ShiftDateFrom.format('HH:MM'));
+                $("#lblShiftDateFrom").text(ShiftDateFrom.format('HH:MM'));
             });
         });    
     </script>
