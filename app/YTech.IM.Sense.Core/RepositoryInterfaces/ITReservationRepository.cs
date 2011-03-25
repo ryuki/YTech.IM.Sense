@@ -11,5 +11,6 @@ namespace YTech.IM.Sense.Core.RepositoryInterfaces
 {
    public interface ITReservationRepository : INHibernateRepositoryWithTypedId<TReservation, string>
     {
+       IEnumerable<TReservation> GetPagedReservationList(string orderCol, string orderBy, int pageIndex, int maxRows, ref int totalRows, string reservationStatus);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace YTech.IM.Sense.Web.Controllers.CRM
+﻿using System.Web.Mvc;
+
+namespace YTech.IM.Sense.Web.Controllers.CRM
 {
     public class CRMAreaRegistration : System.Web.Mvc.AreaRegistration
     {
@@ -15,7 +17,7 @@
             context.MapRoute(
                     "CRM_default",
                     "CRM/{controller}/{action}/{id}",
-                    new { action = "Index", id = "" }
+                    new { action = "Index", id = UrlParameter.Optional  }
                 );
          }
     }

@@ -37,6 +37,13 @@ namespace YTech.IM.Sense.Data.NHibernateMaps.Reservation
             mapping.Map(x => x.ModifiedBy, "MODIFIED_BY");
             mapping.Map(x => x.ModifiedDate, "MODIFIED_DATE");
             mapping.Map(x => x.RowVersion, "ROW_VERSION").ReadOnly();
+
+            mapping.HasMany(x => x.ReservationDetails)
+                //.Access.Property()
+                .AsBag()
+                .Inverse()
+                .KeyColumn("RESERVATION_ID")
+                .Cascade.All();
         }
 
         #endregion

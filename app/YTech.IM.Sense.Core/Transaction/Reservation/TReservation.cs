@@ -28,6 +28,8 @@ namespace YTech.IM.Sense.Core.Transaction.Reservation
         public virtual DateTime? ModifiedDate { get; set; }
         public virtual byte[] RowVersion { get; set; }
 
+        public virtual IList<TReservationDetail> ReservationDetails { get; protected set; }
+
         #region Implementation of IHasAssignedId<string>
 
         public virtual void SetAssignedIdTo(string assignedId)

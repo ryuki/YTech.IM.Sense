@@ -9,9 +9,18 @@ namespace YTech.IM.Sense.Core.Transaction.Reservation
 {
     public class TReservationDetail : EntityWithTypedId<string>, IHasAssignedId<string>
     {
+        public TReservationDetail() { }
+
+        public TReservationDetail(TReservation reservation)
+        {
+            Check.Require(reservation != null, "reservation may not be null");
+
+            ReservationId = reservation;
+        }
+
         [DomainSignature]
         [NotNull, NotEmpty]
-        public virtual TReservation ReservationId { get; set; }
+        public virtual TReservation ReservationId { get; protected set; }
         public virtual string ReservationDetailName { get; set; }
         public virtual MPacket PacketId { get; set; }
         public virtual MEmployee EmployeeId { get; set; }
