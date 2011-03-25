@@ -43,8 +43,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         private readonly IMPacketRepository _mPacketRepository;
         private readonly IMPacketItemCatRepository _mPacketItemCatRepository;
         private readonly ITTransDetItemRepository _tTransDetItemRepository;
+        private readonly IMPacketCommRepository _mPacketCommRepository;
 
-        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransRefRepository tTransRefRepository, ITStockRepository tStockRepository, ITStockRefRepository tStockRefRepository, IMCustomerRepository mCustomerRepository, IMRoomRepository mRoomRepository, IMEmployeeRepository mEmployeeRepository, ITTransDetRepository tTransDetRepository, ITTransRoomRepository tTransRoomRepository, IMPacketRepository mPacketRepository, IMPacketItemCatRepository mPacketItemCatRepository, ITTransDetItemRepository tTransDetItemRepository)
+        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransRefRepository tTransRefRepository, ITStockRepository tStockRepository, ITStockRefRepository tStockRefRepository, IMCustomerRepository mCustomerRepository, IMRoomRepository mRoomRepository, IMEmployeeRepository mEmployeeRepository, ITTransDetRepository tTransDetRepository, ITTransRoomRepository tTransRoomRepository, IMPacketRepository mPacketRepository, IMPacketItemCatRepository mPacketItemCatRepository, ITTransDetItemRepository tTransDetItemRepository, IMPacketCommRepository mPacketCommRepository)
         {
             Check.Require(tTransRepository != null, "tTransRepository may not be null");
             Check.Require(mWarehouseRepository != null, "mWarehouseRepository may not be null");
@@ -63,6 +64,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             Check.Require(mPacketRepository != null, "mPacketRepository may not be null");
             Check.Require(mPacketItemCatRepository != null, "mPacketItemCatRepository may not be null");
             Check.Require(tTransDetItemRepository != null, "tTransDetItemRepository may not be null");
+            Check.Require(mPacketCommRepository != null, "mPacketCommRepository may not be null");
 
             this._tTransRepository = tTransRepository;
             this._mWarehouseRepository = mWarehouseRepository;
@@ -81,6 +83,8 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             this._mPacketRepository = mPacketRepository;
             this._mPacketItemCatRepository = mPacketItemCatRepository;
             this._tTransDetItemRepository = tTransDetItemRepository;
+            this._mPacketCommRepository = mPacketCommRepository;
+            
         }
 
         public ActionResult Index()

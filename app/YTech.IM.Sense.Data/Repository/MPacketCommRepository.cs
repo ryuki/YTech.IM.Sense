@@ -84,6 +84,21 @@ namespace YTech.IM.Sense.Data.Repository
             return q.List<MPacketComm>();
         }
 
+        public MPacketComm GetByEmployeeAndPacket(MEmployee emp, MPacket packet)
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine(@"   select p
+                                from MPacketComm as p");
+            sql.AppendLine(@" where p.EmployeeId = :emp");
+            sql.AppendLine(@"   and p.PacketId = :packet");
+
+            IQuery q = Session.CreateQuery(sql.ToString());
+            q.SetEntity("emp", emp);
+            q.SetEntity("packet", packet);
+
+            return q.UniqueResult<MPacketComm>();
+        }
+
         #endregion
     }
 }

@@ -517,19 +517,14 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             UpdateNumericData(viewModel, formCollection);
             TTransDet transDetToInsert = new TTransDet(trans);
             MEmployee emp = _mEmployeeRepository.Get(formCollection["EmployeeId"]);
+            MPacket packet = _mPacketRepository.Get(formCollection["PacketId"]);
             TransferFormValuesTo(transDetToInsert, viewModel);
             transDetToInsert.SetAssignedIdTo(Guid.NewGuid().ToString());
-            transDetToInsert.PacketId = _mPacketRepository.Get(formCollection["PacketId"]);
+            transDetToInsert.PacketId = packet;
             transDetToInsert.EmployeeId = emp;
-            if (emp.EmployeeCommissionServiceType == EnumCommissionType.Percent.ToString())
-            {
-                transDetToInsert.TransDetCommissionService = emp.EmployeeCommissionServiceVal * transDetToInsert.TransDetTotal /
-                                                         100;
-            }
-            else
-            {
-                transDetToInsert.TransDetCommissionService = emp.EmployeeCommissionServiceVal;
-            }
+
+            transDetToInsert.TransDetCommissionService = CalculateCommission(emp, packet, transDetToInsert.TransDetTotal);
+            
             transDetToInsert.CreatedDate = DateTime.Now;
             transDetToInsert.CreatedBy = User.Identity.Name;
             transDetToInsert.DataStatus = EnumDataStatus.New.ToString();
@@ -556,6 +551,37 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                 transDetToInsert.TransDetQty
             };
             return Json(e, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// calculate commission, 
+        /// if packet commission available, use it, 
+        /// else use global commission
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <param name="packet"></param>
+        /// <param name="totalTrans"></param>
+        /// <returns></returns>
+        private decimal? CalculateCommission(MEmployee emp, MPacket packet,decimal? totalTrans)
+        {
+            decimal? commission = 0;
+            string typeCommission = emp.EmployeeCommissionServiceType;
+            decimal? commissionVal = emp.EmployeeCommissionServiceVal;
+            MPacketComm packetComm = _mPacketCommRepository.GetByEmployeeAndPacket(emp, packet);
+            if (packetComm != null)
+            {
+                typeCommission = packetComm.PacketCommType;
+                commissionVal = packetComm.PacketCommVal;
+            }
+            if (typeCommission == EnumCommissionType.Percent.ToString())
+            {
+                commission = totalTrans * (commissionVal / 100);
+            }
+            else
+            {
+                commission = commissionVal;
+            }
+            return commission;
         }
 
         public ActionResult DeleteBill(TTransDet viewModel, FormCollection formCollection)

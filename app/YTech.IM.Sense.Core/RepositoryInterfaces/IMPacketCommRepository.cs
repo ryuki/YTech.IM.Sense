@@ -9,5 +9,7 @@ namespace YTech.IM.Sense.Core.RepositoryInterfaces
         IEnumerable<MPacketComm> GetPagedPacketCommList(string orderCol, string orderBy, int pageIndex, int maxRows, ref int totalRows, string employeeId);
 
         IList<MPacketComm> GetByEmployeeId(string employeeId);
+
+        MPacketComm GetByEmployeeAndPacket(MEmployee emp, MPacket packet);
     }
 }
