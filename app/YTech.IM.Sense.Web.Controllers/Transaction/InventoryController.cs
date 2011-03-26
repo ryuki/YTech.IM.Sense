@@ -579,9 +579,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             //_tTransRepository.DbContext.CommitTransaction();
 
             //_tStockCardRepository.DbContext.BeginTransaction();
-            decimal totalHpp = 0;
             if (calculateStock)
             {
+                decimal totalHpp = 0;
                 foreach (TTransDet det in listDet)
                 {
                     //save stock
@@ -603,10 +603,10 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                         totalHpp += UpdateStock(Trans.TransDate, Trans.TransDesc, Trans.TransStatus, det.ItemId, det.TransDetPrice, det.TransDetQty, det, addStock, Trans.WarehouseId);
                     }
                 }
+                //save journal
+                SaveJournal(Trans, totalHpp);
             }
 
-            //save journal
-            SaveJournal(Trans, totalHpp);
 
             try
             {
