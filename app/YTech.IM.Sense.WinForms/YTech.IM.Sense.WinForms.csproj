@@ -61,17 +61,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="RptBrand.rdlc" />
-    <EmbeddedResource Include="RptCommission.rdlc" />
-    <EmbeddedResource Include="RptCommissionRecap.rdlc" />
-    <EmbeddedResource Include="RptCostCenter.rdlc" />
-    <EmbeddedResource Include="RptJournal.rdlc" />
-    <EmbeddedResource Include="RptLR.rdlc" />
-    <EmbeddedResource Include="RptNeraca.rdlc" />
-    <EmbeddedResource Include="RptPrintFacturService.rdlc" />
-    <EmbeddedResource Include="RptServiceOmzet.rdlc" />
-    <EmbeddedResource Include="RptStockCard.rdlc" />
-    <EmbeddedResource Include="RptStockItem.rdlc" />
+    <Content Include="RptBrand.rdlc" />
+    <Content Include="RptCommission.rdlc" />
+    <Content Include="RptCommissionRecap.rdlc" />
+    <Content Include="RptCostCenter.rdlc" />
+    <Content Include="RptJournal.rdlc" />
+    <Content Include="RptLR.rdlc" />
+    <Content Include="RptNeraca.rdlc" />
+    <Content Include="RptPrintFacturService.rdlc" />
+    <Content Include="RptServiceOmzet.rdlc" />
+    <Content Include="RptStockCard.rdlc" />
+    <Content Include="RptStockItem.rdlc" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Core.Master.MAccount.datasource" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Core.Master.MAccountRef.datasource" />
     <None Include="Properties\DataSources\YTech.IM.Sense.Core.Master.MBrand.datasource" />

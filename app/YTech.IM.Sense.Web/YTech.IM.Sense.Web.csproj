@@ -424,11 +424,11 @@
     <Content Include="Views\Shared\MasterPopup.master" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\Transaction\Report\RptCommissionRecap.rdlc" />
-    <EmbeddedResource Include="Views\Transaction\Report\RptServiceOmzet.rdlc" />
+    <Content Include="Views\Transaction\Report\RptCommissionRecap.rdlc" />
+    <Content Include="Views\Transaction\Report\RptServiceOmzet.rdlc" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\Transaction\Report\RptCommission.rdlc" />
+    <Content Include="Views\Transaction\Report\RptCommission.rdlc" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

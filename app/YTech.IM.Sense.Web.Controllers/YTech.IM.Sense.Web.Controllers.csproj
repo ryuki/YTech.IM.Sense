@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControllerEnums.cs" />
+    <Compile Include="Helper\AccountHelper.cs" />
     <Compile Include="Helper\CommonHelper.cs" />
     <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Helper\ReportViewerHelper.cs" />
