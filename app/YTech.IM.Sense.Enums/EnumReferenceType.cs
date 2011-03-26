@@ -21,6 +21,9 @@ namespace YTech.IM.Sense.Enums
         Received,
         Budgeting,
         Service,
-        DefaultWarehouse
+        DefaultWarehouse,
+        PurchaseAccountId,
+        CashAccountId,
+        IkhtiarLRAccountId
     }
 }

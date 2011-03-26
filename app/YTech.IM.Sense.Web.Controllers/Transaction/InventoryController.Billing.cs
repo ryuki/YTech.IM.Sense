@@ -201,18 +201,18 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             trans.TransSubTotal = trans.TransDets.Sum(x => x.TransDetTotal);
             _tTransRepository.Update(trans);
 
+            decimal totalHpp = 0;
             //update stock
             foreach (TTransDet det in trans.TransDets)
             {
                 foreach (TTransDetItem detItem in det.TTransDetItems)
                 {
                     SaveStockItem(trans.TransDate, trans.TransDesc, detItem.ItemId, detItem.ItemQty, false, trans.WarehouseId);
-                    UpdateStock(trans.TransDate, trans.TransDesc, trans.TransStatus, detItem.ItemId, 0, detItem.ItemQty, det, false, trans.WarehouseId);
+                    //sum hpp for each stock
+                    totalHpp += UpdateStock(trans.TransDate, trans.TransDesc, trans.TransStatus, detItem.ItemId, 0, detItem.ItemQty, det, false, trans.WarehouseId);
 
                 }
             }
-
-
 
             TTransRoom troom = _tTransRoomRepository.Get(formCollection["TransId"]);
             troom.RoomStatus = EnumTransRoomStatus.Paid.ToString();
@@ -236,6 +236,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             troom.ModifiedDate = DateTime.Now;
             troom.DataStatus = EnumDataStatus.Updated.ToString();
             _tTransRoomRepository.Update(troom);
+
+            //save journal
+            SaveJournal(trans, totalHpp);
 
             string Message = string.Empty;
             bool Success = true;
@@ -445,7 +448,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             }
             else
             {
-                _tTransDetItemRepository.DbContext.RollbackTransaction(); 
+                _tTransDetItemRepository.DbContext.RollbackTransaction();
             }
 
             var e = new
@@ -524,7 +527,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             transDetToInsert.EmployeeId = emp;
 
             transDetToInsert.TransDetCommissionService = CalculateCommission(emp, packet, transDetToInsert.TransDetTotal);
-            
+
             transDetToInsert.CreatedDate = DateTime.Now;
             transDetToInsert.CreatedBy = User.Identity.Name;
             transDetToInsert.DataStatus = EnumDataStatus.New.ToString();
@@ -562,7 +565,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         /// <param name="packet"></param>
         /// <param name="totalTrans"></param>
         /// <returns></returns>
-        private decimal? CalculateCommission(MEmployee emp, MPacket packet,decimal? totalTrans)
+        private decimal? CalculateCommission(MEmployee emp, MPacket packet, decimal? totalTrans)
         {
             decimal? commission = 0;
             string typeCommission = emp.EmployeeCommissionServiceType;

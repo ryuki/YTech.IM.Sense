@@ -16,6 +16,9 @@ namespace YTech.IM.Sense.Web.Controllers.Helper
 {
     public class CommonHelper
     {
+        private const string CONST_FACTURFORMAT = "TIRTA/[TRANS]/[YEAR]/[MONTH]/[DAY]/[XXX]";
+        public const string CONST_VOUCHERNO = "TIRTA/VOUCHER/[YEAR]/[MONTH]/[DAY]/[XXX]";
+
         public static string DateFormat
         {
             get { return "dd-MMM-yyyy"; }
@@ -35,30 +38,49 @@ namespace YTech.IM.Sense.Web.Controllers.Helper
 
         public static TReference GetReference(EnumReferenceType referenceType)
         {
-            ITReferenceRepository referenceRepository = new TReferenceRepository();
-            TReference reference = referenceRepository.GetByReferenceType(referenceType);
-            if (reference == null)
+            //check in cache first
+            object obj = System.Web.HttpContext.Current.Cache[referenceType.ToString()];
+            //if not available, set it first
+            if (obj == null)
             {
-                reference = new TReference();
-                reference.SetAssignedIdTo(Guid.NewGuid().ToString());
-                reference.ReferenceType = referenceType.ToString();
-                reference.ReferenceValue = "0";
-                reference.CreatedDate = DateTime.Now;
-                reference.DataStatus = EnumDataStatus.New.ToString();
-                referenceRepository.Save(reference);
-                referenceRepository.DbContext.CommitChanges();
+                ITReferenceRepository referenceRepository = new TReferenceRepository();
+                TReference reference = referenceRepository.GetByReferenceType(referenceType);
+                if (reference == null)
+                {
+                    referenceRepository.DbContext.BeginTransaction();
+                    reference = new TReference();
+                    reference.SetAssignedIdTo(Guid.NewGuid().ToString());
+                    reference.ReferenceType = referenceType.ToString();
+                    reference.ReferenceValue = "";
+                    reference.CreatedDate = DateTime.Now;
+                    reference.DataStatus = EnumDataStatus.New.ToString();
+                    referenceRepository.Save(reference);
+                    referenceRepository.DbContext.CommitTransaction();
+                }
+                //save to cache
+                System.Web.HttpContext.Current.Cache[referenceType.ToString()] = reference;
             }
-            return reference;
+
+            //return cache
+            return System.Web.HttpContext.Current.Cache[referenceType.ToString()] as TReference;
         }
 
         public static string GetFacturNo(EnumTransactionStatus transactionStatus)
         {
+            return GetFacturNo(transactionStatus, true);
+        }
+
+        public static string GetFacturNo(EnumTransactionStatus transactionStatus, bool automatedIncrease)
+        {
             TReference refer = GetReference((EnumReferenceType)Enum.Parse(typeof(EnumReferenceType), transactionStatus.ToString()));
-            ITReferenceRepository referenceRepository = new TReferenceRepository();
             decimal no = Convert.ToDecimal(refer.ReferenceValue) + 1;
             refer.ReferenceValue = no.ToString();
-            referenceRepository.Update(refer);
-            referenceRepository.DbContext.CommitChanges();
+            if (automatedIncrease)
+            {
+                ITReferenceRepository referenceRepository = new TReferenceRepository();
+                referenceRepository.Update(refer);
+                referenceRepository.DbContext.CommitChanges();
+            }
 
             string tipeTrans = string.Empty;
             char[] charTransArray = transactionStatus.ToString().ToCharArray();
@@ -70,9 +92,9 @@ namespace YTech.IM.Sense.Web.Controllers.Helper
                 if (char.IsUpper(transactionStatus.ToString(), i))
                     tipeTrans += transactionStatus.ToString().Substring(i, 1);
             }
-            string formatFactur = "TIRTA/[TRANS]/[YEAR]/[MONTH]/[DAY]/[XXX]";
+
             StringBuilder result = new StringBuilder();
-            result.Append(formatFactur);
+            result.Append(CONST_FACTURFORMAT);
             result.Replace("[TRANS]", tipeTrans);
             result.Replace("[XXX]", GetFactur(5, no));
             result.Replace("[DAY]", DateTime.Today.Day.ToString());
@@ -83,16 +105,24 @@ namespace YTech.IM.Sense.Web.Controllers.Helper
 
         public static string GetVoucherNo()
         {
+            return GetVoucherNo(false);
+        }
+
+        public static string GetVoucherNo(bool automatedIncrease)
+        {
             TReference refer = GetReference(EnumReferenceType.VoucherNo);
-            ITReferenceRepository referenceRepository = new TReferenceRepository();
             decimal no = Convert.ToDecimal(refer.ReferenceValue) + 1;
             refer.ReferenceValue = no.ToString();
-            referenceRepository.Update(refer);
-            referenceRepository.DbContext.CommitChanges();
+            if (automatedIncrease)
+            {
+                ITReferenceRepository referenceRepository = new TReferenceRepository();
+                referenceRepository.DbContext.BeginTransaction();
+                referenceRepository.Update(refer);
+                referenceRepository.DbContext.CommitTransaction();
+            }
 
-            string formatFactur = "TIRTA/VOUCHER/[YEAR]/[MONTH]/[DAY]/[XXX]";
             StringBuilder result = new StringBuilder();
-            result.Append(formatFactur);
+            result.Append(CONST_VOUCHERNO);
             result.Replace("[XXX]", GetFactur(5, no));
             result.Replace("[DAY]", DateTime.Today.Day.ToString());
             result.Replace("[MONTH]", DateTime.Today.ToString("MMM").ToUpper());

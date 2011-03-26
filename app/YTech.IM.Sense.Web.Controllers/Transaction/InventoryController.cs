@@ -44,8 +44,12 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         private readonly IMPacketItemCatRepository _mPacketItemCatRepository;
         private readonly ITTransDetItemRepository _tTransDetItemRepository;
         private readonly IMPacketCommRepository _mPacketCommRepository;
+        private readonly IMAccountRefRepository _mAccountRefRepository;
+        private readonly ITJournalRepository _tJournalRepository;
+        private readonly ITJournalDetRepository _tJournalDetRepository;
+        private readonly IMAccountRepository _mAccountRepository;
 
-        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransRefRepository tTransRefRepository, ITStockRepository tStockRepository, ITStockRefRepository tStockRefRepository, IMCustomerRepository mCustomerRepository, IMRoomRepository mRoomRepository, IMEmployeeRepository mEmployeeRepository, ITTransDetRepository tTransDetRepository, ITTransRoomRepository tTransRoomRepository, IMPacketRepository mPacketRepository, IMPacketItemCatRepository mPacketItemCatRepository, ITTransDetItemRepository tTransDetItemRepository, IMPacketCommRepository mPacketCommRepository)
+        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransRefRepository tTransRefRepository, ITStockRepository tStockRepository, ITStockRefRepository tStockRefRepository, IMCustomerRepository mCustomerRepository, IMRoomRepository mRoomRepository, IMEmployeeRepository mEmployeeRepository, ITTransDetRepository tTransDetRepository, ITTransRoomRepository tTransRoomRepository, IMPacketRepository mPacketRepository, IMPacketItemCatRepository mPacketItemCatRepository, ITTransDetItemRepository tTransDetItemRepository, IMPacketCommRepository mPacketCommRepository, IMAccountRefRepository mAccountRefRepository, ITJournalRepository tJournalRepository, ITJournalDetRepository tJournalDetRepository, IMAccountRepository mAccountRepository)
         {
             Check.Require(tTransRepository != null, "tTransRepository may not be null");
             Check.Require(mWarehouseRepository != null, "mWarehouseRepository may not be null");
@@ -65,6 +69,10 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             Check.Require(mPacketItemCatRepository != null, "mPacketItemCatRepository may not be null");
             Check.Require(tTransDetItemRepository != null, "tTransDetItemRepository may not be null");
             Check.Require(mPacketCommRepository != null, "mPacketCommRepository may not be null");
+            Check.Require(mAccountRefRepository != null, "mAccountRefRepository may not be null");
+            Check.Require(tJournalRepository != null, "tJournalRepository may not be null");
+            Check.Require(tJournalDetRepository != null, "tJournalDetRepository may not be null");
+            Check.Require(mAccountRepository != null, "mAccountRepository may not be null");
 
             this._tTransRepository = tTransRepository;
             this._mWarehouseRepository = mWarehouseRepository;
@@ -84,7 +92,11 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             this._mPacketItemCatRepository = mPacketItemCatRepository;
             this._tTransDetItemRepository = tTransDetItemRepository;
             this._mPacketCommRepository = mPacketCommRepository;
-            
+            this._mAccountRefRepository = mAccountRefRepository;
+            this._tJournalRepository = tJournalRepository;
+            this._tJournalDetRepository = tJournalDetRepository;
+            this._mAccountRepository = mAccountRepository;
+
         }
 
         public ActionResult Index()
@@ -567,6 +579,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             //_tTransRepository.DbContext.CommitTransaction();
 
             //_tStockCardRepository.DbContext.BeginTransaction();
+            decimal totalHpp = 0;
             if (calculateStock)
             {
                 foreach (TTransDet det in listDet)
@@ -576,16 +589,24 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                     {
                         SaveStockItem(Trans.TransDate, Trans.TransDesc, det.ItemId, det.TransDetQty, false, Trans.WarehouseId);
                         SaveStockItem(Trans.TransDate, Trans.TransDesc, det.ItemId, det.TransDetQty, true, Trans.WarehouseIdTo);
-                        UpdateStock(Trans.TransDate, Trans.TransDesc, Trans.TransStatus, det.ItemId, det.TransDetPrice, det.TransDetQty, det, false, Trans.WarehouseId);
+
+                        //still to do, for mutation, price of stock must recalculate per stock, 
+                        //sum hpp for each stock for stock out
+                        totalHpp += UpdateStock(Trans.TransDate, Trans.TransDesc, Trans.TransStatus, det.ItemId, det.TransDetPrice, det.TransDetQty, det, false, Trans.WarehouseId);
                         UpdateStock(Trans.TransDate, Trans.TransDesc, Trans.TransStatus, det.ItemId, det.TransDetPrice, det.TransDetQty, det, true, Trans.WarehouseIdTo);
                     }
                     else
                     {
                         SaveStockItem(Trans.TransDate, Trans.TransDesc, det.ItemId, det.TransDetQty, addStock, Trans.WarehouseId);
-                        UpdateStock(Trans.TransDate, Trans.TransDesc, Trans.TransStatus, det.ItemId, det.TransDetPrice, det.TransDetQty, det, addStock, Trans.WarehouseId);
+
+                        //sum hpp for each stock
+                        totalHpp += UpdateStock(Trans.TransDate, Trans.TransDesc, Trans.TransStatus, det.ItemId, det.TransDetPrice, det.TransDetQty, det, addStock, Trans.WarehouseId);
                     }
                 }
             }
+
+            //save journal
+            SaveJournal(Trans, totalHpp);
 
             try
             {
