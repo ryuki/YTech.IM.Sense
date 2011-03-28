@@ -24,6 +24,9 @@ namespace YTech.IM.Sense.Enums
         DefaultWarehouse,
         PurchaseAccountId,
         CashAccountId,
-        IkhtiarLRAccountId
+        IkhtiarLRAccountId,
+        SalesAccountId,
+        ReturPurchaseAccountId,
+        ReturSalesAccountId
     }
 }
