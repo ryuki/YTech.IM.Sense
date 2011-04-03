@@ -442,11 +442,7 @@
                                 <KeepWithGroup>After</KeepWithGroup>
                               </TablixMember>
                               <TablixMember>
-                                <Group Name="Details">
-                                  <GroupExpressions>
-                                    <GroupExpression>=Fields!WarehouseId.Value</GroupExpression>
-                                  </GroupExpressions>
-                                </Group>
+                                <Group Name="Details" />
                               </TablixMember>
                             </TablixMembers>
                           </TablixRowHierarchy>
