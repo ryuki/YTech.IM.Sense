@@ -176,7 +176,7 @@ function ajaxValidate() {
 		errorPlacement: function(error, element) { 
 			error.insertAfter(element);
 			//generateTooltips();
-		},
+		}
     }).form();
 }
 
