@@ -60,7 +60,7 @@
                 <input type="button" value='<%= room.RoomName %>' title='<%= room.RoomName %>' class="button_room <% if (room.RoomInUsed) { %>used<% } %>"
                     onclick="OpenRoomDetail('<%= room.Id %>','<%= room.RoomName %>');" id="btn_<%= room.Id %>" />
                 <%
-                    }
+                        }
                     }
                 %>
             </td>
@@ -74,7 +74,7 @@
                 <input type="button" value='<%=room.RoomName%>' title='<%=room.RoomName%>' class="button_room <% if (room.RoomInUsed) { %>used<% } %>"
                     onclick="OpenRoomDetail('<%= room.Id %>','<%= room.RoomName %>');" id="btn_<%= room.Id %>" />
                 <%
-                    }
+                        }
                     }
                 %>
             </td>
@@ -88,7 +88,7 @@
                 <input type="button" value='<%=room.RoomName%>' title='<%=room.RoomName%>' class="button_room <% if (room.RoomInUsed) { %>used<% } %>"
                     onclick="OpenRoomDetail('<%= room.Id %>','<%= room.RoomName %>');" id="btn_<%= room.Id %>" />
                 <%
-                    }
+                        }
                     }
                 %>
             </td>
@@ -206,7 +206,17 @@
                                     Diskon(%) :</label>
                             </td>
                             <td>
-                                <%=Html.TextBox("TransDiscount", Model.Trans.TransDiscount.HasValue != null ? Model.Trans.TransDiscount.Value.ToString() : "")%>
+                                <%=Html.TextBox("TransDiscount", Model.Trans.TransDiscount.HasValue ? Model.Trans.TransDiscount.Value.ToString() : "")%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label id="PromoName" for="PromoValue">
+                                    Promo(%) :</label>
+                            </td>
+                            <td align="right">
+                            <label id="PromoValue">
+                                    0</label>
                             </td>
                         </tr>
                         <tr>
@@ -231,7 +241,7 @@
                     </table>
                     <% Html.RenderPartial("Payment", Model); %>
                     <%
-                        }%>
+                       }%>
                 </td>
                 <td>
                     <div id="detail_list">
@@ -304,7 +314,7 @@
 //            else {
 //                $("#RoomOutDate").val('');
 //            }
-//            alert('debug 2');
+//            alert('debug 2');    
 
             if (troom.RoomStatus == 'New') {
                 $("#detail_list").hide();
@@ -318,7 +328,7 @@
                 $('#btnIn').attr('disabled', 'disabled');
                 $('#btnOut').attr('disabled', '');
                 $('#btnCancel').attr('disabled', '');  
-                $('#btnPrint').attr('disabled', 'disabled');     
+                $('#btnPrint').attr('disabled', 'disabled'); 
             }
             else if (troom.RoomStatus == 'Paid') {
                 $("#detail_list").show();
@@ -340,11 +350,18 @@
               $("#TransBy").val(trans.TransBy);
               $("#TransDiscount").val(trans.TransDiscount);
               $("#txtCustomerName").val(trans.CustomerName);
+                
+            var promoname = trans.PromoName;
+            var promovalue = trans.PromoValue;
+            //alert(promoname);
+            //alert(promovalue);
+            $('#PromoName').text(promoname);
+            $('#PromoValue').text(promovalue);
         }
 
         function onSavedSuccess(e)
         {
-     var roomId =  $("#RoomId").val();
+            var roomId =  $("#RoomId").val();
              var json = e.get_response().get_object();
              var success = json.Success;
              if (success == false) {
@@ -370,6 +387,11 @@
             $('#btnOut').attr('disabled', '');
             $('#btnCancel').attr('disabled', '');
             $('#btnPrint').attr('disabled', 'disabled');
+
+            var promoname = json.PromoName;
+            var promovalue = json.PromoValue;
+            $('#PromoName').text(promoname);
+            $('#PromoValue').text(promovalue);
 }
            else if (roomstatus == 'Paid') { 
             $('#btn_' + roomId).removeClass('used');
@@ -387,9 +409,9 @@
         }
         
     function CalculateTotal() {
-        var price = $('#TransDetPrice').val().replace(",","");
-        var qty = $('#TransDetQty').val().replace(",","");
-        var disc = 0; // $('#TransDetDisc').val().replace(",","");
+        var price = $('#TransDetPrice').val().replace(/,/g,"");
+        var qty = $('#TransDetQty').val().replace(/,/g,"");
+        var disc = 0; // $('#TransDetDisc').val().replace(/,/g,"");
         var subtotal = (price * qty)
         var total = subtotal - (disc * subtotal / 100);
 
@@ -398,13 +420,19 @@
 
     function CalculatePaymentSisa()
     {
-        var grandtotal = parseFloat($('#paymentGrandTotal').text().replace(",",""));
-        var voucher = parseFloat($('#paymentVoucher').val().replace(",",""));
-        var cash = parseFloat($('#paymentCash').val().replace(",",""));
-        var creditcard = parseFloat($('#paymentCreditCard').val().replace(",",""));
+        var grandtotal = parseFloat($('#paymentGrandTotal').text().replace(/,/g,""));
+        var voucher = parseFloat($('#paymentVoucher').val().replace(/,/g,""));
+        var cash = parseFloat($('#paymentCash').val().replace(/,/g,""));
+        var creditcard = parseFloat($('#paymentCreditCard').val().replace(/,/g,""));
         var totalpaid =  (voucher + cash + creditcard);
-        //        alert(totalpaid);
+        
+//        alert(grandtotal);
+//        alert(voucher);
+//        alert(cash);
+//        alert(creditcard);
+//        alert(totalpaid);
         var sisa = totalpaid - grandtotal;
+//        alert(sisa);
         $('#paymentSisa').text(FormatNumberBy3(sisa));
     }
 
@@ -413,12 +441,27 @@
             var total = $("td[aria-describedby='list_TransDetTotal']:last").text();
             //alert(total);
             $("#SubTotal").text(total);
-            var subtotal = parseFloat(total.replace(",",""));
+            var subtotal = parseFloat(total.replace(/,/g,""));
             //alert(subtotal);
-            var discount = parseFloat($('#TransDiscount').val());
+            var totalDiscount = 0;
+            var discount = parseFloat($('#TransDiscount').val().replace(/,/g,""));
             //alert(discount);
-            var grandtotal = subtotal - (subtotal * discount / 100);
+            if (discount)
+            {
+            totalDiscount += discount;
             //alert(grandtotal);
+            }
+
+            var promo = parseFloat($('#PromoValue').text().replace(/,/g,""));
+            //alert(promo);
+            if (promo)
+            {
+            totalDiscount += promo;
+            //alert(grandtotal);
+            }
+
+            var grandtotal = subtotal;
+            grandtotal = subtotal - (subtotal * (totalDiscount / 100));
              $("#GrandTotal").text(FormatNumberBy3(grandtotal));
         }
 
@@ -461,7 +504,7 @@
                 modal:true,
                 title:'Detail Transaksi',
                 width:'900px',
-                height: 380
+                height: 420
             });
             $("#popup").dialog({
                 autoOpen: false,
@@ -486,6 +529,8 @@
                  $("#hidPaymentSubTotal").val($("#SubTotal").text());
                  $("#paymentDiscount").text($("#TransDiscount").val());
                  $("#paymentGrandTotal").text($("#GrandTotal").text());
+                 $("#paymentPromoName").text($("#PromoName").text());
+                 $("#paymentPromoValue").text($("#PromoValue").text());
                 
                  //set 0 for default for payment                 
                  $("#paymentVoucher").val(0);              

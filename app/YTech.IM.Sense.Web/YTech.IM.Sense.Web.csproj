@@ -324,6 +324,7 @@
     <Content Include="Views\Master\Account\Search.aspx" />
     <Content Include="Views\Master\Account\Index.aspx" />
     <Content Include="Views\Master\Brand\Index.aspx" />
+    <Content Include="Views\Master\Promo\Index.aspx" />
     <Content Include="Views\Master\Customer\Search.aspx" />
     <Content Include="Views\Master\Customer\Index.aspx" />
     <Content Include="Views\Master\CostCenter\Index.aspx" />

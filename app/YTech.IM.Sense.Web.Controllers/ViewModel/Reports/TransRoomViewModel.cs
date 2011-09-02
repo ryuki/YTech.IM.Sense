@@ -12,5 +12,6 @@ namespace YTech.IM.Sense.Web.Controllers.ViewModel.Reports
         public decimal? TransDiscount { get; set; }
         public DateTime? TransDate { get; set; }
         public string TransFactur { get; set; }
+        public decimal? PromoValue { get; set; }
     }
 }

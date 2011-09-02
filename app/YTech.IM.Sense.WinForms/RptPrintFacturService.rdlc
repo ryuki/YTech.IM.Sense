@@ -253,6 +253,14 @@
           <DataField>ModifiedDate</DataField>
           <rd:TypeName>System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
         </Field>
+        <Field Name="PromoId">
+          <DataField>PromoId</DataField>
+          <rd:TypeName>YTech.IM.Sense.Core.Master.MPromo</rd:TypeName>
+        </Field>
+        <Field Name="PromoValue">
+          <DataField>PromoValue</DataField>
+          <rd:TypeName>System.Nullable`1[[System.Decimal, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
+        </Field>
         <Field Name="RowVersion">
           <DataField>RowVersion</DataField>
           <rd:TypeName>System.Byte[]</rd:TypeName>
@@ -280,6 +288,10 @@
         <Field Name="TransFactur">
           <DataField>TransFactur</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TransGrandTotal">
+          <DataField>TransGrandTotal</DataField>
+          <rd:TypeName>System.Nullable`1[[System.Decimal, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
         </Field>
         <Field Name="TransPaymentMethod">
           <DataField>TransPaymentMethod</DataField>
@@ -404,7 +416,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -601,7 +612,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>RoomCashPaid</rd:DefaultName>
-            <Top>0.97244in</Top>
+            <Top>1.24744in</Top>
             <Left>1.40433in</Left>
             <Height>0.6cm</Height>
             <Width>1.17481in</Width>
@@ -639,7 +650,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>RoomCreditPaid</rd:DefaultName>
-            <Top>1.20866in</Top>
+            <Top>1.48366in</Top>
             <Left>1.40433in</Left>
             <Height>0.6cm</Height>
             <Width>1.17481in</Width>
@@ -677,7 +688,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>RoomVoucherPaid</rd:DefaultName>
-            <Top>0.73622in</Top>
+            <Top>1.01122in</Top>
             <Left>1.40433in</Left>
             <Height>0.6cm</Height>
             <Width>1.17481in</Width>
@@ -749,7 +760,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>TransSubTotal</rd:DefaultName>
-            <Top>0.73622in</Top>
+            <Top>1.01122in</Top>
             <Left>0.29124in</Left>
             <Height>0.6cm</Height>
             <Width>1.11309in</Width>
@@ -787,7 +798,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>TransSubTotal</rd:DefaultName>
-            <Top>0.97244in</Top>
+            <Top>1.24744in</Top>
             <Left>0.29124in</Left>
             <Height>0.6cm</Height>
             <Width>1.11309in</Width>
@@ -825,7 +836,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>TransSubTotal</rd:DefaultName>
-            <Top>1.20866in</Top>
+            <Top>1.48366in</Top>
             <Left>0.29124in</Left>
             <Height>0.6cm</Height>
             <Width>1.11309in</Width>
@@ -939,7 +950,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>TransSubTotal</rd:DefaultName>
-            <Top>0.47244in</Top>
+            <Top>0.74744in</Top>
             <Left>1.40433in</Left>
             <Height>0.6cm</Height>
             <Width>1.17481in</Width>
@@ -977,7 +988,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>TransSubTotal</rd:DefaultName>
-            <Top>0.47244in</Top>
+            <Top>0.74744in</Top>
             <Left>0.29124in</Left>
             <Height>0.6cm</Height>
             <Width>1.11309in</Width>
@@ -1015,7 +1026,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>TransSubTotal</rd:DefaultName>
-            <Top>1.50409in</Top>
+            <Top>1.77909in</Top>
             <Left>1.42058in</Left>
             <Height>0.6cm</Height>
             <Width>1.17481in</Width>
@@ -1053,7 +1064,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>TransSubTotal</rd:DefaultName>
-            <Top>1.50409in</Top>
+            <Top>1.77909in</Top>
             <Left>0.30749in</Left>
             <Height>0.6cm</Height>
             <Width>1.11309in</Width>
@@ -1071,10 +1082,86 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Textbox Name="TransSubTotal15">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!PromoValue.Value, "TransViewModel")</Value>
+                    <Style>
+                      <FontFamily>Times New Roman</FontFamily>
+                      <Format>N2</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>TransSubTotal</rd:DefaultName>
+            <Top>0.48622in</Top>
+            <Left>1.40639in</Left>
+            <Height>0.6cm</Height>
+            <Width>1.17481in</Width>
+            <ZIndex>14</ZIndex>
+            <Visibility>
+              <Hidden>=iif(First(Fields!TransDiscount.Value, "TransViewModel")=0,true,false)</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="TransSubTotal16">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!PromoId.Value, "TransViewModel")</Value>
+                    <Style>
+                      <FontFamily>Times New Roman</FontFamily>
+                      <Format>N2</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>TransSubTotal</rd:DefaultName>
+            <Top>0.48622in</Top>
+            <Left>0.2933in</Left>
+            <Height>0.6cm</Height>
+            <Width>1.11309in</Width>
+            <ZIndex>15</ZIndex>
+            <Visibility>
+              <Hidden>=iif(First(Fields!TransDiscount.Value, "TransViewModel")=0,true,false)</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <KeepTogether>true</KeepTogether>
         <Top>1.32646in</Top>
-        <Height>1.74031in</Height>
+        <Height>2.11531in</Height>
         <Width>2.59539in</Width>
         <ZIndex>1</ZIndex>
         <Style>
@@ -1342,7 +1429,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox10</rd:DefaultName>
-        <Top>3.07638in</Top>
+        <Top>3.45138in</Top>
         <Height>0.52301in</Height>
         <Width>2.5812in</Width>
         <ZIndex>3</ZIndex>
@@ -1376,7 +1463,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox29</rd:DefaultName>
-        <Top>9.21856cm</Top>
+        <Top>10.17106cm</Top>
         <Left>0.00001cm</Left>
         <Height>0.6cm</Height>
         <Width>6.61222cm</Width>
@@ -1392,7 +1479,7 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>9.81856cm</Height>
+    <Height>10.77106cm</Height>
     <Style />
   </Body>
   <Width>7.60001cm</Width>

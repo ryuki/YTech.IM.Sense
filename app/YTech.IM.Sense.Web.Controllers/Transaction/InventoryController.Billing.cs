@@ -78,7 +78,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                            t.TransDesc,
                            t.TransDiscount,
                            t.TransStatus,
-                           CustomerName = GetCustomerName(t.TransBy)
+                           CustomerName = GetCustomerName(t.TransBy),
+                           PromoId = t.PromoId != null ? t.PromoId.PromoName : null,
+                           t.PromoValue
                        }
        ;
             ReportDataSource reportDataSource = new ReportDataSource("TransViewModel", list.ToList());
@@ -278,12 +280,28 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                 string TransDiscount = formCollection["TransDiscount"].Replace(",", "");
                 Trans.TransDiscount = Convert.ToDecimal(TransDiscount);
             }
+            //get promo
+            MPromo promo = _mPromoRepository.GetActivePromoByDate(DateTime.Today);
+            string promoName = string.Empty;
+            decimal promoValue = 0;
+            if (promo != null)
+            {
+                Trans.PromoId = promo;
+                Trans.PromoValue = promo.PromoValue;
+
+                promoName = promo.PromoName;
+                promoValue = promo.PromoValue ?? 0;
+            }
 
             //Trans.TransDate = DateTime.Today;
             Trans.CreatedDate = DateTime.Now;
             Trans.CreatedBy = User.Identity.Name;
             Trans.DataStatus = Enums.EnumDataStatus.New.ToString();
+
+
+
             _tTransRepository.Save(Trans);
+
 
             TTransRoom troom = new TTransRoom();
             troom.SetAssignedIdTo(Trans.Id);
@@ -299,6 +317,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             troom.CreatedDate = DateTime.Now;
             troom.CreatedBy = User.Identity.Name;
             troom.DataStatus = EnumDataStatus.New.ToString();
+
             _tTransRoomRepository.Save(troom);
 
             string Message = string.Empty;
@@ -316,11 +335,13 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                 TempData[EnumCommonViewData.SaveState.ToString()] = EnumSaveState.Failed;
             }
             var e = new
-            {
-                Success,
-                Message,
-                RoomStatus = EnumTransRoomStatus.In.ToString()
-            };
+                        {
+                            Success,
+                            Message,
+                            RoomStatus = EnumTransRoomStatus.In.ToString(),
+                            PromoName = promoName + "(%)",
+                            PromoValue = promoValue
+                        };
             return Json(e, JsonRequestBehavior.AllowGet);
             //return View("Status");
         }
@@ -379,7 +400,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                 trans.Id,
                 TransDiscount = trans.TransDiscount.HasValue ? trans.TransDiscount.Value.ToString(Helper.CommonHelper.NumberFormat) : null,
                 trans.TransBy,
-                CustomerName
+                CustomerName,
+                PromoName = trans.PromoId != null ? trans.PromoId.PromoName + " (%) :" : string.Empty,
+                PromoValue = trans.PromoValue.HasValue ? trans.PromoValue.Value.ToString(Helper.CommonHelper.NumberFormat) : string.Empty
             };
             return Json(j, JsonRequestBehavior.AllowGet);
         }

@@ -34,6 +34,9 @@ namespace YTech.IM.Sense.Data.NHibernateMaps.Transaction
             mapping.Map(x => x.TransStatus, "TRANS_STATUS");
             mapping.Map(x => x.TransDesc, "TRANS_DESC");
 
+            mapping.References(x => x.PromoId, "PROMO_ID").LazyLoad();
+            mapping.Map(x => x.PromoValue, "PROMO_VALUE");
+
             mapping.Map(x => x.DataStatus, "DATA_STATUS");
             mapping.Map(x => x.CreatedBy, "CREATED_BY");
             mapping.Map(x => x.CreatedDate, "CREATED_DATE");

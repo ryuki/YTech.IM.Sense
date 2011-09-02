@@ -21,11 +21,6 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
     [HandleError]
     public partial class InventoryController : Controller
     {
-        //public InventoryController()
-        //    : this(new TTransRepository(), new MWarehouseRepository(), new MSupplierRepository(), new MItemRepository(), new TStockCardRepository(), new TStockItemRepository(), new TTransRefRepository(), new TStockRepository(), new TStockRefRepository(), new MCustomerRepository(), new MRoomRepository(), new MEmployeeRepository(), new TTransDetRepository(), new TTransRoomRepository(), new MPacketRepository())
-        //{
-        //}
-
         private readonly ITTransRepository _tTransRepository;
         private readonly IMWarehouseRepository _mWarehouseRepository;
         private readonly IMSupplierRepository _mSupplierRepository;
@@ -48,8 +43,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
         private readonly ITJournalRepository _tJournalRepository;
         private readonly ITJournalDetRepository _tJournalDetRepository;
         private readonly IMAccountRepository _mAccountRepository;
+        private readonly IMPromoRepository _mPromoRepository;
 
-        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransRefRepository tTransRefRepository, ITStockRepository tStockRepository, ITStockRefRepository tStockRefRepository, IMCustomerRepository mCustomerRepository, IMRoomRepository mRoomRepository, IMEmployeeRepository mEmployeeRepository, ITTransDetRepository tTransDetRepository, ITTransRoomRepository tTransRoomRepository, IMPacketRepository mPacketRepository, IMPacketItemCatRepository mPacketItemCatRepository, ITTransDetItemRepository tTransDetItemRepository, IMPacketCommRepository mPacketCommRepository, IMAccountRefRepository mAccountRefRepository, ITJournalRepository tJournalRepository, ITJournalDetRepository tJournalDetRepository, IMAccountRepository mAccountRepository)
+        public InventoryController(ITTransRepository tTransRepository, IMWarehouseRepository mWarehouseRepository, IMSupplierRepository mSupplierRepository, IMItemRepository mItemRepository, ITStockCardRepository tStockCardRepository, ITStockItemRepository tStockItemRepository, ITTransRefRepository tTransRefRepository, ITStockRepository tStockRepository, ITStockRefRepository tStockRefRepository, IMCustomerRepository mCustomerRepository, IMRoomRepository mRoomRepository, IMEmployeeRepository mEmployeeRepository, ITTransDetRepository tTransDetRepository, ITTransRoomRepository tTransRoomRepository, IMPacketRepository mPacketRepository, IMPacketItemCatRepository mPacketItemCatRepository, ITTransDetItemRepository tTransDetItemRepository, IMPacketCommRepository mPacketCommRepository, IMAccountRefRepository mAccountRefRepository, ITJournalRepository tJournalRepository, ITJournalDetRepository tJournalDetRepository, IMAccountRepository mAccountRepository, IMPromoRepository mPromoRepository)
         {
             Check.Require(tTransRepository != null, "tTransRepository may not be null");
             Check.Require(mWarehouseRepository != null, "mWarehouseRepository may not be null");
@@ -73,6 +69,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             Check.Require(tJournalRepository != null, "tJournalRepository may not be null");
             Check.Require(tJournalDetRepository != null, "tJournalDetRepository may not be null");
             Check.Require(mAccountRepository != null, "mAccountRepository may not be null");
+            Check.Require(mPromoRepository != null, "mPromoRepository may not be null");
 
             this._tTransRepository = tTransRepository;
             this._mWarehouseRepository = mWarehouseRepository;
@@ -96,6 +93,7 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
             this._tJournalRepository = tJournalRepository;
             this._tJournalDetRepository = tJournalDetRepository;
             this._mAccountRepository = mAccountRepository;
+            this._mPromoRepository = mPromoRepository;
 
         }
 

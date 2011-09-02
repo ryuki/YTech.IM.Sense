@@ -40,6 +40,9 @@ namespace YTech.IM.Sense.Core.Transaction
         public virtual string TransStatus { get; set; }
         public virtual string TransDesc { get; set; }
 
+        public virtual MPromo PromoId { get; set; }
+        public virtual decimal? PromoValue { get; set; }
+
         public virtual IList<TTransDet> TransDets { get; protected set; }
 
         public virtual decimal? TransGrandTotal
@@ -55,11 +58,19 @@ namespace YTech.IM.Sense.Core.Transaction
                 {
                     return grandtotal;
                 }
+
+                decimal totalDiscount = 0;
+                decimal disc = 0;
+                decimal promo = 0;
                 if (TransDiscount.HasValue)
                 {
-                    decimal disc = TransDiscount.Value;
-                    grandtotal = (grandtotal - (grandtotal * disc / 100));
+                    totalDiscount += TransDiscount.Value;
                 }
+                if (PromoValue.HasValue)
+                {
+                    totalDiscount += PromoValue.Value;
+                }
+                grandtotal = (grandtotal - (grandtotal * totalDiscount / 100));
                 if (TransTax.HasValue)
                 {
                     decimal tax = TransTax.Value;

@@ -18,3 +18,17 @@ function () {
         })
     })
 };
+
+$.fn.autoNumeric.defaults = {/* plugin defaults */
+    aNum: '0123456789', /*  allowed  numeric values */
+    aNeg: '-', /* allowed negative sign / character */
+    aSep: ',', /* allowed thousand separator character */
+    aDec: '.', /* allowed decimal separator character */
+    aSign: '', /* allowed currency symbol */
+    pSign: 'p', /* placement of currency sign prefix or suffix */
+    mNum: 15, /* max number of numerical characters to the left of the decimal */
+    mDec: 2, /* max number of decimal places */
+    dGroup: 3, /* digital grouping for the thousand separator used in Format */
+    mRound: 'S', /* method used for rounding */
+    aPad: true/* true= always Pad decimals with zeros, false=does not pad with zeros. If the value is 1000, mDec=2 and aPad=true, the output will be 1000.00, if aPad=false the output will be 1000 (no decimals added) Special Thanks to Jonas Johansson */
+};

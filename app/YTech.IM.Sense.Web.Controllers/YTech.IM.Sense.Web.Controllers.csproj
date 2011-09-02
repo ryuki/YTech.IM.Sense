@@ -93,6 +93,7 @@
     </Compile>
     <Compile Include="Master\AccountController.cs" />
     <Compile Include="Master\BrandController.cs" />
+    <Compile Include="Master\PromoController.cs" />
     <Compile Include="Master\CustomerController.cs" />
     <Compile Include="Master\CostCenterController.cs" />
     <Compile Include="Master\DepartmentController.cs" />

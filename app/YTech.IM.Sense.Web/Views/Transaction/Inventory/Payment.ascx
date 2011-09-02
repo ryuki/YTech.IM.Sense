@@ -26,6 +26,16 @@
             </td>
         </tr>
         <tr>
+            <td>
+                <label id="paymentPromoName" for="paymentPromoValue">
+                    Promo :</label>
+            </td>
+            <td align="right">
+                <label id="paymentPromoValue">
+                </label>
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <hr />
             </td>

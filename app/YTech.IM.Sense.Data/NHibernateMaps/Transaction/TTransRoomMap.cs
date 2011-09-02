@@ -20,7 +20,7 @@ namespace YTech.IM.Sense.Data.NHibernateMaps.Transaction
                  .GeneratedBy.Assigned();
 
             mapping.References(x => x.TransId, "TRANS_ID").LazyLoad();
-            mapping.References(x => x.RoomId, "ROOM_ID").Fetch.Join();
+            mapping.References(x => x.RoomId, "ROOM_ID").LazyLoad();
             mapping.Map(x => x.RoomBookDate, "ROOM_BOOK_DATE");
             mapping.Map(x => x.RoomInDate, "ROOM_IN_DATE");
             mapping.Map(x => x.RoomOutDate, "ROOM_OUT_DATE");

@@ -306,7 +306,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                                t.TransId.TransFactur,
                                t.TransId.TransSubTotal,
                                t.TransId.TransDiscount,
-                               t.TransId.TransDate
+                               t.TransId.TransDate,
+                               PromoId = t.TransId.PromoId != null ? t.TransId.PromoId.PromoName : null,
+                               t.TransId.PromoValue
                            }
       ;
             ReportDataSource reportDataSource = new ReportDataSource("TransRoomViewModel", listRoom.ToList());
@@ -374,7 +376,9 @@ namespace YTech.IM.Sense.Web.Controllers.Transaction
                            det.TransDiscount,
                            det.TransStatus,
                            EmployeeId = det.EmployeeId.Id,
-                           EmployeeName = det.EmployeeId.PersonId.PersonName
+                           EmployeeName = det.EmployeeId.PersonId.PersonName,
+                           PromoId = det.PromoId != null ? det.PromoId.PromoName : null,
+                           det.PromoValue
                        }
        ;
             ReportDataSource reportDataSource = new ReportDataSource("TransViewModel", list.ToList());
