@@ -938,7 +938,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -950,7 +949,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!TransSubTotal.Value-(Fields!TransSubTotal.Value*Fields!TransDiscount.Value/100)</Value>
+                              <Value>=Fields!TransSubTotal.Value-(Fields!TransSubTotal.Value*(Fields!TransDiscount.Value+Fields!PromoValue.Value)/100)</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1020,7 +1019,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!TransSubTotal.Value-(Fields!TransSubTotal.Value*Fields!TransDiscount.Value/100)-Fields!RoomCreditPaid.Value-Fields!RoomVoucherPaid.Value</Value>
+                              <Value>=Fields!TransSubTotal.Value-(Fields!TransSubTotal.Value*(Fields!TransDiscount.Value+Fields!PromoValue.Value)/100)-Fields!RoomCreditPaid.Value-Fields!RoomVoucherPaid.Value</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1241,7 +1240,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=sum(Fields!TransSubTotal.Value-(Fields!TransSubTotal.Value*Fields!TransDiscount.Value/100))</Value>
+                              <Value>=sum(Fields!TransSubTotal.Value-(Fields!TransSubTotal.Value*(Fields!TransDiscount.Value+Fields!PromoValue.Value)/100))</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1313,7 +1312,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=sum(Fields!TransSubTotal.Value-(Fields!TransSubTotal.Value*Fields!TransDiscount.Value/100)-Fields!RoomCreditPaid.Value-Fields!RoomVoucherPaid.Value)</Value>
+                              <Value>=sum(Fields!TransSubTotal.Value-(Fields!TransSubTotal.Value*(Fields!TransDiscount.Value+Fields!PromoValue.Value)/100)-Fields!RoomCreditPaid.Value-Fields!RoomVoucherPaid.Value)</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1338,6 +1337,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>

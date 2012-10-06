@@ -290,6 +290,7 @@
     <Content Include="Global.asax" />
     <Content Include="NHibernate.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\autoNumeric-1.6.2.js" />
     <Content Include="Scripts\complex.js" />
@@ -300,6 +301,7 @@
     <Content Include="Scripts\jquery-1.4.4.min.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.colorbox-min.js" />
+    <Content Include="Scripts\jquery.jqGrid-4.1.2.min.js" />
     <Content Include="Scripts\jquery.jqGrid.min.js" />
     <Content Include="Scripts\jquery.layout.min.js" />
     <Content Include="Scripts\jquery.layout.state.js" />

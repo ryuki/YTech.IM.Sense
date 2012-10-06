@@ -94,7 +94,7 @@
            { %>
         <%= Html.ActionLinkForAreas<InventoryController>(c => c.ListBilling(), "Daftar Billing")%>
         <%= Html.ActionLinkForAreas<UserAdministrationController>(c => c.Index(null), "Daftar Pengguna")%>
-        Ganti Password Backup Database
+       <%-- Ganti Password Backup Database--%>
         <%= Html.ActionLinkForAreas<AccountingController>(c => c.Closing(), "Tutup Buku")%>
     </div>
     <% } %>

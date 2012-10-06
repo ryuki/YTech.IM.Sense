@@ -776,8 +776,8 @@
 
          function SetPacketDetail(packetId, packetName, price, pricevip)
         {
-//        alert(itemId);
-//        alert(itemName);
+//        alert(packetId);
+//        alert(packetName);
 //        alert(price);
   $("#popup").dialog("close");
           $('#PacketId').attr('value', packetId);

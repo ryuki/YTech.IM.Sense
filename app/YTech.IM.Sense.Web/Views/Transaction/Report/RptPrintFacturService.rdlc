@@ -937,7 +937,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!TransSubTotal.Value, "TransViewModel") - (First(Fields!TransSubTotal.Value, "TransViewModel")*First(Fields!TransDiscount.Value, "TransViewModel")/100)</Value>
+                    <Value>=First(Fields!TransSubTotal.Value, "TransViewModel") - (First(Fields!TransSubTotal.Value, "TransViewModel")*(First(Fields!TransDiscount.Value, "TransViewModel")+First(Fields!PromoValue.Value, "TransViewModel"))/100)</Value>
                     <Style>
                       <FontFamily>Times New Roman</FontFamily>
                       <Format>N2</Format>
@@ -1013,7 +1013,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=(First(Fields!TransSubTotal.Value, "TransViewModel") - (First(Fields!TransSubTotal.Value, "TransViewModel")*First(Fields!TransDiscount.Value, "TransViewModel")/100)-First(Fields!RoomCashPaid.Value, "TransRoomViewModel")-First(Fields!RoomVoucherPaid.Value, "TransRoomViewModel")-First(Fields!RoomCreditPaid.Value, "TransRoomViewModel"))*-1</Value>
+                    <Value>=(First(Fields!TransSubTotal.Value, "TransViewModel") - (First(Fields!TransSubTotal.Value, "TransViewModel")*(First(Fields!TransDiscount.Value, "TransViewModel")+First(Fields!PromoValue.Value, "TransViewModel"))/100)-First(Fields!RoomCashPaid.Value, "TransRoomViewModel")-First(Fields!RoomVoucherPaid.Value, "TransRoomViewModel")-First(Fields!RoomCreditPaid.Value, "TransRoomViewModel"))*-1</Value>
                     <Style>
                       <FontFamily>Times New Roman</FontFamily>
                       <Format>N2</Format>
@@ -1089,7 +1089,9 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!PromoValue.Value, "TransViewModel")</Value>
+                    <Value>=iif(First(Fields!PromoValue.Value, "TransViewModel")&lt;0,
+First(Fields!PromoValue.Value, "TransViewModel")*-1
+,First(Fields!PromoValue.Value, "TransViewModel"))</Value>
                     <Style>
                       <FontFamily>Times New Roman</FontFamily>
                       <Format>N2</Format>
@@ -1103,12 +1105,12 @@
             </Paragraphs>
             <rd:DefaultName>TransSubTotal</rd:DefaultName>
             <Top>0.48622in</Top>
-            <Left>1.40639in</Left>
+            <Left>1.42028in</Left>
             <Height>0.6cm</Height>
             <Width>1.17481in</Width>
             <ZIndex>14</ZIndex>
             <Visibility>
-              <Hidden>=iif(First(Fields!TransDiscount.Value, "TransViewModel")=0,true,false)</Hidden>
+              <Hidden>=iif(First(Fields!PromoValue.Value, "TransViewModel")=0,true,false)</Hidden>
             </Visibility>
             <Style>
               <Border>
@@ -1146,7 +1148,7 @@
             <Width>1.11309in</Width>
             <ZIndex>15</ZIndex>
             <Visibility>
-              <Hidden>=iif(First(Fields!TransDiscount.Value, "TransViewModel")=0,true,false)</Hidden>
+              <Hidden>=iif(First(Fields!PromoValue.Value, "TransViewModel")=0,true,false)</Hidden>
             </Visibility>
             <Style>
               <Border>

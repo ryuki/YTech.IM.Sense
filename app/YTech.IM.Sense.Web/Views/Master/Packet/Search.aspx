@@ -60,17 +60,21 @@
 
                 },
                 multiselect: false,
-                subGrid: true,
-                subGridUrl: '<%= Url.Action("ListForSubGrid", "PacketItemCat") %>',
-                subGridModel: [{ name: ['Kategori Item', 'Kuantitas', 'Status', 'Deskripsi'],
-                    width: [55, 80, 80, 80],
-                    //subrig columns aligns
-                    align: ['left', 'right', 'left', 'left'],
-                    params: ['Id']
-                }],
+//                subGrid: true,
+//                subGridUrl: '<%= Url.Action("ListForSubGrid", "PacketItemCat") %>',
+//                subGridModel: [{ name: ['Kategori Item', 'Kuantitas', 'Status', 'Deskripsi'],
+//                    width: [55, 80, 80, 80],
+//                    //subrig columns aligns
+//                    align: ['left', 'right', 'left', 'left'],
+//                    params: ['Id']
+//                }],
                 ondblClickRow: function (rowid, iRow, iCol, e) {
                     var list = $("#list");
                     var rowData = list.getRowData(rowid);
+//                    alert(rowid);
+//                    alert(iRow);
+//                    alert(iCol);
+//                    alert(e);
                      <% if (!string.IsNullOrEmpty(Request.QueryString["src"])) {	%>
                        window.parent.SetPacketDetail('<%= Request.QueryString["src"] %>',rowData["Id"], rowData["PacketName"], rowData["PacketPrice"], rowData["PacketPriceVip"]);
   <%} else {%>

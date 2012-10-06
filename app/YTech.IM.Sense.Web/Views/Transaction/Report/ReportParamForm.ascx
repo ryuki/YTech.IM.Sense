@@ -98,7 +98,7 @@
     <tr>
         <td>
             <label for="ShiftNo">
-                Item :</label>
+                Shift ke :</label>
         </td>
         <td>
             <%= Html.DropDownList("ShiftNo", Model.ShiftNoList)%>
