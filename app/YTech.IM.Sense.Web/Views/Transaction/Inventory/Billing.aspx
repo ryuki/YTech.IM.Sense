@@ -426,11 +426,11 @@
         var creditcard = parseFloat($('#paymentCreditCard').val().replace(/,/g,""));
         var totalpaid =  (voucher + cash + creditcard);
         
-//        alert(grandtotal);
-//        alert(voucher);
-//        alert(cash);
-//        alert(creditcard);
-//        alert(totalpaid);
+        //alert(grandtotal);
+        //alert(voucher);
+        //alert(cash);
+        //alert(creditcard);
+        //alert(totalpaid);
         var sisa = totalpaid - grandtotal;
 //        alert(sisa);
         $('#paymentSisa').text(FormatNumberBy3(sisa));
@@ -539,16 +539,16 @@
                
                  $("#payment").dialog("open"); 
             });
-                   
-             $('#paymentVoucher').change(function(){
+
+             $('#paymentVoucher').bind('keyup change',function() {
              CalculatePaymentSisa();
              }); 
                    
-             $('#paymentCash').change(function(){
+             $('#paymentCash').bind('keyup change',function() {
              CalculatePaymentSisa();
              });
                    
-             $('#paymentCreditCard').change(function(){
+             $('#paymentCreditCard').bind('keyup change',function() {
              CalculatePaymentSisa();
               });  
 //            $('#btnIn').click(function(){
