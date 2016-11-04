@@ -1,8 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code Generation", "Code Generation", "{6ED10701-5655-42C7-9B7B-98BB938039A4}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YTech.IM.Sense.Core", "app\YTech.IM.Sense.Core\YTech.IM.Sense.Core.csproj", "{3FBA5ABE-E5A6-40E3-A394-F3BD728677FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YTech.IM.Sense.ApplicationServices", "app\YTech.IM.Sense.ApplicationServices\YTech.IM.Sense.ApplicationServices.csproj", "{A5229126-50BA-4193-A937-66D4A61EFD1F}"
@@ -14,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YTech.IM.Sense.Tests", "tests\YTech.IM.Sense.Tests\YTech.IM.Sense.Tests.csproj", "{2D9C3DCE-D43B-4236-8972-C8F07B3FF19B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YTech.IM.Sense.Web", "app\YTech.IM.Sense.Web\YTech.IM.Sense.Web.csproj", "{2255C8CE-B234-4E77-ACD6-F347480207B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code Generation", "Code Generation", "{6ED10701-5655-42C7-9B7B-98BB938039A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrudScaffolding", "tools\CrudScaffolding\CrudScaffolding.csproj", "{6492D2A1-2361-4B48-B706-241D140A9D7D}"
 EndProject
